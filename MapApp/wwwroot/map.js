@@ -1,3 +1,5 @@
+import { createSubMap } from './sub-map.mjs';
+
 const ualbertaBounds = [
     [53.5170, -113.5350], // Tighter Southwest corner (University Ave / 116 St)
     [53.5310, -113.5150]  // Tighter Northeast corner (Saskatchewan Dr / 112 St)
@@ -8,13 +10,31 @@ const map = L.map('map', {
     maxBoundsViscosity: 1.0,
     minZoom: 15 // Increased from 14 to block zoom out further
 }).setView([53.5264, -113.5255], 16); // Start closer
+map.zoomControl.setPosition('bottomright');
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '&copy; OpenStreetMap'
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    className: 'base-tiles',
+    maxNativeZoom: 19,
+    maxZoom: 22,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
 
 let locations = {};
+let sub;
+const campusEntrances = [];
+let startPoint, endPoint, routeResult;
+let requestVersion = 0;
+const routeLayer = L.layerGroup().addTo(map);
+const markerLayer = L.layerGroup().addTo(map);
+map.createPane('routes'); map.getPane('routes').style.zIndex = 450;
+const status = document.getElementById('routeStatus');
+try {
+    sub = await createSubMap(map, selectPoint, renderRoute);
+} catch (error) {
+    status.textContent = error.message;
+    document.getElementById('viewSub').disabled = true;
+    document.getElementById('showStairs').disabled = true;
+}
 
 function setupAutocomplete(input) {
     let matches = [];
@@ -82,56 +102,153 @@ function setupAutocomplete(input) {
 fetch('/api/locations')
     .then(res => res.json())
     .then(data => {
-        locations = data;
+        locations = { ...data, ...(sub?.locations ?? {}) };
         setupAutocomplete(document.getElementById('startLoc'));
         setupAutocomplete(document.getElementById('endLoc'));
     });
 
-fetch('/map.geojson')
-    .then(res => res.json())
-    .then(data => L.geoJSON(data, { style: { color: '#a0c4ff', weight: 2 } }).addTo(map));
+const entranceLayer = L.layerGroup().addTo(map);
+const entranceIcon = L.divIcon({
+    className: 'entrance-icon',
+    html: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V3h14v18M3 21h18M8 21V6l8-1v16"/><path d="M12 13h1"/></svg>',
+    iconSize: [22, 22],
+    iconAnchor: [11, 11]
+});
+const isEntrance = feature => feature.geometry?.type === 'Point'
+    && Boolean(feature.properties?.entrance) && feature.properties.entrance !== 'no';
 
-let startMarker, endMarker, routeLayer;
-let step = 0;
-
-map.on('click', async (e) => {
-    if (step === 0) {
-        if (startMarker) map.removeLayer(startMarker);
-        if (endMarker) map.removeLayer(endMarker);
-        if (routeLayer) map.removeLayer(routeLayer);
-
-        startMarker = L.marker(e.latlng).addTo(map);
-        step = 1;
-    } else {
-        endMarker = L.marker(e.latlng).addTo(map);
-        step = 0;
-
-        const slat = startMarker.getLatLng().lat;
-        const slon = startMarker.getLatLng().lng;
-        const elat = endMarker.getLatLng().lat;
-        const elon = endMarker.getLatLng().lng;
-
-        const res = await fetch(`/api/route?slat=${slat}&slon=${slon}&elat=${elat}&elon=${elon}`);
-        const coords = await res.json();
-
-        routeLayer = L.polyline(coords, { color: 'red', weight: 5 }).addTo(map);
-    }
+document.getElementById('showEntrances').addEventListener('change', (event) => {
+    if (event.target.checked) entranceLayer.addTo(map);
+    else map.removeLayer(entranceLayer);
 });
 
-document.getElementById('routeBtn').onclick = async () => {
-    const start = document.getElementById('startLoc').value;
-    const end = document.getElementById('endLoc').value;
+fetch('/map.geojson')
+    .then(res => {
+        if (!res.ok) throw new Error(`Map data failed to load (${res.status})`);
+        return res.json();
+    })
+    .then(data => {
+        sub?.setFootprints(data.features);
+        L.geoJSON(data, {
+            filter: feature => !isEntrance(feature),
+            style: { color: '#8fa99b', weight: 1, opacity: 0.6, fillOpacity: 0.08 }
+        }).addTo(map);
+        L.geoJSON(data, {
+            filter: isEntrance,
+            pointToLayer: (feature, latlng) => {
+                const type = feature.properties.entrance;
+                const label = feature.properties.name || (type === 'yes' ? 'Entrance' : `${type.charAt(0).toUpperCase()}${type.slice(1)} entrance`);
+                const tooltip = document.createElement('span');
+                tooltip.textContent = label;
+                const marker = L.marker(latlng, {
+                    icon: entranceIcon,
+                    title: label,
+                    keyboard: false,
+                    zIndexOffset: -1000,
+                    bubblingMouseEvents: true
+                }).bindTooltip(tooltip, { direction: 'top', offset: [0, -10] });
+                campusEntrances.push(marker);
+                return marker;
+            }
+        }).addTo(entranceLayer);
+    })
+    .catch(error => {
+        console.error(error);
+        const toggle = document.getElementById('showEntrances');
+        toggle.checked = false;
+        toggle.disabled = true;
+        toggle.parentElement.title = 'Entrance data could not be loaded. Refresh to try again.';
+    });
 
-    if (!locations[start] || !locations[end]) return; // Stop if invalid name
+function renderRoute() {
+    routeLayer.clearLayers(); markerLayer.clearLayers();
+    for (const marker of campusEntrances) {
+        const point = marker.getLatLng();
+        const hidden = sub?.visible && sub.floor !== 1 && sub.contains(point.lat, point.lng);
+        marker.setOpacity(hidden ? 0 : 1);
+        if (marker.getElement()) marker.getElement().style.pointerEvents = hidden ? 'none' : '';
+    }
+    for (const point of [startPoint, endPoint]) {
+        if (point && (point.floor == null || !sub?.visible || point.floor === sub.floor))
+            L.marker([point.lat, point.lon]).addTo(markerLayer);
+    }
+    for (const segment of routeResult?.segments ?? []) {
+        if (segment.floor != null && (!sub?.visible || segment.floor !== sub.floor)) continue;
+        L.polyline(segment.coords, { pane: 'routes', color: '#236348', weight: 5 }).addTo(routeLayer);
+    }
+    sub?.refreshLabels();
+}
 
-    const [slat, slon] = locations[start];
-    const [elat, elon] = locations[end];
+async function calculateRoute() {
+    const version = ++requestVersion;
+    routeResult = null; renderRoute();
+    document.getElementById('routeSteps').replaceChildren();
+    status.textContent = 'Finding route…';
+    try {
+        let result;
+        if (sub) result = await sub.route(startPoint, endPoint);
+        else {
+            const params = new URLSearchParams({ slat: startPoint.lat, slon: startPoint.lon, elat: endPoint.lat, elon: endPoint.lon });
+            if (startPoint.name) params.set('startName', startPoint.name);
+            if (endPoint.name) params.set('endName', endPoint.name);
+            const response = await fetch(`/api/route?${params}`);
+            if (!response.ok) throw new Error('Could not calculate route');
+            result = { segments: [{ floor: null, coords: await response.json() }], transitions: [] };
+        }
+        if (version !== requestVersion) return;
+        routeResult = result;
+        if (!routeResult.segments.some(segment => segment.coords.length)) throw new Error('No mapped route found.');
+        status.textContent = routeResult.transitions.length ? 'Follow the route to the stairs, then switch floors below.' : '';
+        const steps = document.getElementById('routeSteps');
+        for (const transition of routeResult.transitions) {
+            const button = document.createElement('button');
+            button.className = 'route-step'; button.textContent = transition.text;
+            button.onclick = () => sub.focus(transition.to); steps.appendChild(button);
+        }
+        const indoorFloor = startPoint.floor ?? endPoint.floor;
+        if (indoorFloor != null) sub.focus(startPoint.floor ?? 1);
+        else {
+            const coords = routeResult.segments.flatMap(s => s.coords);
+            map.fitBounds(L.latLngBounds(coords), { padding: [40, 40] });
+        }
+        renderRoute();
+    } catch (error) {
+        if (version !== requestVersion) return;
+        routeResult = null; renderRoute(); status.textContent = error.message;
+    }
+}
 
-    const res = await fetch(`/api/route?slat=${slat}&slon=${slon}&elat=${elat}&elon=${elon}`);
-    const coords = await res.json();
+function selectPoint(point) {
+    if (!startPoint || endPoint) {
+        ++requestVersion;
+        startPoint = point; endPoint = null; routeResult = null;
+        document.getElementById('startLoc').value = point.name ?? '';
+        document.getElementById('endLoc').value = '';
+        document.getElementById('routeSteps').replaceChildren();
+        status.textContent = 'Choose a destination. You can switch floors.';
+        renderRoute();
+    } else {
+        endPoint = point;
+        document.getElementById('endLoc').value = point.name ?? '';
+        calculateRoute();
+    }
+}
 
-    if (routeLayer) map.removeLayer(routeLayer);
+map.on('click', event => {
+    try { selectPoint(sub ? sub.click(event.latlng.lat, event.latlng.lng) : { lat: event.latlng.lat, lon: event.latlng.lng }); }
+    catch (error) { status.textContent = error.message; }
+});
+map.on('zoomend moveend', renderRoute);
 
-    routeLayer = L.polyline(coords, { color: 'red', weight: 5 }).addTo(map);
-    map.fitBounds(routeLayer.getBounds()); // Zoom to fit route
+document.getElementById('routeBtn').onclick = () => {
+    const resolve = (id, previous) => {
+        const name = document.getElementById(id).value;
+        if (!name && previous) return previous;
+        if (!locations[name]) throw new Error('Choose a location from the suggestions, or place a marker.');
+        return sub?.endpoint(name) ?? { lat: locations[name][0], lon: locations[name][1], name };
+    };
+    try {
+        const start = resolve('startLoc', startPoint), end = resolve('endLoc', endPoint);
+        startPoint = start; endPoint = end; calculateRoute();
+    } catch (error) { status.textContent = error.message; }
 };

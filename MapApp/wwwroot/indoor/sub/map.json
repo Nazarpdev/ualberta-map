@@ -1,0 +1,4742 @@
+{
+  "building": "Students' Union Building",
+  "bounds": [
+    [
+      53.524906,
+      -113.527955
+    ],
+    [
+      53.525655,
+      -113.526295
+    ]
+  ],
+  "source": "UASU SUB floor plans, 2024",
+  "floors": [
+    {
+      "id": 0,
+      "name": "Lower",
+      "file": "SUB-lower2024.pdf",
+      "crop": [
+        190,
+        174,
+        688,
+        772
+      ],
+      "footprint": [
+        [
+          190,
+          330
+        ],
+        [
+          340,
+          330
+        ],
+        [
+          340,
+          174
+        ],
+        [
+          642,
+          174
+        ],
+        [
+          642,
+          253
+        ],
+        [
+          688,
+          253
+        ],
+        [
+          688,
+          519
+        ],
+        [
+          642,
+          519
+        ],
+        [
+          642,
+          772
+        ],
+        [
+          190,
+          772
+        ]
+      ],
+      "partitions": [
+        [
+          [
+            412,
+            330
+          ],
+          [
+            412,
+            355
+          ]
+        ],
+        [
+          [
+            398,
+            365
+          ],
+          [
+            442,
+            365
+          ]
+        ]
+      ],
+      "spaces": [
+        {
+          "name": "Building services",
+          "category": "Offices",
+          "polygon": [
+            [
+              340,
+              174
+            ],
+            [
+              642,
+              174
+            ],
+            [
+              642,
+              330
+            ],
+            [
+              381,
+              330
+            ],
+            [
+              381,
+              311
+            ],
+            [
+              340,
+              311
+            ]
+          ]
+        },
+        {
+          "node": "0:0-31",
+          "label": "Marigold",
+          "polygon": [
+            [
+              190,
+              330
+            ],
+            [
+              243,
+              330
+            ],
+            [
+              243,
+              365
+            ],
+            [
+              190,
+              365
+            ]
+          ],
+          "labelBox": [
+            194,
+            334,
+            239,
+            360
+          ],
+          "name": "Marigold Room",
+          "code": "0-31",
+          "category": "Venues"
+        },
+        {
+          "node": "0:0-33",
+          "label": "Juniper",
+          "polygon": [
+            [
+              190,
+              365
+            ],
+            [
+              243,
+              365
+            ],
+            [
+              243,
+              405
+            ],
+            [
+              190,
+              405
+            ]
+          ],
+          "labelBox": [
+            194,
+            373,
+            239,
+            400
+          ],
+          "name": "Juniper Room",
+          "code": "0-33",
+          "category": "Venues"
+        },
+        {
+          "node": "0:0-51",
+          "label": "Orion Room",
+          "polygon": [
+            [
+              266,
+              330
+            ],
+            [
+              340,
+              330
+            ],
+            [
+              340,
+              425
+            ],
+            [
+              266,
+              425
+            ]
+          ],
+          "labelBox": [
+            275,
+            344,
+            331,
+            410
+          ],
+          "name": "Orion Room",
+          "code": "0-51",
+          "category": "Venues"
+        },
+        {
+          "node": "0:0-48",
+          "label": "Kihiw",
+          "polygon": [
+            [
+              340,
+              397
+            ],
+            [
+              366,
+              397
+            ],
+            [
+              387,
+              412
+            ],
+            [
+              377,
+              425
+            ],
+            [
+              340,
+              425
+            ]
+          ],
+          "labelBox": [
+            344,
+            400,
+            367,
+            421
+          ],
+          "name": "Kihiw Room",
+          "code": "0-48",
+          "category": "Venues"
+        },
+        {
+          "node": "0:0-41",
+          "label": "Cypress",
+          "polygon": [
+            [
+              266,
+              487
+            ],
+            [
+              300,
+              487
+            ],
+            [
+              300,
+              549
+            ],
+            [
+              266,
+              549
+            ]
+          ],
+          "labelBox": [
+            270,
+            497,
+            295,
+            540
+          ],
+          "name": "Cypress Room",
+          "code": "0-41",
+          "category": "Venues"
+        },
+        {
+          "node": "0:0-49",
+          "label": "Cascade Room",
+          "polygon": [
+            [
+              300,
+              443
+            ],
+            [
+              415,
+              443
+            ],
+            [
+              415,
+              549
+            ],
+            [
+              300,
+              549
+            ]
+          ],
+          "labelBox": [
+            314,
+            462,
+            402,
+            530
+          ],
+          "name": "Cascade Room",
+          "code": "0-49",
+          "category": "Venues"
+        },
+        {
+          "name": "Building services",
+          "category": "Offices",
+          "polygon": [
+            [
+              190,
+              405
+            ],
+            [
+              243,
+              405
+            ],
+            [
+              243,
+              443
+            ],
+            [
+              266,
+              443
+            ],
+            [
+              266,
+              549
+            ],
+            [
+              415,
+              549
+            ],
+            [
+              415,
+              570
+            ],
+            [
+              190,
+              570
+            ]
+          ]
+        },
+        {
+          "node": "0:0-12",
+          "label": "University Bookstore",
+          "polygon": [
+            [
+              190,
+              570
+            ],
+            [
+              415,
+              570
+            ],
+            [
+              415,
+              772
+            ],
+            [
+              190,
+              772
+            ]
+          ],
+          "labelBox": [
+            220,
+            613,
+            382,
+            730
+          ],
+          "name": "University Bookstore",
+          "code": "0-12",
+          "category": "Businesses"
+        },
+        {
+          "node": "0:0-60",
+          "label": "SUBprint",
+          "polygon": [
+            [
+              442,
+              330
+            ],
+            [
+              522,
+              330
+            ],
+            [
+              522,
+              376
+            ],
+            [
+              539,
+              376
+            ],
+            [
+              539,
+              437
+            ],
+            [
+              515,
+              437
+            ],
+            [
+              488,
+              433
+            ],
+            [
+              464,
+              425
+            ],
+            [
+              442,
+              414
+            ]
+          ],
+          "labelBox": [
+            454,
+            346,
+            511,
+            406
+          ],
+          "name": "SUBprint",
+          "code": "0-60",
+          "category": "Businesses"
+        },
+        {
+          "node": "0:0-64",
+          "label": "ATB Financial",
+          "polygon": [
+            [
+              539,
+              376
+            ],
+            [
+              625,
+              376
+            ],
+            [
+              619,
+              388
+            ],
+            [
+              604,
+              403
+            ],
+            [
+              583,
+              417
+            ],
+            [
+              559,
+              430
+            ],
+            [
+              539,
+              437
+            ]
+          ],
+          "labelBox": [
+            550,
+            382,
+            594,
+            412
+          ],
+          "name": "ATB Financial",
+          "code": "0-64",
+          "category": "Businesses"
+        },
+        {
+          "node": "0:0-68A",
+          "label": "The Landing",
+          "polygon": [
+            [
+              546,
+              357
+            ],
+            [
+              625,
+              357
+            ],
+            [
+              625,
+              376
+            ],
+            [
+              546,
+              376
+            ]
+          ],
+          "labelBox": [
+            551,
+            359,
+            614,
+            373
+          ],
+          "name": "The Landing",
+          "code": "0-68A",
+          "category": "Services"
+        },
+        {
+          "node": "0:0-68B",
+          "label": "Elections Office",
+          "polygon": [
+            [
+              604,
+              330
+            ],
+            [
+              625,
+              330
+            ],
+            [
+              625,
+              347
+            ],
+            [
+              604,
+              347
+            ]
+          ],
+          "labelBox": [
+            605,
+            332,
+            623,
+            345
+          ],
+          "name": "UASU Elections Office",
+          "code": "0-68B",
+          "category": "Services"
+        },
+        {
+          "name": "Student group spaces",
+          "category": "Services",
+          "polygon": [
+            [
+              522,
+              330
+            ],
+            [
+              546,
+              330
+            ],
+            [
+              546,
+              376
+            ],
+            [
+              522,
+              376
+            ]
+          ]
+        },
+        {
+          "name": "Student group spaces",
+          "category": "Services",
+          "polygon": [
+            [
+              546,
+              330
+            ],
+            [
+              571,
+              330
+            ],
+            [
+              571,
+              347
+            ],
+            [
+              546,
+              347
+            ]
+          ]
+        },
+        {
+          "name": "Student group spaces",
+          "category": "Services",
+          "polygon": [
+            [
+              571,
+              330
+            ],
+            [
+              604,
+              330
+            ],
+            [
+              604,
+              347
+            ],
+            [
+              571,
+              347
+            ]
+          ]
+        },
+        {
+          "node": "0:0-71",
+          "label": "Filistix",
+          "polygon": [
+            [
+              453,
+              471
+            ],
+            [
+              490,
+              471
+            ],
+            [
+              514,
+              476
+            ],
+            [
+              537,
+              484
+            ],
+            [
+              528,
+              505
+            ],
+            [
+              502,
+              496
+            ],
+            [
+              477,
+              494
+            ],
+            [
+              453,
+              494
+            ]
+          ],
+          "labelBox": [
+            457,
+            475,
+            502,
+            490
+          ],
+          "name": "Filistix",
+          "code": "0-71",
+          "category": "Food"
+        },
+        {
+          "node": "0:0-81",
+          "label": "Student Life Central",
+          "polygon": [
+            [
+              556,
+              492
+            ],
+            [
+              572,
+              500
+            ],
+            [
+              561,
+              523
+            ],
+            [
+              544,
+              515
+            ]
+          ],
+          "labelBox": [
+            552,
+            499,
+            565,
+            511
+          ],
+          "name": "Student Life Central",
+          "code": "0-81",
+          "category": "Services"
+        },
+        {
+          "name": "Building services",
+          "category": "Offices",
+          "polygon": [
+            [
+              453,
+              494
+            ],
+            [
+              477,
+              494
+            ],
+            [
+              502,
+              496
+            ],
+            [
+              528,
+              505
+            ],
+            [
+              517,
+              527
+            ],
+            [
+              517,
+              630
+            ],
+            [
+              453,
+              630
+            ]
+          ]
+        },
+        {
+          "name": "Building services",
+          "category": "Offices",
+          "polygon": [
+            [
+              543,
+              518
+            ],
+            [
+              558,
+              525
+            ],
+            [
+              571,
+              510
+            ],
+            [
+              589,
+              532
+            ],
+            [
+              603,
+              551
+            ],
+            [
+              603,
+              582
+            ],
+            [
+              528,
+              582
+            ],
+            [
+              528,
+              544
+            ]
+          ]
+        },
+        {
+          "node": "0:0-77",
+          "label": "Caribou",
+          "polygon": [
+            [
+              528,
+              594
+            ],
+            [
+              554,
+              594
+            ],
+            [
+              554,
+              630
+            ],
+            [
+              528,
+              630
+            ]
+          ],
+          "labelBox": [
+            531,
+            601,
+            551,
+            623
+          ],
+          "name": "Caribou Room",
+          "code": "0-77",
+          "category": "Venues"
+        },
+        {
+          "node": "0:0-90",
+          "label": "Quiet Lounge",
+          "polygon": [
+            [
+              574,
+              594
+            ],
+            [
+              642,
+              594
+            ],
+            [
+              642,
+              630
+            ],
+            [
+              574,
+              630
+            ]
+          ],
+          "labelBox": [
+            579,
+            602,
+            630,
+            624
+          ],
+          "name": "Carlson Construction Quiet Lounge",
+          "code": "0-90",
+          "category": "Student Space"
+        },
+        {
+          "name": "Lounge services",
+          "category": "Offices",
+          "polygon": [
+            [
+              554,
+              594
+            ],
+            [
+              574,
+              594
+            ],
+            [
+              574,
+              630
+            ],
+            [
+              642,
+              630
+            ],
+            [
+              642,
+              772
+            ],
+            [
+              574,
+              772
+            ],
+            [
+              574,
+              672
+            ],
+            [
+              543,
+              672
+            ],
+            [
+              543,
+              630
+            ],
+            [
+              554,
+              630
+            ]
+          ]
+        },
+        {
+          "node": "0:0-09",
+          "label": "CJSR",
+          "polygon": [
+            [
+              507,
+              672
+            ],
+            [
+              574,
+              672
+            ],
+            [
+              574,
+              772
+            ],
+            [
+              507,
+              772
+            ]
+          ],
+          "labelBox": [
+            519,
+            695,
+            563,
+            748
+          ],
+          "name": "CJSR",
+          "code": "0-09",
+          "category": "Offices"
+        },
+        {
+          "node": "0:0-11",
+          "label": "Student Group Workrooms",
+          "polygon": [
+            [
+              433,
+              659
+            ],
+            [
+              507,
+              659
+            ],
+            [
+              507,
+              772
+            ],
+            [
+              416,
+              772
+            ],
+            [
+              416,
+              688
+            ],
+            [
+              433,
+              688
+            ]
+          ],
+          "labelBox": [
+            439,
+            687,
+            496,
+            751
+          ],
+          "name": "Student Group Workrooms",
+          "code": "0-11",
+          "category": "Services"
+        },
+        {
+          "node": "0:WC",
+          "icon": "washroom",
+          "iconPoint": [
+            422,
+            354
+          ],
+          "note": "All-gender, women's and men's washrooms",
+          "polygon": [
+            [
+              387,
+              330
+            ],
+            [
+              442,
+              330
+            ],
+            [
+              442,
+              404
+            ],
+            [
+              412,
+              386
+            ],
+            [
+              398,
+              365
+            ],
+            [
+              387,
+              350
+            ]
+          ],
+          "name": "Washrooms",
+          "code": "WC",
+          "category": "Offices"
+        },
+        {
+          "name": "Lift",
+          "category": "Offices",
+          "icon": "lift",
+          "iconPoint": [
+            372,
+            318
+          ],
+          "polygon": [
+            [
+              364,
+              311
+            ],
+            [
+              381,
+              311
+            ],
+            [
+              381,
+              330
+            ],
+            [
+              364,
+              330
+            ]
+          ]
+        },
+        {
+          "name": "Lift",
+          "category": "Offices",
+          "icon": "lift",
+          "iconPoint": [
+            535,
+            650
+          ],
+          "polygon": [
+            [
+              528,
+              630
+            ],
+            [
+              543,
+              630
+            ],
+            [
+              543,
+              672
+            ],
+            [
+              528,
+              672
+            ]
+          ]
+        },
+        {
+          "name": "SUB Atrium",
+          "category": "Corridors",
+          "labelBox": [
+            584,
+            450,
+            652,
+            477
+          ],
+          "labelOnly": true
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "name": "Main",
+      "file": "SUB-main2024.pdf",
+      "crop": [
+        213,
+        178,
+        643,
+        747
+      ],
+      "footprint": [
+        [
+          213,
+          367
+        ],
+        [
+          326,
+          367
+        ],
+        [
+          326,
+          318
+        ],
+        [
+          343,
+          318
+        ],
+        [
+          343,
+          238
+        ],
+        [
+          377,
+          238
+        ],
+        [
+          377,
+          178
+        ],
+        [
+          570,
+          178
+        ],
+        [
+          570,
+          273
+        ],
+        [
+          603,
+          273
+        ],
+        [
+          603,
+          300
+        ],
+        [
+          643,
+          300
+        ],
+        [
+          643,
+          530
+        ],
+        [
+          604,
+          530
+        ],
+        [
+          604,
+          747
+        ],
+        [
+          213,
+          747
+        ]
+      ],
+      "partitions": [
+        [
+          [
+            411,
+            693
+          ],
+          [
+            411,
+            747
+          ]
+        ]
+      ],
+      "spaces": [
+        {
+          "node": "1:1-14",
+          "label": "Alumni Room",
+          "polygon": [
+            [
+              213,
+              367
+            ],
+            [
+              278,
+              367
+            ],
+            [
+              278,
+              463
+            ],
+            [
+              213,
+              463
+            ]
+          ],
+          "labelBox": [
+            220,
+            382,
+            269,
+            444
+          ],
+          "name": "Alumni Room",
+          "code": "1-14",
+          "category": "Student Space"
+        },
+        {
+          "name": "Loading dock",
+          "category": "Offices",
+          "polygon": [
+            [
+              213,
+              463
+            ],
+            [
+              278,
+              463
+            ],
+            [
+              278,
+              522
+            ],
+            [
+              213,
+              522
+            ]
+          ],
+          "labelBox": [
+            222,
+            475,
+            268,
+            512
+          ]
+        },
+        {
+          "name": "Building services",
+          "category": "Offices",
+          "polygon": [
+            [
+              213,
+              536
+            ],
+            [
+              311,
+              536
+            ],
+            [
+              311,
+              561
+            ],
+            [
+              213,
+              561
+            ]
+          ]
+        },
+        {
+          "node": "1:1-60",
+          "label": "University Bookstore",
+          "polygon": [
+            [
+              213,
+              561
+            ],
+            [
+              376,
+              561
+            ],
+            [
+              376,
+              747
+            ],
+            [
+              213,
+              747
+            ]
+          ],
+          "labelBox": [
+            236,
+            606,
+            351,
+            708
+          ],
+          "name": "University Bookstore",
+          "code": "1-60",
+          "category": "Businesses"
+        },
+        {
+          "node": "1:1-10",
+          "label": "UHC Pharmacy",
+          "polygon": [
+            [
+              323,
+              497
+            ],
+            [
+              376,
+              497
+            ],
+            [
+              376,
+              561
+            ],
+            [
+              311,
+              561
+            ],
+            [
+              311,
+              536
+            ],
+            [
+              295,
+              536
+            ],
+            [
+              295,
+              503
+            ],
+            [
+              323,
+              503
+            ]
+          ],
+          "labelBox": [
+            316,
+            506,
+            364,
+            551
+          ],
+          "name": "UHC Pharmacy",
+          "code": "1-10",
+          "category": "Businesses"
+        },
+        {
+          "node": "1:1-12",
+          "label": "Teapsy",
+          "polygon": [
+            [
+              323,
+              464
+            ],
+            [
+              344,
+              464
+            ],
+            [
+              376,
+              497
+            ],
+            [
+              323,
+              497
+            ]
+          ],
+          "labelBox": [
+            329,
+            475,
+            350,
+            492
+          ],
+          "name": "Teapsy",
+          "code": "1-12",
+          "category": "Food"
+        },
+        {
+          "name": "ATMs",
+          "category": "Services",
+          "polygon": [
+            [
+              295,
+              464
+            ],
+            [
+              323,
+              464
+            ],
+            [
+              323,
+              503
+            ],
+            [
+              295,
+              503
+            ]
+          ],
+          "labelBox": [
+            297,
+            468,
+            320,
+            498
+          ]
+        },
+        {
+          "node": "1:1-40",
+          "label": "SUBmart",
+          "polygon": [
+            [
+              441,
+              464
+            ],
+            [
+              474,
+              464
+            ],
+            [
+              474,
+              594
+            ],
+            [
+              409,
+              594
+            ],
+            [
+              409,
+              497
+            ]
+          ],
+          "labelBox": [
+            420,
+            511,
+            463,
+            578
+          ],
+          "name": "SUBmart",
+          "code": "1-40",
+          "category": "Food"
+        },
+        {
+          "node": "1:1-44",
+          "label": "SUBphoto",
+          "polygon": [
+            [
+              409,
+              594
+            ],
+            [
+              474,
+              594
+            ],
+            [
+              474,
+              628
+            ],
+            [
+              409,
+              628
+            ]
+          ],
+          "labelBox": [
+            414,
+            600,
+            459,
+            623
+          ],
+          "name": "SUBphoto",
+          "code": "1-44",
+          "category": "Businesses"
+        },
+        {
+          "node": "1:1-78",
+          "label": "Bijan Optical",
+          "polygon": [
+            [
+              443,
+              660
+            ],
+            [
+              474,
+              660
+            ],
+            [
+              474,
+              725
+            ],
+            [
+              443,
+              725
+            ]
+          ],
+          "labelBox": [
+            447,
+            679,
+            470,
+            716
+          ],
+          "name": "Bijan Optical",
+          "code": "1-78",
+          "category": "Businesses"
+        },
+        {
+          "node": "1:1-80",
+          "label": "Academic Success Centre",
+          "polygon": [
+            [
+              474,
+              693
+            ],
+            [
+              541,
+              693
+            ],
+            [
+              541,
+              747
+            ],
+            [
+              432,
+              747
+            ],
+            [
+              432,
+              725
+            ],
+            [
+              474,
+              725
+            ]
+          ],
+          "labelBox": [
+            481,
+            702,
+            531,
+            739
+          ],
+          "name": "Academic Success Centre",
+          "code": "1-80",
+          "category": "Services"
+        },
+        {
+          "node": "1:1-81",
+          "label": "Campus Food Bank",
+          "polygon": [
+            [
+              549,
+              627
+            ],
+            [
+              588,
+              627
+            ],
+            [
+              588,
+              747
+            ],
+            [
+              541,
+              747
+            ],
+            [
+              541,
+              660
+            ],
+            [
+              549,
+              660
+            ]
+          ],
+          "labelBox": [
+            550,
+            672,
+            581,
+            731
+          ],
+          "name": "Campus Food Bank",
+          "code": "1-81",
+          "category": "Services"
+        },
+        {
+          "node": "1:1-82",
+          "label": "SUBstage",
+          "polygon": [
+            [
+              474,
+              498
+            ],
+            [
+              494,
+              504
+            ],
+            [
+              494,
+              520
+            ],
+            [
+              474,
+              526
+            ]
+          ],
+          "labelBox": [
+            477,
+            503,
+            490,
+            519
+          ],
+          "name": "SUBstage",
+          "code": "1-82",
+          "category": "Venues"
+        },
+        {
+          "node": "1:2-500",
+          "label": "Theatre entrance",
+          "polygon": [
+            [
+              343,
+              238
+            ],
+            [
+              376,
+              238
+            ],
+            [
+              376,
+              318
+            ],
+            [
+              343,
+              318
+            ]
+          ],
+          "labelBox": [
+            347,
+            251,
+            372,
+            307
+          ],
+          "name": "Myer Horowitz Theatre (main-level entrance)",
+          "code": "2-500",
+          "category": "Venues"
+        },
+        {
+          "name": "Building services",
+          "category": "Offices",
+          "polygon": [
+            [
+              497,
+              178
+            ],
+            [
+              570,
+              178
+            ],
+            [
+              570,
+              312
+            ],
+            [
+              532,
+              312
+            ],
+            [
+              532,
+              266
+            ],
+            [
+              497,
+              266
+            ]
+          ]
+        },
+        {
+          "name": "Food vendors",
+          "category": "Food",
+          "polygon": [
+            [
+              409,
+              266
+            ],
+            [
+              532,
+              266
+            ],
+            [
+              532,
+              312
+            ],
+            [
+              409,
+              312
+            ]
+          ],
+          "labelBox": [
+            425,
+            274,
+            516,
+            305
+          ]
+        },
+        {
+          "name": "Food vendors",
+          "category": "Food",
+          "polygon": [
+            [
+              532,
+              312
+            ],
+            [
+              570,
+              312
+            ],
+            [
+              570,
+              395
+            ],
+            [
+              532,
+              395
+            ]
+          ],
+          "labelBox": [
+            538,
+            328,
+            564,
+            379
+          ]
+        },
+        {
+          "node": "1:1-27–32",
+          "label": "Food Court",
+          "labelOnly": true,
+          "labelBox": [
+            424,
+            346,
+            469,
+            388
+          ],
+          "name": "Food Court",
+          "code": "1-27–32",
+          "category": "Food"
+        },
+        {
+          "name": "Seating",
+          "category": "Corridors",
+          "labelOnly": true,
+          "labelBox": [
+            314,
+            382,
+            363,
+            417
+          ]
+        },
+        {
+          "name": "Counter",
+          "category": "Offices",
+          "polygon": [
+            [
+              504,
+              593
+            ],
+            [
+              585,
+              593
+            ],
+            [
+              585,
+              601
+            ],
+            [
+              577,
+              607
+            ],
+            [
+              504,
+              607
+            ]
+          ]
+        },
+        {
+          "name": "Counter",
+          "category": "Offices",
+          "polygon": [
+            [
+              474,
+              594
+            ],
+            [
+              493,
+              594
+            ],
+            [
+              493,
+              607
+            ],
+            [
+              474,
+              607
+            ]
+          ]
+        },
+        {
+          "node": "1:WC-West",
+          "icon": "washroom",
+          "iconPoint": [
+            411,
+            721
+          ],
+          "note": "Women's and men's washrooms",
+          "polygon": [
+            [
+              390,
+              693
+            ],
+            [
+              432,
+              693
+            ],
+            [
+              432,
+              747
+            ],
+            [
+              390,
+              747
+            ]
+          ],
+          "name": "West washrooms",
+          "code": "WC-West",
+          "category": "Offices"
+        },
+        {
+          "node": "1:WC-East",
+          "icon": "washroom",
+          "iconPoint": [
+            462,
+            244
+          ],
+          "note": "All-gender washroom",
+          "polygon": [
+            [
+              429,
+              221
+            ],
+            [
+              497,
+              221
+            ],
+            [
+              497,
+              266
+            ],
+            [
+              429,
+              266
+            ]
+          ],
+          "name": "East all-gender washroom",
+          "code": "WC-East",
+          "category": "Offices"
+        },
+        {
+          "name": "Lift",
+          "category": "Offices",
+          "icon": "lift",
+          "iconPoint": [
+            367,
+            329
+          ],
+          "polygon": [
+            [
+              358,
+              318
+            ],
+            [
+              376,
+              318
+            ],
+            [
+              376,
+              341
+            ],
+            [
+              358,
+              341
+            ]
+          ]
+        },
+        {
+          "name": "Lift",
+          "category": "Offices",
+          "icon": "lift",
+          "iconPoint": [
+            531,
+            650
+          ],
+          "polygon": [
+            [
+              521,
+              628
+            ],
+            [
+              541,
+              628
+            ],
+            [
+              541,
+              660
+            ],
+            [
+              521,
+              660
+            ]
+          ]
+        },
+        {
+          "node": "1:Parkade",
+          "label": "← Stadium Parkade",
+          "shortLabel": "← Parkade",
+          "icon": "pedway",
+          "iconPoint": [
+            596,
+            643
+          ],
+          "arrow": "←",
+          "polygon": [
+            [
+              588,
+              627
+            ],
+            [
+              604,
+              627
+            ],
+            [
+              604,
+              747
+            ],
+            [
+              588,
+              747
+            ]
+          ],
+          "labelBox": [
+            588,
+            661,
+            604,
+            720
+          ],
+          "name": "Pedway to Stadium Parkade",
+          "code": "Parkade",
+          "category": "Corridors"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Level 2",
+      "file": "SUB-2ndfloor2024.pdf",
+      "crop": [
+        244,
+        165,
+        638,
+        754
+      ],
+      "footprint": [
+        [
+          244,
+          360
+        ],
+        [
+          363,
+          360
+        ],
+        [
+          363,
+          309
+        ],
+        [
+          407,
+          309
+        ],
+        [
+          407,
+          165
+        ],
+        [
+          638,
+          165
+        ],
+        [
+          638,
+          754
+        ],
+        [
+          244,
+          754
+        ]
+      ],
+      "partitions": [
+        [
+          [
+            492,
+            656
+          ],
+          [
+            492,
+            697
+          ]
+        ]
+      ],
+      "spaces": [
+        {
+          "node": "2:2-000",
+          "label": "Dinwoodie Lounge",
+          "polygon": [
+            [
+              244,
+              622
+            ],
+            [
+              441,
+              622
+            ],
+            [
+              441,
+              737
+            ],
+            [
+              244,
+              737
+            ]
+          ],
+          "labelBox": [
+            277,
+            649,
+            410,
+            714
+          ],
+          "name": "Dinwoodie Lounge",
+          "code": "2-000",
+          "category": "Venues"
+        },
+        {
+          "node": "2:2-100",
+          "label": "Career Centre",
+          "polygon": [
+            [
+              244,
+              524
+            ],
+            [
+              441,
+              524
+            ],
+            [
+              441,
+              622
+            ],
+            [
+              244,
+              622
+            ]
+          ],
+          "labelBox": [
+            278,
+            544,
+            410,
+            604
+          ],
+          "name": "Career Centre",
+          "code": "2-100",
+          "category": "Services"
+        },
+        {
+          "node": "2:2-200",
+          "label": "University Health Centre",
+          "polygon": [
+            [
+              244,
+              360
+            ],
+            [
+              360,
+              360
+            ],
+            [
+              360,
+              443
+            ],
+            [
+              388,
+              443
+            ],
+            [
+              388,
+              492
+            ],
+            [
+              441,
+              492
+            ],
+            [
+              441,
+              524
+            ],
+            [
+              244,
+              524
+            ]
+          ],
+          "labelBox": [
+            263,
+            387,
+            347,
+            493
+          ],
+          "name": "University Health Centre (UHC)",
+          "code": "2-200",
+          "category": "Services"
+        },
+        {
+          "node": "2:2-300",
+          "label": "Wellness Supports",
+          "polygon": [
+            [
+              388,
+              443
+            ],
+            [
+              441,
+              443
+            ],
+            [
+              441,
+              492
+            ],
+            [
+              388,
+              492
+            ]
+          ],
+          "labelBox": [
+            394,
+            448,
+            435,
+            486
+          ],
+          "name": "Wellness Supports",
+          "code": "2-300",
+          "category": "Services"
+        },
+        {
+          "node": "2:2-400",
+          "label": "First Peoples’ House",
+          "polygon": [
+            [
+              360,
+              360
+            ],
+            [
+              441,
+              360
+            ],
+            [
+              441,
+              443
+            ],
+            [
+              360,
+              443
+            ]
+          ],
+          "labelBox": [
+            371,
+            373,
+            430,
+            427
+          ],
+          "name": "First Peoples’ House",
+          "code": "2-400",
+          "category": "Services"
+        },
+        {
+          "node": "2:2-600",
+          "label": "Counselling & Clinical Services",
+          "polygon": [
+            [
+              462,
+              360
+            ],
+            [
+              638,
+              360
+            ],
+            [
+              638,
+              581
+            ],
+            [
+              607,
+              581
+            ],
+            [
+              607,
+              427
+            ],
+            [
+              492,
+              427
+            ],
+            [
+              492,
+              393
+            ],
+            [
+              475,
+              393
+            ],
+            [
+              475,
+              372
+            ],
+            [
+              462,
+              372
+            ]
+          ],
+          "labelBox": [
+            498,
+            372,
+            625,
+            415
+          ],
+          "name": "Counselling and Clinical Services",
+          "code": "2-600",
+          "category": "Services"
+        },
+        {
+          "node": "2:2-727",
+          "label": "Transition Year Program",
+          "polygon": [
+            [
+              457,
+              372
+            ],
+            [
+              475,
+              372
+            ],
+            [
+              475,
+              393
+            ],
+            [
+              492,
+              393
+            ],
+            [
+              492,
+              427
+            ],
+            [
+              457,
+              427
+            ]
+          ],
+          "labelBox": [
+            460,
+            398,
+            486,
+            422
+          ],
+          "name": "Transition Year Program",
+          "code": "2-727",
+          "category": "Services"
+        },
+        {
+          "node": "2:2-725",
+          "label": "Dean of Students Meeting Room",
+          "polygon": [
+            [
+              457,
+              427
+            ],
+            [
+              607,
+              427
+            ],
+            [
+              607,
+              458
+            ],
+            [
+              457,
+              458
+            ]
+          ],
+          "labelBox": [
+            482,
+            432,
+            595,
+            452
+          ],
+          "name": "Dean of Students Meeting Room",
+          "code": "2-725",
+          "category": "Offices"
+        },
+        {
+          "node": "2:2-705",
+          "label": "Sexual Assault Centre",
+          "polygon": [
+            [
+              531,
+              458
+            ],
+            [
+              607,
+              458
+            ],
+            [
+              607,
+              508
+            ],
+            [
+              531,
+              508
+            ]
+          ],
+          "labelBox": [
+            542,
+            465,
+            596,
+            499
+          ],
+          "name": "Sexual Assault Centre",
+          "code": "2-705",
+          "category": "Services"
+        },
+        {
+          "node": "2:2-707",
+          "label": "Peer Support Centre",
+          "polygon": [
+            [
+              516,
+              517
+            ],
+            [
+              607,
+              517
+            ],
+            [
+              607,
+              557
+            ],
+            [
+              516,
+              557
+            ]
+          ],
+          "labelBox": [
+            533,
+            523,
+            595,
+            550
+          ],
+          "name": "Peer Support Centre",
+          "code": "2-707",
+          "category": "Services"
+        },
+        {
+          "node": "2:2-702",
+          "label": "Student Ombuds",
+          "polygon": [
+            [
+              457,
+              517
+            ],
+            [
+              516,
+              517
+            ],
+            [
+              516,
+              557
+            ],
+            [
+              457,
+              557
+            ]
+          ],
+          "labelBox": [
+            465,
+            524,
+            509,
+            550
+          ],
+          "name": "Office of the Student Ombuds",
+          "code": "2-702",
+          "category": "Services"
+        },
+        {
+          "node": "2:2-701",
+          "label": "Undergraduate Research",
+          "polygon": [
+            [
+              457,
+              557
+            ],
+            [
+              607,
+              557
+            ],
+            [
+              607,
+              591
+            ],
+            [
+              483,
+              591
+            ],
+            [
+              483,
+              622
+            ],
+            [
+              457,
+              622
+            ]
+          ],
+          "labelBox": [
+            467,
+            563,
+            596,
+            583
+          ],
+          "name": "Undergraduate Research Initiative",
+          "code": "2-701",
+          "category": "Services"
+        },
+        {
+          "node": "2:2-800",
+          "label": "Horowitz Events Offices",
+          "polygon": [
+            [
+              483,
+              591
+            ],
+            [
+              607,
+              591
+            ],
+            [
+              607,
+              581
+            ],
+            [
+              638,
+              581
+            ],
+            [
+              638,
+              622
+            ],
+            [
+              483,
+              622
+            ]
+          ],
+          "labelBox": [
+            493,
+            596,
+            629,
+            616
+          ],
+          "name": "Horowitz Events Centre Offices",
+          "code": "2-800",
+          "category": "Offices"
+        },
+        {
+          "node": "2:2-900",
+          "label": "Students’ Union Offices",
+          "polygon": [
+            [
+              556,
+              622
+            ],
+            [
+              638,
+              622
+            ],
+            [
+              638,
+              754
+            ],
+            [
+              456,
+              754
+            ],
+            [
+              456,
+              697
+            ],
+            [
+              509,
+              697
+            ],
+            [
+              509,
+              656
+            ],
+            [
+              556,
+              656
+            ]
+          ],
+          "labelBox": [
+            516,
+            675,
+            622,
+            732
+          ],
+          "name": "Students’ Union Executive & Administrative Offices",
+          "code": "2-900",
+          "category": "Offices"
+        },
+        {
+          "name": "Myer Horowitz Theatre",
+          "category": "Venues",
+          "polygon": [
+            [
+              407,
+              165
+            ],
+            [
+              638,
+              165
+            ],
+            [
+              638,
+              360
+            ],
+            [
+              462,
+              360
+            ],
+            [
+              462,
+              335
+            ],
+            [
+              422,
+              335
+            ],
+            [
+              422,
+              309
+            ],
+            [
+              407,
+              309
+            ]
+          ],
+          "labelBox": [
+            449,
+            203,
+            603,
+            299
+          ],
+          "note": "Entrance on Main",
+          "destination": "1:2-500"
+        },
+        {
+          "name": "Building services",
+          "category": "Offices",
+          "polygon": [
+            [
+              457,
+              458
+            ],
+            [
+              531,
+              458
+            ],
+            [
+              531,
+              481
+            ],
+            [
+              479,
+              481
+            ],
+            [
+              479,
+              508
+            ],
+            [
+              457,
+              508
+            ]
+          ]
+        },
+        {
+          "name": "Building services",
+          "category": "Offices",
+          "polygon": [
+            [
+              487,
+              486
+            ],
+            [
+              522,
+              486
+            ],
+            [
+              522,
+              507
+            ],
+            [
+              487,
+              507
+            ]
+          ]
+        },
+        {
+          "node": "2:WC",
+          "icon": "washroom",
+          "iconPoint": [
+            499,
+            681
+          ],
+          "note": "Women's and men's washrooms",
+          "polygon": [
+            [
+              475,
+              656
+            ],
+            [
+              509,
+              656
+            ],
+            [
+              509,
+              697
+            ],
+            [
+              475,
+              697
+            ]
+          ],
+          "name": "Washrooms",
+          "code": "WC",
+          "category": "Offices"
+        },
+        {
+          "name": "Lift",
+          "category": "Offices",
+          "icon": "lift",
+          "iconPoint": [
+            409,
+            322
+          ],
+          "polygon": [
+            [
+              397,
+              309
+            ],
+            [
+              422,
+              309
+            ],
+            [
+              422,
+              335
+            ],
+            [
+              397,
+              335
+            ]
+          ]
+        },
+        {
+          "name": "Lift",
+          "category": "Offices",
+          "icon": "lift",
+          "iconPoint": [
+            548,
+            638
+          ],
+          "polygon": [
+            [
+              541,
+              622
+            ],
+            [
+              556,
+              622
+            ],
+            [
+              556,
+              656
+            ],
+            [
+              541,
+              656
+            ]
+          ]
+        },
+        {
+          "node": "2:Ag-Pedway",
+          "label": "To Agriculture / Forestry",
+          "icon": "pedway",
+          "iconPoint": [
+            268,
+            745
+          ],
+          "arrow": "↑",
+          "polygon": [
+            [
+              244,
+              737
+            ],
+            [
+              456,
+              737
+            ],
+            [
+              456,
+              754
+            ],
+            [
+              244,
+              754
+            ]
+          ],
+          "labelBox": [
+            286,
+            738,
+            425,
+            753
+          ],
+          "name": "Pedway to Agriculture / Forestry Centre",
+          "code": "Ag-Pedway",
+          "category": "Corridors"
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "id": "1:quad",
+      "floor": 1,
+      "x": 393,
+      "y": 184,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "1:east",
+      "floor": 1,
+      "x": 393,
+      "y": 250,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "1:food-n",
+      "floor": 1,
+      "x": 393,
+      "y": 328,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "1:vest",
+      "floor": 1,
+      "x": 393,
+      "y": 350,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "1:middle",
+      "floor": 1,
+      "x": 393,
+      "y": 447,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "1:mart-n",
+      "floor": 1,
+      "x": 393,
+      "y": 480,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "1:mart-mid",
+      "floor": 1,
+      "x": 393,
+      "y": 555,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "1:photo",
+      "floor": 1,
+      "x": 393,
+      "y": 641,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "1:west-j",
+      "floor": 1,
+      "x": 393,
+      "y": 674,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "1:west-turn",
+      "floor": 1,
+      "x": 384,
+      "y": 690,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "1:industrial",
+      "floor": 1,
+      "x": 384,
+      "y": 743,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "1:vest-door",
+      "floor": 1,
+      "x": 373,
+      "y": 350,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "1:north-hall",
+      "floor": 1,
+      "x": 343,
+      "y": 350,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "1:north-exit",
+      "floor": 1,
+      "x": 326,
+      "y": 350,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "1:alumni-hall",
+      "floor": 1,
+      "x": 286,
+      "y": 447,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "1:alumni-door",
+      "floor": 1,
+      "x": 286,
+      "y": 421,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "1:food-s",
+      "floor": 1,
+      "x": 489,
+      "y": 447,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "1:south-j",
+      "floor": 1,
+      "x": 589,
+      "y": 447,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "1:admin",
+      "floor": 1,
+      "x": 589,
+      "y": 290,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "1:food-ne",
+      "floor": 1,
+      "x": 430,
+      "y": 328,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "1:food-mid",
+      "floor": 1,
+      "x": 489,
+      "y": 328,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "1:food-entry",
+      "floor": 1,
+      "x": 489,
+      "y": 420,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "1:stage-hall",
+      "floor": 1,
+      "x": 489,
+      "y": 480,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "1:stage",
+      "floor": 1,
+      "x": 489,
+      "y": 514,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "1:fountain-e",
+      "floor": 1,
+      "x": 554,
+      "y": 556,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "1:west-lobby",
+      "floor": 1,
+      "x": 554,
+      "y": 578,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "1:counter-gap-n",
+      "floor": 1,
+      "x": 498,
+      "y": 578,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "1:counter-gap-s",
+      "floor": 1,
+      "x": 498,
+      "y": 615,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "1:services-e",
+      "floor": 1,
+      "x": 515,
+      "y": 615,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "1:services",
+      "floor": 1,
+      "x": 495,
+      "y": 641,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "1:photo-e",
+      "floor": 1,
+      "x": 468,
+      "y": 641,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "1:photo-in",
+      "floor": 1,
+      "x": 416,
+      "y": 641,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "1:services-door-n",
+      "floor": 1,
+      "x": 508,
+      "y": 650,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "1:services-door-s",
+      "floor": 1,
+      "x": 508,
+      "y": 666,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "1:services-w",
+      "floor": 1,
+      "x": 495,
+      "y": 673,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "1:foodbank-hall",
+      "floor": 1,
+      "x": 529,
+      "y": 673,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "1:north-stairs",
+      "floor": 1,
+      "x": 341,
+      "y": 329,
+      "kind": "stairs",
+      "name": "North stairs",
+      "code": null
+    },
+    {
+      "id": "1:west-stairs",
+      "floor": 1,
+      "x": 425,
+      "y": 678,
+      "kind": "stairs",
+      "name": "West stairs",
+      "code": null
+    },
+    {
+      "id": "1:atrium-stairs",
+      "floor": 1,
+      "x": 625,
+      "y": 362,
+      "kind": "stairs",
+      "name": "Atrium stairs",
+      "code": null
+    },
+    {
+      "id": "1:entry-quad",
+      "floor": 1,
+      "x": 393,
+      "y": 178,
+      "kind": "entrance",
+      "name": "Quad entrance",
+      "code": null,
+      "campus": [
+        53.525407,
+        -113.5263
+      ]
+    },
+    {
+      "id": "1:entry-north",
+      "floor": 1,
+      "x": 321,
+      "y": 350,
+      "kind": "entrance",
+      "name": "North entrance",
+      "code": null,
+      "campus": [
+        53.525459,
+        -113.526773
+      ]
+    },
+    {
+      "id": "1:entry-west",
+      "floor": 1,
+      "x": 384,
+      "y": 747,
+      "kind": "entrance",
+      "name": "Industrial Design entrance",
+      "code": null,
+      "campus": [
+        53.525367,
+        -113.527955
+      ]
+    },
+    {
+      "id": "1:1-14",
+      "floor": 1,
+      "x": 274,
+      "y": 421,
+      "kind": "room",
+      "name": "Alumni Room",
+      "code": "1-14",
+      "category": "Student Space"
+    },
+    {
+      "id": "1:1-10",
+      "floor": 1,
+      "x": 373,
+      "y": 522,
+      "kind": "room",
+      "name": "UHC Pharmacy",
+      "code": "1-10",
+      "category": "Businesses"
+    },
+    {
+      "id": "1:1-12",
+      "floor": 1,
+      "x": 350,
+      "y": 480,
+      "kind": "room",
+      "name": "Teapsy",
+      "code": "1-12",
+      "category": "Food"
+    },
+    {
+      "id": "1:1-40",
+      "floor": 1,
+      "x": 409,
+      "y": 490,
+      "kind": "room",
+      "name": "SUBmart",
+      "code": "1-40",
+      "category": "Food"
+    },
+    {
+      "id": "1:1-44",
+      "floor": 1,
+      "x": 462,
+      "y": 624,
+      "kind": "room",
+      "name": "SUBphoto",
+      "code": "1-44",
+      "category": "Businesses"
+    },
+    {
+      "id": "1:1-60",
+      "floor": 1,
+      "x": 378,
+      "y": 600,
+      "kind": "room",
+      "name": "University Bookstore",
+      "code": "1-60",
+      "category": "Businesses"
+    },
+    {
+      "id": "1:1-78",
+      "floor": 1,
+      "x": 450,
+      "y": 656,
+      "kind": "room",
+      "name": "Bijan Optical",
+      "code": "1-78",
+      "category": "Businesses"
+    },
+    {
+      "id": "1:1-80",
+      "floor": 1,
+      "x": 489,
+      "y": 694,
+      "kind": "room",
+      "name": "Academic Success Centre",
+      "code": "1-80",
+      "category": "Services"
+    },
+    {
+      "id": "1:1-81",
+      "floor": 1,
+      "x": 539,
+      "y": 665,
+      "kind": "room",
+      "name": "Campus Food Bank",
+      "code": "1-81",
+      "category": "Services"
+    },
+    {
+      "id": "1:1-82",
+      "floor": 1,
+      "x": 478,
+      "y": 514,
+      "kind": "room",
+      "name": "SUBstage",
+      "code": "1-82",
+      "category": "Venues"
+    },
+    {
+      "id": "1:1-27–32",
+      "floor": 1,
+      "x": 470,
+      "y": 402,
+      "kind": "room",
+      "name": "Food Court",
+      "code": "1-27–32",
+      "category": "Food"
+    },
+    {
+      "id": "1:2-500",
+      "floor": 1,
+      "x": 376,
+      "y": 300,
+      "kind": "room",
+      "name": "Myer Horowitz Theatre (main-level entrance)",
+      "code": "2-500",
+      "category": "Venues"
+    },
+    {
+      "id": "1:parkade-lobby",
+      "floor": 1,
+      "x": 579,
+      "y": 615,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "1:parkade-door",
+      "floor": 1,
+      "x": 596,
+      "y": 623,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "1:parkade-mid",
+      "floor": 1,
+      "x": 596,
+      "y": 688,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "1:Parkade",
+      "floor": 1,
+      "x": 596,
+      "y": 747,
+      "kind": "room",
+      "name": "Pedway to Stadium Parkade",
+      "code": "Parkade",
+      "category": "Corridors",
+      "amenity": "pedway"
+    },
+    {
+      "id": "1:WC-West",
+      "floor": 1,
+      "x": 390,
+      "y": 704,
+      "kind": "room",
+      "name": "West washrooms",
+      "code": "WC-West",
+      "category": "Offices",
+      "amenity": "washroom"
+    },
+    {
+      "id": "1:WC-East",
+      "floor": 1,
+      "x": 429,
+      "y": 245,
+      "kind": "room",
+      "name": "East all-gender washroom",
+      "code": "WC-East",
+      "category": "Offices",
+      "amenity": "washroom"
+    },
+    {
+      "id": "2:north-hall",
+      "floor": 2,
+      "x": 379,
+      "y": 344,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "2:east-j",
+      "floor": 2,
+      "x": 449,
+      "y": 344,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "2:typ",
+      "floor": 2,
+      "x": 449,
+      "y": 366,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "2:fph",
+      "floor": 2,
+      "x": 449,
+      "y": 385,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "2:ccs",
+      "floor": 2,
+      "x": 449,
+      "y": 403,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "2:dean",
+      "floor": 2,
+      "x": 449,
+      "y": 435,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "2:wellness",
+      "floor": 2,
+      "x": 449,
+      "y": 461,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "2:uhc",
+      "floor": 2,
+      "x": 449,
+      "y": 502,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "2:cross",
+      "floor": 2,
+      "x": 449,
+      "y": 512,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "2:ombuds",
+      "floor": 2,
+      "x": 449,
+      "y": 525,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "2:uri",
+      "floor": 2,
+      "x": 449,
+      "y": 579,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "2:career",
+      "floor": 2,
+      "x": 449,
+      "y": 585,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "2:dinwoodie",
+      "floor": 2,
+      "x": 449,
+      "y": 630,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "2:west-j",
+      "floor": 2,
+      "x": 449,
+      "y": 638,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "2:west-bottom",
+      "floor": 2,
+      "x": 449,
+      "y": 741,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "2:sac-hall",
+      "floor": 2,
+      "x": 558,
+      "y": 512,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "2:peer-hall",
+      "floor": 2,
+      "x": 523,
+      "y": 512,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "2:events-hall",
+      "floor": 2,
+      "x": 500,
+      "y": 638,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "2:su-hall",
+      "floor": 2,
+      "x": 519,
+      "y": 646,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "2:north-stairs",
+      "floor": 2,
+      "x": 379,
+      "y": 322,
+      "kind": "stairs",
+      "name": "North stairs",
+      "code": null
+    },
+    {
+      "id": "2:west-stairs",
+      "floor": 2,
+      "x": 465,
+      "y": 669,
+      "kind": "stairs",
+      "name": "West stairs",
+      "code": null
+    },
+    {
+      "id": "2:2-000",
+      "floor": 2,
+      "x": 437,
+      "y": 630,
+      "kind": "room",
+      "name": "Dinwoodie Lounge",
+      "code": "2-000",
+      "category": "Venues"
+    },
+    {
+      "id": "2:2-100",
+      "floor": 2,
+      "x": 437,
+      "y": 585,
+      "kind": "room",
+      "name": "Career Centre",
+      "code": "2-100",
+      "category": "Services"
+    },
+    {
+      "id": "2:2-200",
+      "floor": 2,
+      "x": 437,
+      "y": 502,
+      "kind": "room",
+      "name": "University Health Centre (UHC)",
+      "code": "2-200",
+      "category": "Services"
+    },
+    {
+      "id": "2:2-300",
+      "floor": 2,
+      "x": 437,
+      "y": 461,
+      "kind": "room",
+      "name": "Wellness Supports",
+      "code": "2-300",
+      "category": "Services"
+    },
+    {
+      "id": "2:2-400",
+      "floor": 2,
+      "x": 437,
+      "y": 385,
+      "kind": "room",
+      "name": "First Peoples’ House",
+      "code": "2-400",
+      "category": "Services"
+    },
+    {
+      "id": "2:2-600",
+      "floor": 2,
+      "x": 457,
+      "y": 403,
+      "kind": "room",
+      "name": "Counselling and Clinical Services",
+      "code": "2-600",
+      "category": "Services"
+    },
+    {
+      "id": "2:2-701",
+      "floor": 2,
+      "x": 457,
+      "y": 579,
+      "kind": "room",
+      "name": "Undergraduate Research Initiative",
+      "code": "2-701",
+      "category": "Services"
+    },
+    {
+      "id": "2:2-702",
+      "floor": 2,
+      "x": 457,
+      "y": 525,
+      "kind": "room",
+      "name": "Office of the Student Ombuds",
+      "code": "2-702",
+      "category": "Services"
+    },
+    {
+      "id": "2:2-705",
+      "floor": 2,
+      "x": 558,
+      "y": 501,
+      "kind": "room",
+      "name": "Sexual Assault Centre",
+      "code": "2-705",
+      "category": "Services"
+    },
+    {
+      "id": "2:2-707",
+      "floor": 2,
+      "x": 523,
+      "y": 520,
+      "kind": "room",
+      "name": "Peer Support Centre",
+      "code": "2-707",
+      "category": "Services"
+    },
+    {
+      "id": "2:2-727",
+      "floor": 2,
+      "x": 459,
+      "y": 366,
+      "kind": "room",
+      "name": "Transition Year Program",
+      "code": "2-727",
+      "category": "Services"
+    },
+    {
+      "id": "2:2-725",
+      "floor": 2,
+      "x": 457,
+      "y": 435,
+      "kind": "room",
+      "name": "Dean of Students Meeting Room",
+      "code": "2-725",
+      "category": "Offices"
+    },
+    {
+      "id": "2:2-800",
+      "floor": 2,
+      "x": 500,
+      "y": 617,
+      "kind": "room",
+      "name": "Horowitz Events Centre Offices",
+      "code": "2-800",
+      "category": "Offices"
+    },
+    {
+      "id": "2:2-900",
+      "floor": 2,
+      "x": 519,
+      "y": 657,
+      "kind": "room",
+      "name": "Students’ Union Executive & Administrative Offices",
+      "code": "2-900",
+      "category": "Offices"
+    },
+    {
+      "id": "2:pedway-turn",
+      "floor": 2,
+      "x": 449,
+      "y": 745,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "2:ag-pedway",
+      "floor": 2,
+      "x": 350,
+      "y": 745,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "2:Ag-Pedway",
+      "floor": 2,
+      "x": 244,
+      "y": 745,
+      "kind": "room",
+      "name": "Pedway to Agriculture / Forestry Centre",
+      "code": "Ag-Pedway",
+      "category": "Corridors",
+      "amenity": "pedway"
+    },
+    {
+      "id": "2:wc-hall",
+      "floor": 2,
+      "x": 481,
+      "y": 647,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "2:WC",
+      "floor": 2,
+      "x": 481,
+      "y": 656,
+      "kind": "room",
+      "name": "Washrooms",
+      "code": "WC",
+      "category": "Offices",
+      "amenity": "washroom"
+    },
+    {
+      "id": "0:north-hall",
+      "floor": 0,
+      "x": 353,
+      "y": 340,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "0:curve-a",
+      "floor": 0,
+      "x": 370,
+      "y": 355,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "0:curve-b",
+      "floor": 0,
+      "x": 396,
+      "y": 386,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "0:curve-c",
+      "floor": 0,
+      "x": 429,
+      "y": 414,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "0:curve-d",
+      "floor": 0,
+      "x": 464,
+      "y": 434,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "0:curve-e",
+      "floor": 0,
+      "x": 507,
+      "y": 445,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "0:atrium",
+      "floor": 0,
+      "x": 558,
+      "y": 449,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "0:east-atrium",
+      "floor": 0,
+      "x": 636,
+      "y": 407,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "0:east-hall",
+      "floor": 0,
+      "x": 636,
+      "y": 352,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "0:atrium-foot",
+      "floor": 0,
+      "x": 653,
+      "y": 385,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "0:junction",
+      "floor": 0,
+      "x": 425,
+      "y": 434,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "0:west-spine",
+      "floor": 0,
+      "x": 425,
+      "y": 470,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "0:west-mid",
+      "floor": 0,
+      "x": 425,
+      "y": 565,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "0:west-lobby",
+      "floor": 0,
+      "x": 425,
+      "y": 646,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "0:west-stair-hall",
+      "floor": 0,
+      "x": 425,
+      "y": 660,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "0:cascade-hall",
+      "floor": 0,
+      "x": 377,
+      "y": 434,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "0:orion-hall",
+      "floor": 0,
+      "x": 335,
+      "y": 434,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "0:meeting-j",
+      "floor": 0,
+      "x": 253,
+      "y": 434,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "0:meeting-n",
+      "floor": 0,
+      "x": 253,
+      "y": 365,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "0:cypress-hall",
+      "floor": 0,
+      "x": 276,
+      "y": 460,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "0:cypress-door",
+      "floor": 0,
+      "x": 276,
+      "y": 483,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "0:filistix-hall",
+      "floor": 0,
+      "x": 493,
+      "y": 455,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "0:slc-hall",
+      "floor": 0,
+      "x": 587,
+      "y": 477,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "0:plaza-hall",
+      "floor": 0,
+      "x": 614,
+      "y": 545,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "0:quiet-hall",
+      "floor": 0,
+      "x": 613,
+      "y": 585,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "0:caribou-hall",
+      "floor": 0,
+      "x": 520,
+      "y": 585,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "0:caribou-west",
+      "floor": 0,
+      "x": 520,
+      "y": 637,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "0:cjsr-hall",
+      "floor": 0,
+      "x": 520,
+      "y": 671,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "0:landing-hall",
+      "floor": 0,
+      "x": 620,
+      "y": 352,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "0:workspaces",
+      "floor": 0,
+      "x": 561,
+      "y": 352,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "0:north-stairs",
+      "floor": 0,
+      "x": 353,
+      "y": 314,
+      "kind": "stairs",
+      "name": "North stairs",
+      "code": null
+    },
+    {
+      "id": "0:west-stairs",
+      "floor": 0,
+      "x": 425,
+      "y": 676,
+      "kind": "stairs",
+      "name": "West stairs",
+      "code": null
+    },
+    {
+      "id": "0:atrium-stairs",
+      "floor": 0,
+      "x": 671,
+      "y": 324,
+      "kind": "stairs",
+      "name": "Atrium stairs",
+      "code": null
+    },
+    {
+      "id": "0:0-31",
+      "floor": 0,
+      "x": 241,
+      "y": 365,
+      "kind": "room",
+      "name": "Marigold Room",
+      "code": "0-31",
+      "category": "Venues"
+    },
+    {
+      "id": "0:0-33",
+      "floor": 0,
+      "x": 241,
+      "y": 375,
+      "kind": "room",
+      "name": "Juniper Room",
+      "code": "0-33",
+      "category": "Venues"
+    },
+    {
+      "id": "0:0-41",
+      "floor": 0,
+      "x": 276,
+      "y": 489,
+      "kind": "room",
+      "name": "Cypress Room",
+      "code": "0-41",
+      "category": "Venues"
+    },
+    {
+      "id": "0:0-48",
+      "floor": 0,
+      "x": 387,
+      "y": 405,
+      "kind": "room",
+      "name": "Kihiw Room",
+      "code": "0-48",
+      "category": "Venues"
+    },
+    {
+      "id": "0:0-49",
+      "floor": 0,
+      "x": 377,
+      "y": 443,
+      "kind": "room",
+      "name": "Cascade Room",
+      "code": "0-49",
+      "category": "Venues"
+    },
+    {
+      "id": "0:0-51",
+      "floor": 0,
+      "x": 335,
+      "y": 424,
+      "kind": "room",
+      "name": "Orion Room",
+      "code": "0-51",
+      "category": "Venues"
+    },
+    {
+      "id": "0:0-77",
+      "floor": 0,
+      "x": 530,
+      "y": 597,
+      "kind": "room",
+      "name": "Caribou Room",
+      "code": "0-77",
+      "category": "Venues"
+    },
+    {
+      "id": "0:0-90",
+      "floor": 0,
+      "x": 613,
+      "y": 596,
+      "kind": "room",
+      "name": "Carlson Construction Quiet Lounge",
+      "code": "0-90",
+      "category": "Student Space"
+    },
+    {
+      "id": "0:0-12",
+      "floor": 0,
+      "x": 415,
+      "y": 607,
+      "kind": "room",
+      "name": "University Bookstore",
+      "code": "0-12",
+      "category": "Businesses"
+    },
+    {
+      "id": "0:0-60",
+      "floor": 0,
+      "x": 480,
+      "y": 429,
+      "kind": "room",
+      "name": "SUBprint",
+      "code": "0-60",
+      "category": "Businesses"
+    },
+    {
+      "id": "0:0-64",
+      "floor": 0,
+      "x": 579,
+      "y": 425,
+      "kind": "room",
+      "name": "ATB Financial",
+      "code": "0-64",
+      "category": "Businesses"
+    },
+    {
+      "id": "0:0-71",
+      "floor": 0,
+      "x": 490,
+      "y": 471,
+      "kind": "room",
+      "name": "Filistix",
+      "code": "0-71",
+      "category": "Food"
+    },
+    {
+      "id": "0:0-09",
+      "floor": 0,
+      "x": 508,
+      "y": 671,
+      "kind": "room",
+      "name": "CJSR",
+      "code": "0-09",
+      "category": "Offices"
+    },
+    {
+      "id": "0:0-11",
+      "floor": 0,
+      "x": 475,
+      "y": 659,
+      "kind": "room",
+      "name": "Student Group Workrooms",
+      "code": "0-11",
+      "category": "Services"
+    },
+    {
+      "id": "0:0-68A",
+      "floor": 0,
+      "x": 617,
+      "y": 366,
+      "kind": "room",
+      "name": "The Landing",
+      "code": "0-68A",
+      "category": "Services"
+    },
+    {
+      "id": "0:0-68B",
+      "floor": 0,
+      "x": 617,
+      "y": 341,
+      "kind": "room",
+      "name": "UASU Elections Office",
+      "code": "0-68B",
+      "category": "Services"
+    },
+    {
+      "id": "0:0-81",
+      "floor": 0,
+      "x": 560,
+      "y": 491,
+      "kind": "room",
+      "name": "Student Life Central",
+      "code": "0-81",
+      "category": "Services"
+    },
+    {
+      "id": "0:WC",
+      "floor": 0,
+      "x": 399,
+      "y": 355,
+      "kind": "room",
+      "name": "Washrooms",
+      "code": "WC",
+      "category": "Offices",
+      "amenity": "washroom"
+    }
+  ],
+  "edges": [
+    [
+      "1:quad",
+      "1:east"
+    ],
+    [
+      "1:east",
+      "1:food-n"
+    ],
+    [
+      "1:food-n",
+      "1:vest"
+    ],
+    [
+      "1:vest",
+      "1:middle"
+    ],
+    [
+      "1:middle",
+      "1:mart-n"
+    ],
+    [
+      "1:mart-n",
+      "1:mart-mid"
+    ],
+    [
+      "1:mart-mid",
+      "1:photo"
+    ],
+    [
+      "1:photo",
+      "1:west-j"
+    ],
+    [
+      "1:west-j",
+      "1:west-turn"
+    ],
+    [
+      "1:west-turn",
+      "1:industrial"
+    ],
+    [
+      "1:vest",
+      "1:vest-door"
+    ],
+    [
+      "1:vest-door",
+      "1:north-hall"
+    ],
+    [
+      "1:north-hall",
+      "1:north-exit"
+    ],
+    [
+      "1:middle",
+      "1:alumni-hall"
+    ],
+    [
+      "1:alumni-hall",
+      "1:alumni-door"
+    ],
+    [
+      "1:middle",
+      "1:food-s"
+    ],
+    [
+      "1:food-s",
+      "1:south-j"
+    ],
+    [
+      "1:south-j",
+      "1:admin"
+    ],
+    [
+      "1:food-n",
+      "1:food-ne"
+    ],
+    [
+      "1:food-ne",
+      "1:food-mid"
+    ],
+    [
+      "1:food-mid",
+      "1:food-entry"
+    ],
+    [
+      "1:food-entry",
+      "1:food-s"
+    ],
+    [
+      "1:food-s",
+      "1:stage-hall"
+    ],
+    [
+      "1:stage-hall",
+      "1:stage"
+    ],
+    [
+      "1:stage",
+      "1:fountain-e"
+    ],
+    [
+      "1:fountain-e",
+      "1:west-lobby"
+    ],
+    [
+      "1:west-lobby",
+      "1:counter-gap-n"
+    ],
+    [
+      "1:counter-gap-n",
+      "1:counter-gap-s"
+    ],
+    [
+      "1:counter-gap-s",
+      "1:services-e"
+    ],
+    [
+      "1:services-e",
+      "1:services"
+    ],
+    [
+      "1:services",
+      "1:photo-e"
+    ],
+    [
+      "1:photo",
+      "1:photo-in"
+    ],
+    [
+      "1:photo-in",
+      "1:photo-e"
+    ],
+    [
+      "1:services",
+      "1:services-door-n"
+    ],
+    [
+      "1:services-door-n",
+      "1:services-door-s"
+    ],
+    [
+      "1:services-door-s",
+      "1:services-w"
+    ],
+    [
+      "1:services-w",
+      "1:foodbank-hall"
+    ],
+    [
+      "1:north-hall",
+      "1:north-stairs"
+    ],
+    [
+      "1:west-j",
+      "1:west-stairs"
+    ],
+    [
+      "1:admin",
+      "1:atrium-stairs"
+    ],
+    [
+      "1:quad",
+      "1:entry-quad"
+    ],
+    [
+      "1:north-exit",
+      "1:entry-north"
+    ],
+    [
+      "1:industrial",
+      "1:entry-west"
+    ],
+    [
+      "1:alumni-door",
+      "1:1-14"
+    ],
+    [
+      "1:mart-mid",
+      "1:1-10"
+    ],
+    [
+      "1:mart-n",
+      "1:1-12"
+    ],
+    [
+      "1:mart-n",
+      "1:1-40"
+    ],
+    [
+      "1:photo-e",
+      "1:1-44"
+    ],
+    [
+      "1:photo",
+      "1:1-60"
+    ],
+    [
+      "1:photo-e",
+      "1:1-78"
+    ],
+    [
+      "1:services-w",
+      "1:1-80"
+    ],
+    [
+      "1:foodbank-hall",
+      "1:1-81"
+    ],
+    [
+      "1:stage",
+      "1:1-82"
+    ],
+    [
+      "1:food-entry",
+      "1:1-27–32"
+    ],
+    [
+      "1:food-n",
+      "1:2-500"
+    ],
+    [
+      "1:services-e",
+      "1:parkade-lobby"
+    ],
+    [
+      "1:parkade-lobby",
+      "1:parkade-door"
+    ],
+    [
+      "1:parkade-door",
+      "1:parkade-mid"
+    ],
+    [
+      "1:parkade-mid",
+      "1:Parkade"
+    ],
+    [
+      "1:west-turn",
+      "1:WC-West"
+    ],
+    [
+      "1:east",
+      "1:WC-East"
+    ],
+    [
+      "2:north-hall",
+      "2:east-j"
+    ],
+    [
+      "2:east-j",
+      "2:typ"
+    ],
+    [
+      "2:typ",
+      "2:fph"
+    ],
+    [
+      "2:fph",
+      "2:ccs"
+    ],
+    [
+      "2:ccs",
+      "2:dean"
+    ],
+    [
+      "2:dean",
+      "2:wellness"
+    ],
+    [
+      "2:wellness",
+      "2:uhc"
+    ],
+    [
+      "2:uhc",
+      "2:cross"
+    ],
+    [
+      "2:cross",
+      "2:ombuds"
+    ],
+    [
+      "2:ombuds",
+      "2:uri"
+    ],
+    [
+      "2:uri",
+      "2:career"
+    ],
+    [
+      "2:career",
+      "2:dinwoodie"
+    ],
+    [
+      "2:dinwoodie",
+      "2:west-j"
+    ],
+    [
+      "2:west-j",
+      "2:west-bottom"
+    ],
+    [
+      "2:cross",
+      "2:sac-hall"
+    ],
+    [
+      "2:sac-hall",
+      "2:peer-hall"
+    ],
+    [
+      "2:west-j",
+      "2:events-hall"
+    ],
+    [
+      "2:events-hall",
+      "2:su-hall"
+    ],
+    [
+      "2:north-hall",
+      "2:north-stairs"
+    ],
+    [
+      "2:west-j",
+      "2:west-stairs"
+    ],
+    [
+      "2:dinwoodie",
+      "2:2-000"
+    ],
+    [
+      "2:career",
+      "2:2-100"
+    ],
+    [
+      "2:uhc",
+      "2:2-200"
+    ],
+    [
+      "2:wellness",
+      "2:2-300"
+    ],
+    [
+      "2:fph",
+      "2:2-400"
+    ],
+    [
+      "2:ccs",
+      "2:2-600"
+    ],
+    [
+      "2:uri",
+      "2:2-701"
+    ],
+    [
+      "2:ombuds",
+      "2:2-702"
+    ],
+    [
+      "2:sac-hall",
+      "2:2-705"
+    ],
+    [
+      "2:peer-hall",
+      "2:2-707"
+    ],
+    [
+      "2:typ",
+      "2:2-727"
+    ],
+    [
+      "2:dean",
+      "2:2-725"
+    ],
+    [
+      "2:events-hall",
+      "2:2-800"
+    ],
+    [
+      "2:su-hall",
+      "2:2-900"
+    ],
+    [
+      "2:west-bottom",
+      "2:pedway-turn"
+    ],
+    [
+      "2:pedway-turn",
+      "2:ag-pedway"
+    ],
+    [
+      "2:ag-pedway",
+      "2:Ag-Pedway"
+    ],
+    [
+      "2:west-j",
+      "2:wc-hall"
+    ],
+    [
+      "2:wc-hall",
+      "2:WC"
+    ],
+    [
+      "0:north-hall",
+      "0:curve-a"
+    ],
+    [
+      "0:curve-a",
+      "0:curve-b"
+    ],
+    [
+      "0:curve-b",
+      "0:curve-c"
+    ],
+    [
+      "0:curve-c",
+      "0:curve-d"
+    ],
+    [
+      "0:curve-d",
+      "0:curve-e"
+    ],
+    [
+      "0:curve-e",
+      "0:atrium"
+    ],
+    [
+      "0:atrium",
+      "0:east-atrium"
+    ],
+    [
+      "0:east-atrium",
+      "0:east-hall"
+    ],
+    [
+      "0:east-hall",
+      "0:atrium-foot"
+    ],
+    [
+      "0:curve-c",
+      "0:junction"
+    ],
+    [
+      "0:junction",
+      "0:west-spine"
+    ],
+    [
+      "0:west-spine",
+      "0:west-mid"
+    ],
+    [
+      "0:west-mid",
+      "0:west-lobby"
+    ],
+    [
+      "0:west-lobby",
+      "0:west-stair-hall"
+    ],
+    [
+      "0:junction",
+      "0:cascade-hall"
+    ],
+    [
+      "0:cascade-hall",
+      "0:orion-hall"
+    ],
+    [
+      "0:orion-hall",
+      "0:meeting-j"
+    ],
+    [
+      "0:meeting-j",
+      "0:meeting-n"
+    ],
+    [
+      "0:meeting-j",
+      "0:cypress-hall"
+    ],
+    [
+      "0:cypress-hall",
+      "0:cypress-door"
+    ],
+    [
+      "0:atrium",
+      "0:filistix-hall"
+    ],
+    [
+      "0:filistix-hall",
+      "0:west-spine"
+    ],
+    [
+      "0:atrium",
+      "0:slc-hall"
+    ],
+    [
+      "0:slc-hall",
+      "0:plaza-hall"
+    ],
+    [
+      "0:plaza-hall",
+      "0:quiet-hall"
+    ],
+    [
+      "0:quiet-hall",
+      "0:caribou-hall"
+    ],
+    [
+      "0:caribou-hall",
+      "0:caribou-west"
+    ],
+    [
+      "0:caribou-west",
+      "0:west-lobby"
+    ],
+    [
+      "0:caribou-west",
+      "0:cjsr-hall"
+    ],
+    [
+      "0:east-hall",
+      "0:landing-hall"
+    ],
+    [
+      "0:landing-hall",
+      "0:workspaces"
+    ],
+    [
+      "0:north-hall",
+      "0:north-stairs"
+    ],
+    [
+      "0:west-stair-hall",
+      "0:west-stairs"
+    ],
+    [
+      "0:atrium-foot",
+      "0:atrium-stairs"
+    ],
+    [
+      "0:meeting-n",
+      "0:0-31"
+    ],
+    [
+      "0:meeting-n",
+      "0:0-33"
+    ],
+    [
+      "0:cypress-door",
+      "0:0-41"
+    ],
+    [
+      "0:curve-b",
+      "0:0-48"
+    ],
+    [
+      "0:cascade-hall",
+      "0:0-49"
+    ],
+    [
+      "0:orion-hall",
+      "0:0-51"
+    ],
+    [
+      "0:caribou-hall",
+      "0:0-77"
+    ],
+    [
+      "0:quiet-hall",
+      "0:0-90"
+    ],
+    [
+      "0:west-lobby",
+      "0:0-12"
+    ],
+    [
+      "0:curve-d",
+      "0:0-60"
+    ],
+    [
+      "0:atrium",
+      "0:0-64"
+    ],
+    [
+      "0:filistix-hall",
+      "0:0-71"
+    ],
+    [
+      "0:cjsr-hall",
+      "0:0-09"
+    ],
+    [
+      "0:west-lobby",
+      "0:0-11"
+    ],
+    [
+      "0:landing-hall",
+      "0:0-68A"
+    ],
+    [
+      "0:landing-hall",
+      "0:0-68B"
+    ],
+    [
+      "0:slc-hall",
+      "0:0-81"
+    ],
+    [
+      "0:curve-a",
+      "0:WC"
+    ],
+    [
+      "0:north-stairs",
+      "1:north-stairs"
+    ],
+    [
+      "1:north-stairs",
+      "2:north-stairs"
+    ],
+    [
+      "0:west-stairs",
+      "1:west-stairs"
+    ],
+    [
+      "1:west-stairs",
+      "2:west-stairs"
+    ],
+    [
+      "0:atrium-stairs",
+      "1:atrium-stairs"
+    ]
+  ]
+}

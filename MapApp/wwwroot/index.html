@@ -1,28 +1,116 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>UAlberta Map</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <style>
-        body { margin: 0; }
-        #map { height: 100vh; }
-        .ac-wrapper { position: relative; display: inline-block; }
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #25352e; }
+        #map { height: 100vh; height: 100dvh; }
+        .route-panel { position: absolute; top: 20px; left: 20px; z-index: 1000; width: 320px; max-width: calc(100% - 40px); padding: 20px; background: #fff; border: 1px solid #e4e9e5; border-radius: 16px; box-shadow: 0 4px 24px #20382b14; }
+        .base-tiles { filter: saturate(.25) contrast(.9) brightness(1.06); }
+        .ac-wrapper { position: relative; margin-bottom: 14px; }
+        label { display: block; margin-bottom: 6px; font-size: 12px; font-weight: 600; color: #5e6e64; }
+        input { width: 100%; padding: 11px 12px; border: 1px solid #dfe5e1; border-radius: 9px; background: #f8faf8; font: inherit; font-size: 14px; color: inherit; outline: none; }
+        input::placeholder { color: #8a968e; }
+        input:focus { border-color: #438369; background: #fff; box-shadow: 0 0 0 3px #43836918; }
+        #routeBtn { width: 100%; padding: 11px 16px; border: 0; border-radius: 9px; background: #236348; color: #fff; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
+        #routeBtn:hover { background: #194f38; }
+        #routeBtn:focus-visible { outline: 3px solid #83bca1; outline-offset: 3px; }
         .ac-list {
-            position: absolute; top: 100%; left: 0; right: 0; z-index: 2000;
-            background: white; border: 1px solid #ccc; border-radius: 4px;
-            max-height: 200px; overflow-y: auto; box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            position: absolute; top: calc(100% + 6px); left: 0; right: 0; z-index: 2000;
+            background: white; border: 1px solid #e4e9e5; border-radius: 10px; padding: 4px;
+            max-height: 200px; overflow-y: auto; box-shadow: 0 8px 24px #20382b1a;
         }
-        .ac-item { padding: 6px 10px; cursor: pointer; }
-        .ac-item:hover, .ac-item.ac-active { background: #a0c4ff; }
+        .ac-item { padding: 10px; border-radius: 6px; font-size: 13px; line-height: 1.4; cursor: pointer; }
+        .ac-item:hover, .ac-item.ac-active { background: #edf4ef; color: #236348; }
+        .leaflet-bar { border: 1px solid #e4e9e5 !important; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 12px #20382b14; }
+        .leaflet-bar a { color: #435b4d; }
+        .entrance-toggle { display: flex; align-items: center; justify-content: space-between; margin: 14px 0 0; min-height: 28px; font-size: 13px; cursor: pointer; }
+        .entrance-toggle input { appearance: none; position: relative; width: 34px; height: 20px; padding: 0; margin: 0; border: 0; border-radius: 20px; background: #dce3de; cursor: pointer; flex-shrink: 0; }
+        .entrance-toggle input::before { content: ''; position: absolute; top: 3px; left: 3px; width: 14px; height: 14px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px #20382b26; }
+        .entrance-toggle input:checked { background: #236348; }
+        .entrance-toggle input:checked::before { transform: translateX(14px); }
+        .entrance-toggle input:focus-visible { outline: 3px solid #83bca1; outline-offset: 3px; }
+        .entrance-icon { display: flex; align-items: center; justify-content: center; border: 1px solid #a6bbae; border-radius: 50%; background: #fff; color: #236348; box-shadow: 0 1px 4px #20382b26; }
+        .entrance-icon svg { width: 13px; height: 13px; }
+        [hidden] { display: none !important; }
+        .sub-link { margin-top: 12px; padding: 0; border: 0; background: none; color: #236348; font: inherit; font-size: 12px; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+        .floor-panel { position: absolute; top: 20px; right: 20px; z-index: 1000; padding: 12px; border: 1px solid #e4e9e5; border-radius: 12px; background: #fff; box-shadow: 0 4px 24px #20382b14; }
+        .floor-panel strong { display: block; margin-bottom: 10px; font-size: 13px; }
+        .floor-buttons { display: flex; gap: 4px; }
+        .floor-buttons button, .route-step { border: 0; border-radius: 7px; padding: 9px 10px; background: #f1f5f2; color: #53665a; font: inherit; font-size: 12px; cursor: pointer; }
+        .floor-buttons button[aria-pressed="true"] { background: #236348; color: #fff; }
+        .floor-buttons button:focus-visible, .route-step:focus-visible, .sub-link:focus-visible { outline: 3px solid #83bca1; outline-offset: 3px; }
+        .sub-legend { position: absolute; bottom: 28px; left: 20px; z-index: 1000; max-width: 260px; padding: 12px 14px; border-radius: 12px; border: 1px solid #e4e9e5; background: #fff; font-size: 12px; box-shadow: 0 4px 24px #20382b14; }
+        .sub-legend summary { cursor: pointer; font-weight: 600; }
+        .legend-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 12px; margin-top: 12px; }
+        .legend-grid span { display: flex; align-items: center; gap: 6px; }
+        .legend-grid i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+        .sub-legend p { margin: 10px 0 0; color: #738078; line-height: 1.5; }
+        .stair-icon { color: #675389; border-color: #b9aec8; }
+        .sub-room-label { background: none; border: 0; color: #31443a; font-family: system-ui, sans-serif; font-size: 11px; line-height: 1.3; text-align: center; }
+        .sub-label-content { width: 100%; }
+        .sub-label-name { display: block; font-weight: 550; overflow-wrap: normal; }
+        .sub-label-code { display: block; margin-top: 3px; font-size: 9px; color: #68776e; }
+        .sub-code-only { font-size: 10px; color: #52635a; white-space: nowrap; }
+        .sub-space { cursor: pointer; }
+        .sub-amenity-icon { display: flex; align-items: center; justify-content: center; border: 1px solid #9daea3; border-radius: 4px; background: #fff; color: #435b4d; font: 600 9px/1 system-ui, sans-serif; box-shadow: 0 1px 3px #20382b14; }
+        .sub-lift, .sub-pedway { font-size: 14px; }
+        .sub-pedway { color: #236348; border-color: #7ca28d; }
+        #routeStatus { margin-top: 10px; font-size: 12px; line-height: 1.5; color: #5e6e64; }
+        #routeStatus:empty { display: none; }
+        #routeSteps { display: grid; gap: 5px; margin-top: 8px; }
+        #routeSteps:empty { display: none; }
+        .route-step { text-align: left; }
+        @media (max-width: 480px) {
+            .route-panel { top: 12px; left: 12px; max-width: calc(100% - 24px); padding: 16px; }
+            .floor-panel { top: auto; bottom: 96px; right: 12px; padding: 10px; }
+            .sub-legend { bottom: 28px; left: 12px; max-width: 200px; padding: 10px; }
+            .legend-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
-    <div style="position:absolute; top:10px; left:50px; z-index:1000; background:white; padding:10px; border-radius:4px; box-shadow:0 2px 5px rgba(0,0,0,0.3);">
-            <div class="ac-wrapper"><input id="startLoc" placeholder="Start building..."></div>
-            <div class="ac-wrapper"><input id="endLoc" placeholder="End building..."></div>
-            <button id="routeBtn">Route</button>
+    <section class="route-panel" aria-label="Plan a campus route">
+        <div class="ac-wrapper"><label for="startLoc">From</label><input id="startLoc" placeholder="Starting location" autocomplete="off"></div>
+        <div class="ac-wrapper"><label for="endLoc">To</label><input id="endLoc" placeholder="Destination" autocomplete="off"></div>
+        <button id="routeBtn">Find route</button>
+        <label class="entrance-toggle" for="showEntrances">Show entrances<input id="showEntrances" type="checkbox" role="switch" checked></label>
+        <label class="entrance-toggle" for="showStairs">Show staircases<input id="showStairs" type="checkbox" role="switch" checked></label>
+        <button class="sub-link" id="viewSub">SUB floor plans</button>
+        <div id="routeStatus" role="status" aria-live="polite"></div>
+        <div id="routeSteps" aria-label="Route floor changes"></div>
+    </section>
+    <aside id="subFloors" class="floor-panel" aria-label="SUB floor selector" hidden>
+        <strong id="subFloorName">SUB · Main</strong>
+        <div class="floor-buttons">
+            <button data-floor="0" aria-pressed="false">Lower</button>
+            <button data-floor="1" aria-pressed="true">Main</button>
+            <button data-floor="2" aria-pressed="false">Level 2</button>
         </div>
+    </aside>
+    <details id="subLegend" class="sub-legend" open hidden>
+        <summary>SUB legend</summary>
+        <div class="legend-grid">
+            <span><i style="background:#e3eed3"></i>Student space</span>
+            <span><i style="background:#f9e6d1"></i>Food</span>
+            <span><i style="background:#deecf4"></i>Services</span>
+            <span><i style="background:#dcebe2"></i>Businesses</span>
+            <span><i style="background:#f2dddd"></i>Venues</span>
+            <span><i style="background:#e7e9ed"></i>Offices</span>
+            <span><i style="background:#f3f6f3"></i>Corridors</span>
+            <span><i style="background:#675389"></i>Stair icons</span>
+            <span>WC · Washrooms</span>
+            <span>↕ · Lift</span>
+            <span>← / ↑ · Pedway</span>
+        </div>
+        <p>Select a room or its green doorway dot.<br>Traced from UASU’s 2024 plans.</p>
+    </details>
     <div id="map"></div>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script src="map.js"></script>
+    <script type="module" src="map.js"></script>
 </body>
 </html>

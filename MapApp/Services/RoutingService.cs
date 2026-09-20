@@ -7,253 +7,214 @@ namespace MapApp.Services
     public class RoutingService
     {
         private readonly Dictionary<Coordinate, List<(Coordinate neighbor, double distance)>> _graph = new();
-        private readonly HashSet<Coordinate> _pedestrian = new();
+        private readonly List<(Coordinate a, Coordinate b)> _walkways = new();
         private readonly List<Geometry> _buildings = new();
-
-        // Ways a pedestrian can actually walk on. Excludes roads (service, residential,
-        // secondary, ...) so building destinations snap to a door/pedway node, not the road outside.
+        private readonly List<Geometry> _subBuildings = new();
+        private readonly Dictionary<string, Geometry> _locations = new();
+        private readonly Dictionary<Geometry, List<Coordinate>> _connections = new();
+        private const double EdgeSnapTolerance = 0.00001;
         private static readonly HashSet<string> PedestrianHighways = new(StringComparer.OrdinalIgnoreCase)
         {
             "footway", "path", "pedestrian", "steps", "cycleway"
         };
 
-        // Pedway/sidewalk nodes sit a hair outside the building polygon they serve. Treat a node
-        // within this distance (degrees, ~1 m) as being at the building's edge.
-        private const double EdgeSnapTolerance = 0.00001;
+        public RoutingService() : this("wwwroot/map.geojson") { }
 
-        public RoutingService()
+        public RoutingService(string geoJsonPath)
         {
-            var geoJson = File.ReadAllText("wwwroot/map.geojson");
-            var reader = new GeoJsonReader();
-            var features = reader.Read<FeatureCollection>(geoJson);
-
+            var features = new GeoJsonReader().Read<FeatureCollection>(File.ReadAllText(geoJsonPath));
+            var pedestrian = new HashSet<Coordinate>();
+            var indoor = new HashSet<Coordinate>();
+            var entrances = new List<Coordinate>();
             foreach (var feature in features)
             {
-                if (feature.Geometry is LineString line)
+                var geometry = feature.Geometry;
+                var name = Tag(feature, "name");
+                if (name != null) _locations[name] = geometry;
+                if (geometry is Polygon or MultiPolygon && Tag(feature, "building") != null)
                 {
-                    var coords = line.Coordinates;
-                    for (int i = 0; i < coords.Length - 1; i++)
-                    {
-                        AddEdge(coords[i], coords[i + 1]);
-                        AddEdge(coords[i + 1], coords[i]);
-                    }
-
-                    var highway = feature.Attributes?.GetNames().Contains("highway") == true
-                        ? feature.Attributes["highway"]?.ToString()
-                        : null;
-                    if (highway != null && PedestrianHighways.Contains(highway))
-                    {
-                        foreach (var c in coords) _pedestrian.Add(c);
-                    }
+                    _buildings.Add(geometry);
+                    if (name == "Students' Union Building") _subBuildings.Add(geometry);
                 }
-                else if (feature.Geometry is Polygon or MultiPolygon
-                         && feature.Attributes?.GetNames().Contains("building") == true)
+                if (geometry is Point point && Tag(feature, "entrance") is string entrance
+                    && entrance is not ("no" or "emergency" or "exit"))
+                    entrances.Add(point.Coordinate);
+                if (geometry is not LineString line) continue;
+
+                var walkable = PedestrianHighways.Contains(Tag(feature, "highway") ?? "")
+                    || Tag(feature, "indoor") == "corridor";
+                var covered = Tag(feature, "indoor") is "yes" or "corridor"
+                    || Tag(feature, "bridge") is "yes" or "pedestrian"
+                    || Tag(feature, "man_made") == "bridge"
+                    || Tag(feature, "tunnel") is "yes" or "covered";
+                var coords = line.Coordinates;
+                for (int i = 0; i < coords.Length - 1; i++)
                 {
-                    _buildings.Add(feature.Geometry);
+                    AddEdge(_graph, coords[i], coords[i + 1]);
+                    if (walkable) _walkways.Add((coords[i], coords[i + 1]));
                 }
+                if (walkable) pedestrian.UnionWith(coords);
+                if (walkable && covered) indoor.UnionWith(coords);
+            }
+
+            foreach (var building in _buildings)
+            {
+                var area = building.Buffer(EdgeSnapTolerance);
+                // Outdoor access must use a mapped door; pedway/indoor connections may
+                // land just beyond the footprint. A nearby sidewalk is not an entrance.
+                var nodes = pedestrian.Where(c => building.Contains(new Point(c))
+                    || (area.Covers(new Point(c)) && (indoor.Contains(c)
+                        || entrances.Any(e => e.Distance(c) <= EdgeSnapTolerance)))).ToList();
+                _connections[building] = nodes;
+                // The source map has pedways and doors but often no interior corridors.
+                // Connect visible access points inside the footprint, never across a courtyard.
+                for (int i = 0; i < nodes.Count; i++)
+                    for (int j = i + 1; j < nodes.Count; j++)
+                        if (area.Covers(new LineString([nodes[i], nodes[j]])))
+                            AddEdge(_graph, nodes[i], nodes[j]);
             }
         }
 
-        private bool IsIndoor(double lat, double lon)
-            => _buildings.Any(b => b.Contains(new Point(lon, lat)));
+        private static string? Tag(IFeature feature, string key)
+            => feature.Attributes?.Exists(key) == true ? feature.Attributes[key]?.ToString() : null;
 
-        // When a route's end node is inside a building, terminate the drawn line at the
-        // building's boundary along the line of approach ("edge to edge") instead of at an
-        // interior node such as the entrance. Keying off the route node (not the requested
-        // point) is robust for L-shaped buildings whose centroid lies outside the polygon.
-        private void ConnectToBuildingEdge(List<double[]> path, bool fromStart)
+        private static void AddEdge(Dictionary<Coordinate, List<(Coordinate neighbor, double distance)>> graph,
+            Coordinate a, Coordinate b)
         {
-            int n = path.Count;
-            var tip = path[fromStart ? 0 : n - 1];
-
-            var building = _buildings.FirstOrDefault(b => b.Contains(new Point(tip[1], tip[0])));
-            if (building == null) return; // end node is outdoors: keep nearest-entrance behaviour
-
-            int outer = -1; // node closest to this end that is still outside the building
-            if (fromStart)
-            {
-                for (int i = 0; i < n; i++)
-                    if (!building.Contains(new Point(path[i][1], path[i][0]))) { outer = i; break; }
-            }
-            else
-            {
-                for (int i = n - 1; i >= 0; i--)
-                    if (!building.Contains(new Point(path[i][1], path[i][0]))) { outer = i; break; }
-            }
-            if (outer < 0) return; // whole route is inside the building; leave it as-is
-
-            // tip is strictly inside, so the first outside node always has a neighbour behind it
-            var outNode = path[outer];
-            var inNode = fromStart ? path[outer - 1] : path[outer + 1];
-
-            var seg = new LineString(new[]
-            {
-                new Coordinate(outNode[1], outNode[0]),
-                new Coordinate(inNode[1], inNode[0])
-            });
-
-            var crossed = building.Intersection(seg);
-            if (crossed.IsEmpty) return;
-
-            // the boundary point where the route enters/leaves the building
-            var edge = crossed.Coordinates
-                .OrderBy(c => c.Distance(new Coordinate(outNode[1], outNode[0])))
-                .First();
-
-            if (fromStart)
-            {
-                path.RemoveRange(0, outer);
-                path.Insert(0, [edge.Y, edge.X]);
-            }
-            else
-            {
-                path.RemoveRange(outer + 1, path.Count - 1 - outer);
-                path.Add([edge.Y, edge.X]);
-            }
+            if (!graph.ContainsKey(a)) graph[a] = [];
+            if (!graph.ContainsKey(b)) graph[b] = [];
+            if (a.Equals2D(b)) return;
+            graph[a].Add((b, a.Distance(b)));
+            graph[b].Add((a, a.Distance(b)));
         }
 
-        // The requested destination is inside a building ("walking on the inside"), but the
-        // route's end node is merely the nearest walkable node to it -- often an entrance on the
-        // far side of the building. Walk the route from the start and stop the drawn line where it
-        // first reaches the destination building's edge, instead of running along the outside to
-        // that entrance.
-        private void TerminateEndAtBuildingEdge(List<double[]> path, double elat, double elon)
+        private Geometry? BuildingAt(Coordinate point, string? name)
         {
-            int n = path.Count;
-            if (n == 0) return;
-
-            var dest = _buildings.FirstOrDefault(b => b.Covers(new Point(elon, elat)));
-            if (dest == null)
-            {
-                // Requested point is outdoors (e.g. the centroid of an L-shaped building lies
-                // outside its polygon): fall back to keying off the route's end node, which is
-                // typically an entrance on that building's boundary.
-                var tip = path[n - 1];
-                dest = _buildings.FirstOrDefault(b => b.Covers(new Point(tip[1], tip[0])));
-            }
-            if (dest == null) return; // destination is outdoors: keep nearest-entrance behaviour
-
-            for (int i = 0; i < n; i++)
-            {
-                var node = path[i];
-                if (dest.Distance(new Point(node[1], node[0])) > EdgeSnapTolerance)
-                    continue;
-
-                // Reached the building. A strictly interior node is pulled back to the boundary
-                // along the line of approach ("edge to edge"); a node on or just outside the wall
-                // (e.g. a pedway landing) is already at the edge and is kept as the end.
-                if (i > 0 && dest.Contains(new Point(node[1], node[0])))
-                {
-                    var prev = path[i - 1];
-                    var crossed = dest.Intersection(new LineString(new[]
-                    {
-                        new Coordinate(prev[1], prev[0]),
-                        new Coordinate(node[1], node[0])
-                    }));
-                    if (!crossed.IsEmpty)
-                    {
-                        var edge = crossed.Coordinates
-                            .OrderBy(c => c.Distance(new Coordinate(prev[1], prev[0])))
-                            .First();
-                        path.RemoveRange(i, path.Count - i);
-                        path.Add([edge.Y, edge.X]);
-                        return;
-                    }
-                }
-
-                path.RemoveRange(i + 1, path.Count - (i + 1));
-                return;
-            }
+            if (name != null && _locations.TryGetValue(name, out var geometry) && _connections.ContainsKey(geometry))
+                return geometry;
+            return _buildings.FirstOrDefault(b => b.Covers(new Point(point)));
         }
 
-        private void AddEdge(Coordinate a, Coordinate b)
+        private Dictionary<Coordinate, double> Attach(Coordinate point, Geometry? building, bool named,
+            Dictionary<Coordinate, List<(Coordinate neighbor, double distance)>> graph, out Coordinate? projection)
         {
-            if (!_graph.TryGetValue(a, out List<(Coordinate neighbor, double distance)>? value))
+            projection = null;
+            if (building != null)
             {
-                value = [];
-                _graph[a] = value;
+                var area = building.Buffer(EdgeSnapTolerance);
+                var nodes = _connections[building];
+                if (named) return nodes.ToDictionary(c => c, _ => 0.0);
+                foreach (var node in nodes)
+                    if (point.Equals2D(node) || area.Covers(new LineString([point, node])))
+                        AddEdge(graph, point, node);
+                return graph.ContainsKey(point) ? new() { [point] = 0 } : new();
             }
-            value.Add((b, a.Distance(b)));
+
+            // Snap to a segment rather than its nearest vertex, retaining the exact marker.
+            // Reject connectors through buildings instead of drawing through their walls.
+            var candidates = _walkways.Where(edge => graph[edge.a].Any(e => e.neighbor.Equals2D(edge.b))).Select(edge =>
+            {
+                var projected = new LineSegment(edge.a, edge.b).ClosestPoint(point);
+                return (edge, projected, distance: point.Distance(projected));
+            }).OrderBy(c => c.distance);
+            foreach (var candidate in candidates)
+            {
+                var connector = new LineString([point, candidate.projected]);
+                if (_buildings.Any(b => b.Contains(new Point(candidate.projected))
+                    || (connector.Length > 0 && connector.Relate(b, "T********")))) continue;
+                AddEdge(graph, point, candidate.projected);
+                AddEdge(graph, candidate.projected, candidate.edge.a);
+                AddEdge(graph, candidate.projected, candidate.edge.b);
+                projection = candidate.projected;
+                return new() { [point] = 0 };
+            }
+            return new();
         }
 
-        private Coordinate Nearest(double lat, double lon)
+        public List<double[]> GetRoute(double slat, double slon, double elat, double elon,
+            string? startName = null, string? endName = null, bool avoidSub = false)
         {
-            var target = new Coordinate(lon, lat);
-            return _pedestrian.MinBy(k => k.Distance(target))!;
-        }
+            var requestedStart = new Coordinate(slon, slat);
+            var requestedEnd = new Coordinate(elon, elat);
+            var startBuilding = BuildingAt(requestedStart, startName);
+            var endBuilding = BuildingAt(requestedEnd, endName);
+            // Request-local edges keep concurrent routes from modifying the singleton graph.
+            var graph = _graph.ToDictionary(p => p.Key, p => new List<(Coordinate neighbor, double distance)>(p.Value));
+            // Indoor requests hand off at a specific SUB entrance. Their campus leg
+            // must not enter another door and take the old footprint shortcut through SUB.
+            if (avoidSub)
+            {
+                foreach (var (node, edges) in graph)
+                    edges.RemoveAll(edge => _subBuildings.Any(building =>
+                        new LineString([node, edge.neighbor]).Relate(building, "T********")));
+                if (startBuilding != null && _subBuildings.Contains(startBuilding)) startBuilding = null;
+                if (endBuilding != null && _subBuildings.Contains(endBuilding)) endBuilding = null;
+            }
+            var starts = Attach(requestedStart, startBuilding, startName != null, graph, out var startProjection);
+            var ends = Attach(requestedEnd, endBuilding, endName != null, graph, out var endProjection);
+            if (startBuilding != null && ReferenceEquals(startBuilding, endBuilding)
+                && startName == null && endName == null
+                && startBuilding.Covers(new LineString([requestedStart, requestedEnd])))
+                return [[slat, slon], [elat, elon]];
+            if (starts.Count == 0 || ends.Count == 0) return [];
 
-        public List<double[]> GetRoute(double slat, double slon, double elat, double elon)
-        {
-            var start = Nearest(slat, slon);
-            var end = Nearest(elat, elon);
+            // Join projections on the same mapped segment without a detour to its vertices.
+            if (startProjection != null && endProjection != null)
+            {
+                if (_walkways.Any(e => new LineSegment(e.a, e.b).Distance(startProjection) < 1e-12
+                    && new LineSegment(e.a, e.b).Distance(endProjection) < 1e-12))
+                    AddEdge(graph, startProjection, endProjection);
+            }
 
-            var dist = new Dictionary<Coordinate, double>();
+            var dist = new Dictionary<Coordinate, double>(starts);
             var prev = new Dictionary<Coordinate, Coordinate>();
-            var pq = new PriorityQueue<Coordinate, double>();
-
-            foreach (var node in _graph.Keys) dist[node] = double.MaxValue;
-            dist[start] = 0;
-            pq.Enqueue(start, 0);
-
-            while (pq.Count > 0)
+            var queue = new PriorityQueue<Coordinate, double>();
+            foreach (var (node, cost) in starts) queue.Enqueue(node, cost);
+            Coordinate? end = null;
+            while (queue.TryDequeue(out var current, out var cost))
             {
-                var curr = pq.Dequeue();
-                if (curr.Equals(end)) break;
-
-                foreach (var (neighbor, distance) in _graph[curr])
+                if (cost > dist[current]) continue;
+                if (ends.ContainsKey(current)) { end = current; break; }
+                foreach (var (neighbor, distance) in graph[current])
                 {
-                    var alt = dist[curr] + distance;
-                    if (alt < dist[neighbor])
-                    {
-                        dist[neighbor] = alt;
-                        prev[neighbor] = curr;
-                        pq.Enqueue(neighbor, alt);
-                    }
+                    var next = cost + distance;
+                    if (dist.TryGetValue(neighbor, out var known) && next >= known) continue;
+                    dist[neighbor] = next;
+                    prev[neighbor] = current;
+                    queue.Enqueue(neighbor, next);
                 }
             }
-
-            var path = new List<double[]>();
-            var c = end;
-            while (prev.ContainsKey(c))
-            {
-                path.Add([c.Y, c.X]);
-                c = prev[c];
-            }
-            if (path.Count > 0) path.Add([start.Y, start.X]);
+            if (end == null) return [];
+            var path = new List<Coordinate> { end };
+            while (prev.TryGetValue(path[^1], out var parent)) path.Add(parent);
             path.Reverse();
+            // Only named buildings stop at their edge. Markers always retain exact coordinates.
+            if (startName != null && startBuilding != null) TrimBuilding(path, startBuilding, true);
+            if (endName != null && endBuilding != null) TrimBuilding(path, endBuilding, false);
+            return path.Select(c => new[] { c.Y, c.X }).ToList();
+        }
 
-            // Connect "edge to edge": when an endpoint is inside a building, the drawn line
-            // stops at the building boundary along the approach, rather than at an interior
-            // point (e.g. the centroid) which may be outside an L-shaped building.
-            if (path.Count > 0)
+        private static void TrimBuilding(List<Coordinate> path, Geometry building, bool start)
+        {
+            if (start) path.Reverse();
+            for (int i = 0; i < path.Count - 1; i++)
             {
-                ConnectToBuildingEdge(path, fromStart: true);
-                TerminateEndAtBuildingEdge(path, elat, elon);
+                var segment = new LineString([path[i], path[i + 1]]);
+                var crossing = building.Boundary.Intersection(segment);
+                if (crossing.IsEmpty) continue;
+                var edge = crossing.Coordinates.MinBy(c => c.Distance(path[i]))!;
+                path.RemoveRange(i + 1, path.Count - i - 1);
+                if (!path[^1].Equals2D(edge)) path.Add(edge);
+                break;
             }
-
-            return path;
+            if (start) path.Reverse();
         }
 
         public Dictionary<string, double[]> GetLocations()
+            => _locations.ToDictionary(p => p.Key, p =>
             {
-                var locs = new Dictionary<string, double[]>();
-                var geoJson = File.ReadAllText("wwwroot/map.geojson");
-                var reader = new GeoJsonReader();
-                var features = reader.Read<FeatureCollection>(geoJson);
-
-                foreach (var f in features)
-                {
-                    if (f.Attributes != null && f.Attributes.GetNames().Contains("name"))
-                    {
-                        var name = f.Attributes["name"].ToString();
-                        if (name != null)
-                        {
-                            var center = f.Geometry.Centroid;
-                            locs[name] = [center.Y, center.X];
-                        }
-                    }
-                }
-                return locs;
-            }
+                var point = p.Value is Polygon or MultiPolygon ? p.Value.InteriorPoint : p.Value.Centroid;
+                return new[] { point.Y, point.X };
+            });
     }
 }

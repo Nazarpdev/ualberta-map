@@ -1,0 +1,154 @@
+import { IndoorRouter, distance, floorSegments } from './indoor-router.mjs';
+import { createSubPlan } from './sub-plan.mjs';
+
+export async function createSubMap(map, onSelect, onFloorChange) {
+    const response = await fetch('/indoor/sub/map.json');
+    if (!response.ok) throw new Error('SUB floor plans could not be loaded');
+    const data = await response.json();
+    const router = new IndoorRouter(data);
+    const bounds = L.latLngBounds(data.bounds);
+    let floor = 1, visible = false, outline = [];
+    const panel = document.getElementById('subFloors');
+    const details = document.getElementById('subLegend');
+    if (window.matchMedia('(max-width: 480px)').matches) details.open = false;
+    const stairs = L.layerGroup();
+    const rooms = L.layerGroup();
+    map.createPane('subPlans'); map.getPane('subPlans').style.zIndex = 410;
+    map.createPane('subDetails'); map.getPane('subDetails').style.zIndex = 430;
+    map.createPane('subLabels'); map.getPane('subLabels').style.zIndex = 440;
+    const plan = createSubPlan(map, router, selectRoom);
+    function selectRoom(id) {
+        const node = router.nodes.get(id);
+        if (node.floor !== floor) setFloor(node.floor);
+        onSelect({ nodeId: node.id, floor: node.floor, lat: node.lat, lon: node.lon, name: title(node) });
+    }
+    const stairsIcon = L.divIcon({ className: 'entrance-icon stair-icon', iconSize: [24, 24], iconAnchor: [12, 12],
+        html: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 20h6v-6h6V8h6V3"/></svg>' });
+    const text = value => { const span = document.createElement('span'); span.textContent = value; return span; };
+    const title = node => `SUB ${node.code} · ${node.name}`;
+    const floorName = value => data.floors.find(f => f.id === value).name;
+    function setFloor(value) {
+        floor = value;
+        render(); onFloorChange();
+    }
+    panel.querySelectorAll('[data-floor]').forEach(button => button.addEventListener('click', () => setFloor(Number(button.dataset.floor))));
+    function render() {
+        stairs.clearLayers(); rooms.clearLayers();
+        panel.hidden = details.hidden = !visible;
+        if (!visible) { plan.clear(); map.removeLayer(stairs); map.removeLayer(rooms); return; }
+        plan.draw(data.floors.find(f => f.id === floor)); rooms.addTo(map);
+        panel.querySelectorAll('[data-floor]').forEach(button => button.setAttribute('aria-pressed', String(Number(button.dataset.floor) === floor)));
+        document.getElementById('subFloorName').textContent = `SUB · ${floorName(floor)}`;
+        for (const node of router.nodes.values()) {
+            if (node.floor !== floor) continue;
+            if (node.kind === 'stairs') {
+                L.marker([node.lat, node.lon], { icon: stairsIcon, title: node.name, keyboard: false })
+                    .bindTooltip(text(`${node.name} · ${floorName(floor)}`)).addTo(stairs);
+            } else if (node.kind === 'room' && !node.amenity) {
+                const marker = L.circleMarker([node.lat, node.lon], { pane: 'subDetails', radius: 5, color: '#fff', weight: 2, fillColor: '#236348', fillOpacity: 1 });
+                marker.bindTooltip(text(`${node.code} · ${node.name}`));
+                marker.on('click', event => {
+                    L.DomEvent.stopPropagation(event);
+                    selectRoom(node.id);
+                });
+                marker.options.bubblingMouseEvents = false;
+                marker.addTo(rooms);
+            }
+        }
+        if (document.getElementById('showStairs').checked) stairs.addTo(map);
+        else map.removeLayer(stairs);
+        plan.refreshLabels();
+    }
+    function update() {
+        const next = map.getZoom() >= 19 && map.getBounds().intersects(bounds);
+        if (next !== visible) { visible = next; render(); }
+        else if (visible) plan.refreshLabels();
+    }
+    map.on('zoomend moveend', update);
+    document.getElementById('showStairs').addEventListener('change', render);
+    function focus(value = floor) {
+        setFloor(value);
+        const zoom = Math.max(19, Math.min(20, map.getBoundsZoom(bounds, false, L.point(120, 120))));
+        map.setView(bounds.getCenter(), zoom, { animate: false });
+    }
+    document.getElementById('viewSub').addEventListener('click', () => focus());
+    map.on('resize', () => { if (window.matchMedia('(max-width: 480px)').matches) details.open = false; });
+    update();
+
+    const names = new Map([...router.nodes.values()].filter(n => n.kind === 'room').map(n => [title(n), n]));
+    function inside(lat, lon) {
+        // Use the actual campus footprint rather than its bounding rectangle.
+        return outline.some(ring => {
+            let result = false;
+            for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+                const [xi, yi] = ring[i], [xj, yj] = ring[j];
+                if ((yi > lat) !== (yj > lat) && lon < (xj - xi) * (lat - yi) / (yj - yi) + xi) result = !result;
+            }
+            return result;
+        });
+    }
+    async function campusRoute(start, end) {
+        const params = new URLSearchParams({ slat: start.lat, slon: start.lon, elat: end.lat, elon: end.lon, avoidSub: true });
+        if (start.name) params.set('startName', start.name);
+        if (end.name) params.set('endName', end.name);
+        const response = await fetch(`/api/route?${params}`);
+        if (!response.ok) throw new Error('Could not calculate a campus route');
+        return response.json();
+    }
+    async function route(start, end) {
+        const startIndoor = start.floor != null, endIndoor = end.floor != null;
+        if (!startIndoor && !endIndoor) {
+            const coords = await campusRoute(start, end);
+            return { segments: [{ floor: null, coords }], transitions: [] };
+        }
+        let indoor, outdoor = [], entry;
+        if (startIndoor && endIndoor) indoor = router.route(start, end);
+        else {
+            const options = await Promise.all([...router.nodes.values()].filter(n => n.kind === 'entrance').map(async portal => {
+                const indoor = startIndoor ? router.route(start, { nodeId: portal.id }) : router.route({ nodeId: portal.id }, end);
+                if (!indoor) return null;
+                const point = { lat: portal.campus[0], lon: portal.campus[1] };
+                const outdoor = await campusRoute(startIndoor ? point : start, startIndoor ? end : point);
+                if (!outdoor.length) return null;
+                const cost = indoor.cost + outdoor.slice(1).reduce((sum, p, i) => sum + distance(
+                    { lat: outdoor[i][0], lon: outdoor[i][1] }, { lat: p[0], lon: p[1] }), 0);
+                return { indoor, outdoor, portal, cost };
+            }));
+            const best = options.filter(Boolean).sort((a, b) => a.cost - b.cost)[0];
+            if (best) { indoor = best.indoor; outdoor = best.outdoor; entry = best.portal; }
+        }
+        if (!indoor) throw new Error('No mapped route. Select a SUB room or a point on a corridor.');
+        const segments = floorSegments(indoor.points, router);
+        if (outdoor.length) {
+            const connector = [entry.lat, entry.lon];
+            if (startIndoor) { outdoor.unshift(connector); segments.push({ floor: null, coords: outdoor }); }
+            else { outdoor.push(connector); segments.unshift({ floor: null, coords: outdoor }); }
+        }
+        const transitions = [];
+        for (let i = 1; i < indoor.points.length; i++) {
+            const a = indoor.points[i - 1], b = indoor.points[i];
+            if (a.floor !== b.floor) transitions.push({ from: a.floor, to: b.floor,
+                text: `${a.name}: ${floorName(a.floor)} → ${floorName(b.floor)}` });
+        }
+        return { segments, transitions };
+    }
+    return {
+        router, route, floorName, contains: inside, refreshLabels: plan.refreshLabels,
+        get floor() { return floor; },
+        get visible() { return visible; },
+        setFloor,
+        focus,
+        setFootprints(features) { outline = features.filter(f => f.properties?.name === data.building && f.geometry.type === 'Polygon').map(f => f.geometry.coordinates[0]); },
+        locations: Object.fromEntries([...names].map(([name, n]) => [name, [n.lat, n.lon]])),
+        endpoint(name) {
+            const node = names.get(name) ?? (name === data.building ? router.nodes.get('1:entry-north') : null);
+            return node ? { nodeId: node.id, floor: node.floor, lat: node.lat, lon: node.lon, name } : null;
+        },
+        click(lat, lon) {
+            if (!inside(lat, lon)) return { lat, lon };
+            const point = { lat, lon, floor };
+            if (!router.locate(point)) throw new Error('Choose a green room dot or click a mapped corridor inside SUB.');
+            return point;
+        }
+    };
+}

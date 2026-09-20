@@ -1,15 +1,15 @@
 {
   "version": 2,
-  "dgSpecHash": "4xrLEHlJsPo=",
+  "dgSpecHash": "MZMR0HqW8Vw=",
   "success": true,
-  "projectFilePath": "/Users/nazarp/Projects/ualberta-map/MapApp/MapApp.csproj",
+  "projectFilePath": "C:\\Users\\Nazar\\Projects\\ualberta-map\\MapApp\\MapApp.csproj",
   "expectedPackageFiles": [
-    "/Users/nazarp/.nuget/packages/microsoft.aspnetcore.openapi/10.0.12/microsoft.aspnetcore.openapi.10.0.12.nupkg.sha512",
-    "/Users/nazarp/.nuget/packages/microsoft.openapi/2.12.0/microsoft.openapi.2.12.0.nupkg.sha512",
-    "/Users/nazarp/.nuget/packages/nettopologysuite/2.0.0/nettopologysuite.2.0.0.nupkg.sha512",
-    "/Users/nazarp/.nuget/packages/nettopologysuite.features/2.0.0/nettopologysuite.features.2.0.0.nupkg.sha512",
-    "/Users/nazarp/.nuget/packages/nettopologysuite.io.geojson/4.0.0/nettopologysuite.io.geojson.4.0.0.nupkg.sha512",
-    "/Users/nazarp/.nuget/packages/newtonsoft.json/13.0.1/newtonsoft.json.13.0.1.nupkg.sha512"
+    "C:\\Users\\Nazar\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.12\\microsoft.aspnetcore.openapi.10.0.12.nupkg.sha512",
+    "C:\\Users\\Nazar\\.nuget\\packages\\microsoft.openapi\\2.12.0\\microsoft.openapi.2.12.0.nupkg.sha512",
+    "C:\\Users\\Nazar\\.nuget\\packages\\nettopologysuite\\2.0.0\\nettopologysuite.2.0.0.nupkg.sha512",
+    "C:\\Users\\Nazar\\.nuget\\packages\\nettopologysuite.features\\2.0.0\\nettopologysuite.features.2.0.0.nupkg.sha512",
+    "C:\\Users\\Nazar\\.nuget\\packages\\nettopologysuite.io.geojson\\4.0.0\\nettopologysuite.io.geojson.4.0.0.nupkg.sha512",
+    "C:\\Users\\Nazar\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512"
   ],
   "logs": []
 }
