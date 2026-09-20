@@ -2,9 +2,25 @@
 <html>
 <head>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <style>body { margin: 0; } #map { height: 100vh; }</style>
+    <style>
+        body { margin: 0; }
+        #map { height: 100vh; }
+        .ac-wrapper { position: relative; display: inline-block; }
+        .ac-list {
+            position: absolute; top: 100%; left: 0; right: 0; z-index: 2000;
+            background: white; border: 1px solid #ccc; border-radius: 4px;
+            max-height: 200px; overflow-y: auto; box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+        .ac-item { padding: 6px 10px; cursor: pointer; }
+        .ac-item:hover, .ac-item.ac-active { background: #a0c4ff; }
+    </style>
 </head>
 <body>
+    <div style="position:absolute; top:10px; left:50px; z-index:1000; background:white; padding:10px; border-radius:4px; box-shadow:0 2px 5px rgba(0,0,0,0.3);">
+            <div class="ac-wrapper"><input id="startLoc" placeholder="Start building..."></div>
+            <div class="ac-wrapper"><input id="endLoc" placeholder="End building..."></div>
+            <button id="routeBtn">Route</button>
+        </div>
     <div id="map"></div>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="map.js"></script>

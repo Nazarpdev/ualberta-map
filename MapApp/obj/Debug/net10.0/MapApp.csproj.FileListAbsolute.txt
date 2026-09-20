@@ -26,7 +26,6 @@
 /Users/nazarp/Projects/ualberta-map/MapApp/obj/Debug/net10.0/rjsmrazor.dswa.cache.json
 /Users/nazarp/Projects/ualberta-map/MapApp/obj/Debug/net10.0/rjsmcshtml.dswa.cache.json
 /Users/nazarp/Projects/ualberta-map/MapApp/obj/Debug/net10.0/scopedcss/bundle/MapApp.styles.css
-/Users/nazarp/Projects/ualberta-map/MapApp/obj/Debug/net10.0/compressed/5e1wpxyuo9-{0}-39dsh8x6np-39dsh8x6np.gz
 /Users/nazarp/Projects/ualberta-map/MapApp/obj/Debug/net10.0/staticwebassets.build.json
 /Users/nazarp/Projects/ualberta-map/MapApp/obj/Debug/net10.0/staticwebassets.build.json.cache
 /Users/nazarp/Projects/ualberta-map/MapApp/obj/Debug/net10.0/staticwebassets.development.json
@@ -38,4 +37,5 @@
 /Users/nazarp/Projects/ualberta-map/MapApp/obj/Debug/net10.0/MapApp.pdb
 /Users/nazarp/Projects/ualberta-map/MapApp/obj/Debug/net10.0/MapApp.genruntimeconfig.cache
 /Users/nazarp/Projects/ualberta-map/MapApp/obj/Debug/net10.0/ref/MapApp.dll
-/Users/nazarp/Projects/ualberta-map/MapApp/obj/Debug/net10.0/compressed/sh99o643eb-{0}-fcqnmce53m-fcqnmce53m.gz
+/Users/nazarp/Projects/ualberta-map/MapApp/obj/Debug/net10.0/compressed/sh99o643eb-{0}-p82g7hrqs8-p82g7hrqs8.gz
+/Users/nazarp/Projects/ualberta-map/MapApp/obj/Debug/net10.0/compressed/5e1wpxyuo9-{0}-jzvttb2kfa-jzvttb2kfa.gz
