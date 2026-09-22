@@ -64,8 +64,6 @@
         .sub-amenity-icon { display: flex; align-items: center; justify-content: center; border: 1px solid #9daea3; border-radius: 4px; background: #fff; color: #435b4d; font: 600 9px/1 system-ui, sans-serif; box-shadow: 0 1px 3px #20382b14; }
         .sub-lift, .sub-pedway { font-size: 14px; }
         .sub-pedway { color: #236348; border-color: #7ca28d; }
-        #routeStatus { margin-top: 10px; font-size: 12px; line-height: 1.5; color: #5e6e64; }
-        #routeStatus:empty { display: none; }
         #routeSteps { display: grid; gap: 5px; margin-top: 8px; }
         #routeSteps:empty { display: none; }
         .route-step { text-align: left; }
@@ -85,7 +83,6 @@
         <label class="route-preference"><input id="preferIndoor" type="checkbox">Prefer indoor routes</label>
         <label class="entrance-toggle" for="showEntrances">Show entrances<input id="showEntrances" type="checkbox" role="switch" checked></label>
         <label class="entrance-toggle" for="showStairs">Show staircases<input id="showStairs" type="checkbox" role="switch" checked></label>
-        <div id="routeStatus" role="status" aria-live="polite"></div>
         <div id="routeSteps" aria-label="Route floor changes"></div>
     </section>
     <aside id="subFloors" class="floor-panel" aria-label="SUB floor selector" hidden>

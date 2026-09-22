@@ -35,11 +35,9 @@ const selectionIcon = L.divIcon({
         + '<circle cx="18" cy="16" r="6" fill="#fff" stroke="#246c9a" stroke-width="1.5"/></svg>'
 });
 map.createPane('routes'); map.getPane('routes').style.zIndex = 450;
-const status = document.getElementById('routeStatus');
 try {
     sub = await createSubMap(map, selectPoint, renderRoute);
 } catch (error) {
-    status.textContent = error.message;
     document.getElementById('showStairs').disabled = true;
 }
 
@@ -190,7 +188,6 @@ async function calculateRoute() {
     const version = ++requestVersion;
     routeResult = null; renderRoute();
     document.getElementById('routeSteps').replaceChildren();
-    status.textContent = '';
     try {
         let result;
         const preferIndoor = document.getElementById('preferIndoor').checked;
@@ -212,23 +209,37 @@ async function calculateRoute() {
         if (indoorFloor != null) sub.focus(startPoint.floor ?? 1);
         else {
             const coords = routeResult.segments.flatMap(s => s.coords);
-            map.fitBounds(L.latLngBounds(coords), { padding: [40, 40] });
+            map.fitBounds(L.latLngBounds(coords), { padding: [50, 50], maxZoom: 19 });
         }
         renderRoute();
     } catch (error) {
         if (version !== requestVersion) return;
-        routeResult = null; renderRoute(); status.textContent = error.message;
+        routeResult = null; renderRoute();
     }
 }
 
+function samePoint(a, b) {
+    if (a.nodeId && b.nodeId) return a.nodeId === b.nodeId;
+    const dLat = (a.lat - b.lat) * 111320;
+    const dLon = (a.lon - b.lon) * 111320 * Math.cos(a.lat * Math.PI / 180);
+    return Math.hypot(dLat, dLon) < 10;
+}
+
 function selectPoint(point) {
+    if (startPoint && !endPoint && samePoint(point, startPoint)) {
+        ++requestVersion;
+        startPoint = null; routeResult = null;
+        document.getElementById('startLoc').value = '';
+        document.getElementById('routeSteps').replaceChildren();
+        renderRoute();
+        return;
+    }
     if (!startPoint || endPoint) {
         ++requestVersion;
         startPoint = point; endPoint = null; routeResult = null;
         document.getElementById('startLoc').value = point.name ?? '';
         document.getElementById('endLoc').value = '';
         document.getElementById('routeSteps').replaceChildren();
-        status.textContent = '';
         renderRoute();
     } else {
         endPoint = point;
@@ -239,7 +250,7 @@ function selectPoint(point) {
 
 map.on('click', event => {
     try { selectPoint(sub ? sub.click(event.latlng.lat, event.latlng.lng) : { lat: event.latlng.lat, lon: event.latlng.lng }); }
-    catch (error) { status.textContent = error.message; }
+    catch (error) { /* invalid SUB click: ignore */ }
 });
 map.on('zoomend moveend', renderRoute);
 document.getElementById('preferIndoor').addEventListener('change', () => {
@@ -256,5 +267,5 @@ document.getElementById('routeBtn').onclick = () => {
     try {
         const start = resolve('startLoc', startPoint), end = resolve('endLoc', endPoint);
         startPoint = start; endPoint = end; calculateRoute();
-    } catch (error) { status.textContent = error.message; }
+    } catch (error) { /* invalid location: ignore */ }
 };

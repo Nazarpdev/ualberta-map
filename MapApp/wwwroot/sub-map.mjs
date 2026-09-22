@@ -131,10 +131,7 @@ export async function createSubMap(map, onSelect, onFloorChange) {
             return node ? { nodeId: node.id, floor: node.floor, lat: node.lat, lon: node.lon, name } : null;
         },
         click(lat, lon) {
-            if (!inside(lat, lon)) return { lat, lon };
-            const point = { lat, lon, floor };
-            if (!router.locate(point)) throw new Error('Select a room or click a mapped corridor inside SUB.');
-            return point;
+            return { lat, lon };
         }
     };
 }
