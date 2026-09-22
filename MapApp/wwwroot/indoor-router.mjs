@@ -118,8 +118,51 @@ export class IndoorRouter {
         if (!costs.has(b)) return null;
         const path = [b];
         while (prev.has(path[0])) path.unshift(prev.get(path[0]));
-        return { points: path.map(id => nodes.get(id)), cost: costs.get(b) };
+        const points = this.shorten(path.map(id => nodes.get(id)));
+        const cost = points.slice(1).reduce((sum, point, i) => sum +
+            (point.floor === points[i].floor ? distance(points[i], point) : 12), 0);
+        return { points, cost };
     }
+
+    shorten(path) {
+        const points = [path[0]];
+        for (let i = 0; i < path.length - 1;) {
+            let next = i + 1;
+            for (let j = i + 2; j < path.length && path[j].floor === path[i].floor; j++) {
+                if (path[j - 1].floor !== path[i].floor) break;
+                if (this.clearCorridor(path[i], path[j])) next = j;
+            }
+            points.push(path[next]);
+            i = next;
+        }
+        return points;
+    }
+
+    clearCorridor(from, to) {
+        const floor = this.data.floors.find(f => f.id === from.floor);
+        const a = [from.x, from.y], b = [to.x, to.y];
+        const crosses = polygon => polygon.some((p, i) => intersects(a, b, p, polygon[(i + 1) % polygon.length]));
+        if (!floor.footprint || !inside(a, floor.footprint) || !inside(b, floor.footprint) || crosses(floor.footprint)) return false;
+        if ((floor.partitions ?? []).some(line => line.slice(1).some((p, i) => intersects(a, b, line[i], p)))) return false;
+        return !(floor.spaces ?? []).some(space => space.polygon && space.category !== 'Corridors'
+            && (inside(a, space.polygon) || inside(b, space.polygon) || crosses(space.polygon)));
+    }
+}
+
+function inside([x, y], polygon) {
+    let result = false;
+    for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+        const [ax, ay] = polygon[i], [bx, by] = polygon[j];
+        if ((ay > y) !== (by > y) && x < (bx - ax) * (y - ay) / (by - ay) + ax) result = !result;
+    }
+    return result;
+}
+
+function intersects(a, b, c, d) {
+    const cross = (p, q, r) => (q[0] - p[0]) * (r[1] - p[1]) - (q[1] - p[1]) * (r[0] - p[0]);
+    if ([0, 1].some(axis => Math.max(a[axis], b[axis]) < Math.min(c[axis], d[axis])
+        || Math.max(c[axis], d[axis]) < Math.min(a[axis], b[axis]))) return false;
+    return cross(a, b, c) * cross(a, b, d) <= 0 && cross(c, d, a) * cross(c, d, b) <= 0;
 }
 
 export function distance(a, b) {

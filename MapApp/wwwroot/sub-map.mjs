@@ -1,5 +1,6 @@
-import { IndoorRouter, distance, floorSegments } from './indoor-router.mjs';
+import { IndoorRouter, floorSegments } from './indoor-router.mjs?v=sub-routing-3';
 import { createSubPlan } from './sub-plan.mjs';
+import { requestCampusRoute } from './route-client.mjs';
 
 export async function createSubMap(map, onSelect, onFloorChange) {
     const response = await fetch('/indoor/sub/map.json');
@@ -12,7 +13,6 @@ export async function createSubMap(map, onSelect, onFloorChange) {
     const details = document.getElementById('subLegend');
     if (window.matchMedia('(max-width: 480px)').matches) details.open = false;
     const stairs = L.layerGroup();
-    const rooms = L.layerGroup();
     map.createPane('subPlans'); map.getPane('subPlans').style.zIndex = 410;
     map.createPane('subDetails'); map.getPane('subDetails').style.zIndex = 430;
     map.createPane('subLabels'); map.getPane('subLabels').style.zIndex = 440;
@@ -22,7 +22,7 @@ export async function createSubMap(map, onSelect, onFloorChange) {
         if (node.floor !== floor) setFloor(node.floor);
         onSelect({ nodeId: node.id, floor: node.floor, lat: node.lat, lon: node.lon, name: title(node) });
     }
-    const stairsIcon = L.divIcon({ className: 'entrance-icon stair-icon', iconSize: [24, 24], iconAnchor: [12, 12],
+    const stairsIcon = L.divIcon({ className: 'entrance-icon stair-icon', iconSize: [26, 26], iconAnchor: [13, 13],
         html: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 20h6v-6h6V8h6V3"/></svg>' });
     const text = value => { const span = document.createElement('span'); span.textContent = value; return span; };
     const title = node => `SUB ${node.code} · ${node.name}`;
@@ -33,10 +33,10 @@ export async function createSubMap(map, onSelect, onFloorChange) {
     }
     panel.querySelectorAll('[data-floor]').forEach(button => button.addEventListener('click', () => setFloor(Number(button.dataset.floor))));
     function render() {
-        stairs.clearLayers(); rooms.clearLayers();
+        stairs.clearLayers();
         panel.hidden = details.hidden = !visible;
         if (!visible) { plan.clear(); map.removeLayer(stairs); map.removeLayer(rooms); return; }
-        plan.draw(data.floors.find(f => f.id === floor)); rooms.addTo(map);
+        plan.draw(data.floors.find(f => f.id === floor));
         panel.querySelectorAll('[data-floor]').forEach(button => button.setAttribute('aria-pressed', String(Number(button.dataset.floor) === floor)));
         document.getElementById('subFloorName').textContent = `SUB · ${floorName(floor)}`;
         for (const node of router.nodes.values()) {
@@ -44,15 +44,6 @@ export async function createSubMap(map, onSelect, onFloorChange) {
             if (node.kind === 'stairs') {
                 L.marker([node.lat, node.lon], { icon: stairsIcon, title: node.name, keyboard: false })
                     .bindTooltip(text(`${node.name} · ${floorName(floor)}`)).addTo(stairs);
-            } else if (node.kind === 'room' && !node.amenity) {
-                const marker = L.circleMarker([node.lat, node.lon], { pane: 'subDetails', radius: 5, color: '#fff', weight: 2, fillColor: '#236348', fillOpacity: 1 });
-                marker.bindTooltip(text(`${node.code} · ${node.name}`));
-                marker.on('click', event => {
-                    L.DomEvent.stopPropagation(event);
-                    selectRoom(node.id);
-                });
-                marker.options.bubblingMouseEvents = false;
-                marker.addTo(rooms);
             }
         }
         if (document.getElementById('showStairs').checked) stairs.addTo(map);
@@ -71,7 +62,6 @@ export async function createSubMap(map, onSelect, onFloorChange) {
         const zoom = Math.max(19, Math.min(20, map.getBoundsZoom(bounds, false, L.point(120, 120))));
         map.setView(bounds.getCenter(), zoom, { animate: false });
     }
-    document.getElementById('viewSub').addEventListener('click', () => focus());
     map.on('resize', () => { if (window.matchMedia('(max-width: 480px)').matches) details.open = false; });
     update();
 
@@ -87,18 +77,13 @@ export async function createSubMap(map, onSelect, onFloorChange) {
             return result;
         });
     }
-    async function campusRoute(start, end) {
-        const params = new URLSearchParams({ slat: start.lat, slon: start.lon, elat: end.lat, elon: end.lon, avoidSub: true });
-        if (start.name) params.set('startName', start.name);
-        if (end.name) params.set('endName', end.name);
-        const response = await fetch(`/api/route?${params}`);
-        if (!response.ok) throw new Error('Could not calculate a campus route');
-        return response.json();
+    async function campusRoute(start, end, preferIndoor) {
+        return requestCampusRoute(start, end, { preferIndoor, avoidSub: true });
     }
-    async function route(start, end) {
+    async function route(start, end, { preferIndoor = false } = {}) {
         const startIndoor = start.floor != null, endIndoor = end.floor != null;
         if (!startIndoor && !endIndoor) {
-            const coords = await campusRoute(start, end);
+            const { coordinates: coords } = await campusRoute(start, end, preferIndoor);
             return { segments: [{ floor: null, coords }], transitions: [] };
         }
         let indoor, outdoor = [], entry;
@@ -108,10 +93,11 @@ export async function createSubMap(map, onSelect, onFloorChange) {
                 const indoor = startIndoor ? router.route(start, { nodeId: portal.id }) : router.route({ nodeId: portal.id }, end);
                 if (!indoor) return null;
                 const point = { lat: portal.campus[0], lon: portal.campus[1] };
-                const outdoor = await campusRoute(startIndoor ? point : start, startIndoor ? end : point);
+                const campus = await campusRoute(startIndoor ? point : start, startIndoor ? end : point, preferIndoor);
+                const outdoor = campus.coordinates;
                 if (!outdoor.length) return null;
-                const cost = indoor.cost + outdoor.slice(1).reduce((sum, p, i) => sum + distance(
-                    { lat: outdoor[i][0], lon: outdoor[i][1] }, { lat: p[0], lon: p[1] }), 0);
+                // Compare all SUB entrances using the same indoor preference as the campus leg.
+                const cost = indoor.cost + campus.cost;
                 return { indoor, outdoor, portal, cost };
             }));
             const best = options.filter(Boolean).sort((a, b) => a.cost - b.cost)[0];
@@ -147,7 +133,7 @@ export async function createSubMap(map, onSelect, onFloorChange) {
         click(lat, lon) {
             if (!inside(lat, lon)) return { lat, lon };
             const point = { lat, lon, floor };
-            if (!router.locate(point)) throw new Error('Choose a green room dot or click a mapped corridor inside SUB.');
+            if (!router.locate(point)) throw new Error('Select a room or click a mapped corridor inside SUB.');
             return point;
         }
     };

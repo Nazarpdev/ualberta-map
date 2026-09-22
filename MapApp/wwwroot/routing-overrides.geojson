@@ -1,0 +1,128 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "local/cab-chemistry-indoor",
+        "highway": "footway",
+        "indoor": "corridor",
+        "note": "Indoor doorway connection across CAB's north wall into Gunning/Lemieux Chemistry Centre. Schematic alignment; door position is not surveyed."
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-113.52478, 53.52679],
+          [-113.52478, 53.52685]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1312307217",
+        "highway": "footway",
+        "indoor": "corridor",
+        "man_made": "bridge",
+        "layer": "1",
+        "note": "CAB–SAB ground-level enclosed passage. The east–west path passes underneath; only the west door is an access junction."
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-113.524778, 53.52611],
+          [-113.524778, 53.526189],
+          [-113.524778, 53.526307]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "local/cab-sab-west-door",
+        "highway": "footway",
+        "indoor": "corridor",
+        "note": "Connect the mapped west entrance (node/12146744181) to the enclosed passage."
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-113.524868, 53.526189],
+          [-113.524778, 53.526189]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "local/sab-university-commons-indoor",
+        "highway": "footway",
+        "indoor": "corridor",
+        "note": "Indoor connection through the shared SAB–University Commons wall in SAB's southeast wing. Schematic corridor alignment; door positions are not surveyed."
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-113.52474, 53.52524],
+          [-113.52424, 53.52524],
+          [-113.52416, 53.52524]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "local/ccis-chemistry-indoor",
+        "highway": "footway",
+        "indoor": "corridor",
+        "note": "Indoor connection through CCIS's narrow southward extension into Gunning/Lemieux Chemistry Centre. The interior junction at the north end of the extension allows a turn into CCIS without visiting an exterior entrance. Schematic corridor alignment; door positions are not surveyed."
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-113.52466, 53.5281],
+          [-113.52466, 53.52801],
+          [-113.52466, 53.52786],
+          [-113.52466, 53.5278]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "local/ccis-north-lectures-indoor",
+        "highway": "footway",
+        "indoor": "corridor",
+        "note": "Indoor connection through CCIS's northward extension into the North Lecture Theatres. Interior turning points avoid detours to the extension's exterior doors. Schematic corridor alignment; door positions are not surveyed."
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-113.52514, 53.5284],
+          [-113.52514, 53.52853],
+          [-113.52514, 53.52858],
+          [-113.52514, 53.52865]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "local/north-lectures-biology-indoor",
+        "highway": "footway",
+        "indoor": "corridor",
+        "note": "Indoor connection from the North Lecture Theatres through the upper angled shared wall into Biological Sciences. Interior turning points continue into Biology's connecting wing. Schematic corridor alignment; door positions are not surveyed."
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-113.5251, 53.52902],
+          [-113.5252, 53.52909],
+          [-113.5253, 53.52898],
+          [-113.52665, 53.52898],
+          [-113.52665, 53.5295]
+        ]
+      }
+    }
+  ]
+}

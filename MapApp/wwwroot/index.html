@@ -34,16 +34,20 @@
         .entrance-toggle input:checked { background: #236348; }
         .entrance-toggle input:checked::before { transform: translateX(14px); }
         .entrance-toggle input:focus-visible { outline: 3px solid #83bca1; outline-offset: 3px; }
-        .entrance-icon { display: flex; align-items: center; justify-content: center; border: 1px solid #a6bbae; border-radius: 50%; background: #fff; color: #236348; box-shadow: 0 1px 4px #20382b26; }
-        .entrance-icon svg { width: 13px; height: 13px; }
+        .route-preference { display: flex; align-items: center; gap: 8px; margin: 12px 0 0; font-size: 13px; cursor: pointer; }
+        .route-preference input { width: 16px; height: 16px; padding: 0; margin: 0; accent-color: #236348; }
+        .entrance-icon { display: flex; align-items: center; justify-content: center; min-width: 26px; min-height: 26px; border: 1px solid #a6bbae; border-radius: 50%; background: #fff; color: #236348; box-shadow: 0 1px 4px #20382b26; }
+        .entrance-icon svg { width: 16px; height: 16px; flex-shrink: 0; }
+        .selection-marker { background: none; border: 0; }
+        .selection-marker svg { display: block; overflow: visible; }
+        .selection-marker .pin-shadow { filter: blur(1.5px); }
         [hidden] { display: none !important; }
-        .sub-link { margin-top: 12px; padding: 0; border: 0; background: none; color: #236348; font: inherit; font-size: 12px; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
         .floor-panel { position: absolute; top: 20px; right: 20px; z-index: 1000; padding: 12px; border: 1px solid #e4e9e5; border-radius: 12px; background: #fff; box-shadow: 0 4px 24px #20382b14; }
         .floor-panel strong { display: block; margin-bottom: 10px; font-size: 13px; }
         .floor-buttons { display: flex; gap: 4px; }
         .floor-buttons button, .route-step { border: 0; border-radius: 7px; padding: 9px 10px; background: #f1f5f2; color: #53665a; font: inherit; font-size: 12px; cursor: pointer; }
         .floor-buttons button[aria-pressed="true"] { background: #236348; color: #fff; }
-        .floor-buttons button:focus-visible, .route-step:focus-visible, .sub-link:focus-visible { outline: 3px solid #83bca1; outline-offset: 3px; }
+        .floor-buttons button:focus-visible, .route-step:focus-visible { outline: 3px solid #83bca1; outline-offset: 3px; }
         .sub-legend { position: absolute; bottom: 28px; left: 20px; z-index: 1000; max-width: 260px; padding: 12px 14px; border-radius: 12px; border: 1px solid #e4e9e5; background: #fff; font-size: 12px; box-shadow: 0 4px 24px #20382b14; }
         .sub-legend summary { cursor: pointer; font-weight: 600; }
         .legend-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 12px; margin-top: 12px; }
@@ -78,9 +82,9 @@
         <div class="ac-wrapper"><label for="startLoc">From</label><input id="startLoc" placeholder="Starting location" autocomplete="off"></div>
         <div class="ac-wrapper"><label for="endLoc">To</label><input id="endLoc" placeholder="Destination" autocomplete="off"></div>
         <button id="routeBtn">Find route</button>
+        <label class="route-preference"><input id="preferIndoor" type="checkbox">Prefer indoor routes</label>
         <label class="entrance-toggle" for="showEntrances">Show entrances<input id="showEntrances" type="checkbox" role="switch" checked></label>
         <label class="entrance-toggle" for="showStairs">Show staircases<input id="showStairs" type="checkbox" role="switch" checked></label>
-        <button class="sub-link" id="viewSub">SUB floor plans</button>
         <div id="routeStatus" role="status" aria-live="polite"></div>
         <div id="routeSteps" aria-label="Route floor changes"></div>
     </section>
@@ -107,10 +111,10 @@
             <span>↕ · Lift</span>
             <span>← / ↑ · Pedway</span>
         </div>
-        <p>Select a room or its green doorway dot.<br>Traced from UASU’s 2024 plans.</p>
+        <p>Traced from UASU’s 2024 plans.</p>
     </details>
     <div id="map"></div>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script type="module" src="map.js"></script>
+    <script type="module" src="map.js?v=sub-routing-3"></script>
 </body>
 </html>

@@ -1,4 +1,5 @@
-import { createSubMap } from './sub-map.mjs';
+import { createSubMap } from './sub-map.mjs?v=sub-routing-3';
+import { requestCampusRoute } from './route-client.mjs';
 
 const ualbertaBounds = [
     [53.5170, -113.5350], // Tighter Southwest corner (University Ave / 116 St)
@@ -26,13 +27,19 @@ let startPoint, endPoint, routeResult;
 let requestVersion = 0;
 const routeLayer = L.layerGroup().addTo(map);
 const markerLayer = L.layerGroup().addTo(map);
+const selectionIcon = L.divIcon({
+    className: 'selection-marker', iconSize: [36, 46], iconAnchor: [18, 42],
+    html: '<svg width="36" height="46" viewBox="0 0 36 46" aria-hidden="true">'
+        + '<ellipse class="pin-shadow" cx="19" cy="42" rx="10" ry="3" fill="#20382b" opacity=".25"/>'
+        + '<path d="M18 2C10 2 4 8 4 16c0 10 14 26 14 26s14-16 14-26C32 8 26 2 18 2Z" fill="#338bc4" stroke="#246c9a" stroke-width="1.5"/>'
+        + '<circle cx="18" cy="16" r="6" fill="#fff" stroke="#246c9a" stroke-width="1.5"/></svg>'
+});
 map.createPane('routes'); map.getPane('routes').style.zIndex = 450;
 const status = document.getElementById('routeStatus');
 try {
     sub = await createSubMap(map, selectPoint, renderRoute);
 } catch (error) {
     status.textContent = error.message;
-    document.getElementById('viewSub').disabled = true;
     document.getElementById('showStairs').disabled = true;
 }
 
@@ -111,8 +118,8 @@ const entranceLayer = L.layerGroup().addTo(map);
 const entranceIcon = L.divIcon({
     className: 'entrance-icon',
     html: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V3h14v18M3 21h18M8 21V6l8-1v16"/><path d="M12 13h1"/></svg>',
-    iconSize: [22, 22],
-    iconAnchor: [11, 11]
+    iconSize: [26, 26],
+    iconAnchor: [13, 13]
 });
 const isEntrance = feature => feature.geometry?.type === 'Point'
     && Boolean(feature.properties?.entrance) && feature.properties.entrance !== 'no';
@@ -170,7 +177,7 @@ function renderRoute() {
     }
     for (const point of [startPoint, endPoint]) {
         if (point && (point.floor == null || !sub?.visible || point.floor === sub.floor))
-            L.marker([point.lat, point.lon]).addTo(markerLayer);
+            L.marker([point.lat, point.lon], { icon: selectionIcon, title: point.name ?? 'Selected location' }).addTo(markerLayer);
     }
     for (const segment of routeResult?.segments ?? []) {
         if (segment.floor != null && (!sub?.visible || segment.floor !== sub.floor)) continue;
@@ -183,22 +190,18 @@ async function calculateRoute() {
     const version = ++requestVersion;
     routeResult = null; renderRoute();
     document.getElementById('routeSteps').replaceChildren();
-    status.textContent = 'Finding route…';
+    status.textContent = '';
     try {
         let result;
-        if (sub) result = await sub.route(startPoint, endPoint);
+        const preferIndoor = document.getElementById('preferIndoor').checked;
+        if (sub) result = await sub.route(startPoint, endPoint, { preferIndoor });
         else {
-            const params = new URLSearchParams({ slat: startPoint.lat, slon: startPoint.lon, elat: endPoint.lat, elon: endPoint.lon });
-            if (startPoint.name) params.set('startName', startPoint.name);
-            if (endPoint.name) params.set('endName', endPoint.name);
-            const response = await fetch(`/api/route?${params}`);
-            if (!response.ok) throw new Error('Could not calculate route');
-            result = { segments: [{ floor: null, coords: await response.json() }], transitions: [] };
+            const route = await requestCampusRoute(startPoint, endPoint, { preferIndoor });
+            result = { segments: [{ floor: null, coords: route.coordinates }], transitions: [] };
         }
         if (version !== requestVersion) return;
         routeResult = result;
         if (!routeResult.segments.some(segment => segment.coords.length)) throw new Error('No mapped route found.');
-        status.textContent = routeResult.transitions.length ? 'Follow the route to the stairs, then switch floors below.' : '';
         const steps = document.getElementById('routeSteps');
         for (const transition of routeResult.transitions) {
             const button = document.createElement('button');
@@ -225,7 +228,7 @@ function selectPoint(point) {
         document.getElementById('startLoc').value = point.name ?? '';
         document.getElementById('endLoc').value = '';
         document.getElementById('routeSteps').replaceChildren();
-        status.textContent = 'Choose a destination. You can switch floors.';
+        status.textContent = '';
         renderRoute();
     } else {
         endPoint = point;
@@ -239,6 +242,9 @@ map.on('click', event => {
     catch (error) { status.textContent = error.message; }
 });
 map.on('zoomend moveend', renderRoute);
+document.getElementById('preferIndoor').addEventListener('change', () => {
+    if (startPoint && endPoint) calculateRoute();
+});
 
 document.getElementById('routeBtn').onclick = () => {
     const resolve = (id, previous) => {
