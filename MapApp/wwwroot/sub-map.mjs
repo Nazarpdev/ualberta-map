@@ -8,14 +8,28 @@ export async function createSubMap(map, onSelect, onFloorChange) {
     const data = await response.json();
     const router = new IndoorRouter(data);
     const bounds = L.latLngBounds(data.bounds);
-    let floor = 1, visible = false, outline = [];
-    const panel = document.getElementById('subFloors');
+    let floor = 1, visible = false, outline = [], drawnFloor;
+    const panel = document.getElementById('subPanel');
     const details = document.getElementById('subLegend');
     if (window.matchMedia('(max-width: 480px)').matches) details.open = false;
     const stairs = L.layerGroup();
     map.createPane('subPlans'); map.getPane('subPlans').style.zIndex = 410;
     map.createPane('subDetails'); map.getPane('subDetails').style.zIndex = 430;
     map.createPane('subLabels'); map.getPane('subLabels').style.zIndex = 440;
+    for (const name of ['subPlans', 'subDetails', 'subLabels']) {
+        const pane = map.getPane(name);
+        pane.style.transition = 'opacity .3s ease';
+        pane.style.opacity = '0';
+        pane.inert = true;
+    }
+    const setPlanOpacity = value => {
+        for (const name of ['subPlans', 'subDetails', 'subLabels']) {
+            const pane = map.getPane(name);
+            pane.style.opacity = value;
+            // Fading rooms must not reopen tooltips as they pass under the pointer.
+            pane.inert = value === '0';
+        }
+    };
     const plan = createSubPlan(map, router, selectRoom);
     function selectRoom(id) {
         const node = router.nodes.get(id);
@@ -32,17 +46,20 @@ export async function createSubMap(map, onSelect, onFloorChange) {
         render(); onFloorChange();
     }
     panel.querySelectorAll('[data-floor]').forEach(button => button.addEventListener('click', () => setFloor(Number(button.dataset.floor))));
-    function render() {
-        stairs.clearLayers();
-        panel.hidden = details.hidden = !visible;
-        if (!visible) { plan.clear(); map.removeLayer(stairs); map.removeLayer(rooms); return; }
-        plan.draw(data.floors.find(f => f.id === floor));
+    function syncFloorUI() {
         panel.querySelectorAll('[data-floor]').forEach(button => button.setAttribute('aria-pressed', String(Number(button.dataset.floor) === floor)));
         document.getElementById('subFloorName').textContent = `SUB · ${floorName(floor)}`;
+    }
+    function drawShapes() {
+        plan.draw(data.floors.find(f => f.id === floor));
+        syncFloorUI();
+    }
+    function drawMarkers() {
+        stairs.clearLayers();
         for (const node of router.nodes.values()) {
             if (node.floor !== floor) continue;
             if (node.kind === 'stairs') {
-                L.marker([node.lat, node.lon], { icon: stairsIcon, title: node.name, keyboard: false })
+                L.marker([node.lat, node.lon], { pane: 'subDetails', icon: stairsIcon, title: node.name, keyboard: false })
                     .bindTooltip(text(`${node.name} · ${floorName(floor)}`)).addTo(stairs);
             }
         }
@@ -50,19 +67,54 @@ export async function createSubMap(map, onSelect, onFloorChange) {
         else map.removeLayer(stairs);
         plan.refreshLabels();
     }
+    function fadeInPanes() {
+        // Labels lay out a frame later, so fade after to include them, not pop them.
+        requestAnimationFrame(() => requestAnimationFrame(() => { if (visible) setPlanOpacity('1'); }));
+    }
+    function render() {
+        // Keep hidden layers mounted so Leaflet positions them before zoomanim.
+        if (drawnFloor !== floor) {
+            drawShapes();
+            drawMarkers();
+            drawnFloor = floor;
+        }
+        if (!visible) {
+            panel.classList.remove('show');
+            setPlanOpacity('0');
+            plan.closeTooltips();
+            stairs.eachLayer(layer => layer.closeTooltip());
+            return;
+        }
+        panel.classList.add('show');
+        const fadingIn = map.getPane('subPlans').style.opacity === '0';
+        if (fadingIn) setPlanOpacity('0');
+        if (fadingIn) fadeInPanes();
+        else setPlanOpacity('1');
+    }
     function update() {
         const next = map.getZoom() >= 19 && map.getBounds().intersects(bounds);
         if (next !== visible) { visible = next; render(); }
-        else if (visible) plan.refreshLabels();
     }
-    map.on('zoomend moveend', update);
-    document.getElementById('showStairs').addEventListener('change', render);
+    map.on('moveend', () => { update(); plan.refreshLabels(); });
+    map.on('zoomstart', () => {
+        // Close rather than just CSS-hide tooltips, so they stay faded after zoom.
+        plan.closeTooltips();
+        stairs.eachLayer(layer => layer.closeTooltip());
+    });
+    map.on('zoomend', update);
+    // Use the destination zoom so both fades start during the animation.
+    map.on('zoomanim', event => {
+        const next = event.zoom >= 19 && map.getBounds().intersects(bounds);
+        if (next !== visible) { visible = next; render(); }
+    });
+    document.getElementById('showStairs').addEventListener('change', drawMarkers);
     function focus(value = floor) {
         setFloor(value);
         const zoom = Math.max(19, Math.min(20, map.getBoundsZoom(bounds, false, L.point(120, 120))));
         map.setView(bounds.getCenter(), zoom, { animate: false });
     }
     map.on('resize', () => { if (window.matchMedia('(max-width: 480px)').matches) details.open = false; });
+    render();
     update();
 
     const names = new Map([...router.nodes.values()].filter(n => n.kind === 'room').map(n => [title(n), n]));

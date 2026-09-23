@@ -85,9 +85,9 @@ C:/Users/Nazar/Projects/ualberta-map/MapApp/obj/Debug/net10.0/compressed/c1eomnu
 C:/Users/Nazar/Projects/ualberta-map/MapApp/obj/Debug/net10.0/compressed/be9fn3g3p5-{0}-bejfei9djg-bejfei9djg.gz
 /Users/nazarp/Projects/ualberta-map/MapApp/obj/Debug/net10.0/compressed/tag4vxawy4-{0}-4uaw005kfe-4uaw005kfe.gz
 /Users/nazarp/Projects/ualberta-map/MapApp/obj/Debug/net10.0/compressed/euojq26glo-{0}-0rz49a9pnc-0rz49a9pnc.gz
-/Users/nazarp/Projects/ualberta-map/MapApp/obj/Debug/net10.0/compressed/be9fn3g3p5-{0}-alq8gimh9h-alq8gimh9h.gz
 /Users/nazarp/Projects/ualberta-map/MapApp/obj/Debug/net10.0/compressed/n5uk782f7v-{0}-bj9aigxm58-bj9aigxm58.gz
 /Users/nazarp/Projects/ualberta-map/MapApp/obj/Debug/net10.0/compressed/z6gifky2e3-{0}-zilksjxdqp-zilksjxdqp.gz
-/Users/nazarp/Projects/ualberta-map/MapApp/obj/Debug/net10.0/compressed/sh99o643eb-{0}-fopim7eu5d-fopim7eu5d.gz
-/Users/nazarp/Projects/ualberta-map/MapApp/obj/Debug/net10.0/compressed/c1eomnu88u-{0}-hid2ol3tdc-hid2ol3tdc.gz
-/Users/nazarp/Projects/ualberta-map/MapApp/obj/Debug/net10.0/compressed/5e1wpxyuo9-{0}-rmflohn50q-rmflohn50q.gz
+/Users/nazarp/Projects/ualberta-map/MapApp/obj/Debug/net10.0/compressed/5e1wpxyuo9-{0}-m5eyk8etdh-m5eyk8etdh.gz
+/Users/nazarp/Projects/ualberta-map/MapApp/obj/Debug/net10.0/compressed/sh99o643eb-{0}-u1tnlv22f1-u1tnlv22f1.gz
+/Users/nazarp/Projects/ualberta-map/MapApp/obj/Debug/net10.0/compressed/c1eomnu88u-{0}-i87iaznq74-i87iaznq74.gz
+/Users/nazarp/Projects/ualberta-map/MapApp/obj/Debug/net10.0/compressed/be9fn3g3p5-{0}-6e02sr2d7y-6e02sr2d7y.gz

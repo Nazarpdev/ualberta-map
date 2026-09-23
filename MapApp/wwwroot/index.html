@@ -38,24 +38,29 @@
         .route-preference input { width: 16px; height: 16px; padding: 0; margin: 0; accent-color: #236348; }
         .entrance-icon { display: flex; align-items: center; justify-content: center; min-width: 26px; min-height: 26px; border: 1px solid #a6bbae; border-radius: 50%; background: #fff; color: #236348; box-shadow: 0 1px 4px #20382b26; }
         .entrance-icon svg { width: 16px; height: 16px; flex-shrink: 0; }
+        .leaflet-tooltip { transition: opacity .15s ease; }
+        .leaflet-zoom-anim .leaflet-tooltip { opacity: 0 !important; }
         .selection-marker { background: none; border: 0; }
         .selection-marker svg { display: block; overflow: visible; }
         .selection-marker .pin-shadow { filter: blur(1.5px); }
         [hidden] { display: none !important; }
-        .floor-panel { position: absolute; top: 20px; right: 20px; z-index: 1000; padding: 12px; border: 1px solid #e4e9e5; border-radius: 12px; background: #fff; box-shadow: 0 4px 24px #20382b14; }
-        .floor-panel strong { display: block; margin-bottom: 10px; font-size: 13px; }
+        .sub-panel { position: absolute; top: 20px; right: 20px; z-index: 1000; width: 260px; max-width: calc(100% - 40px); padding: 12px 14px; border: 1px solid #e4e9e5; border-radius: 12px; background: #fff; font-size: 12px; box-shadow: 0 4px 24px #20382b14; opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .3s ease, visibility .3s; }
+        .sub-panel.show { opacity: 1; visibility: visible; pointer-events: auto; }
+        .sub-panel strong { display: block; margin-bottom: 10px; font-size: 13px; }
         .floor-buttons { display: flex; gap: 4px; }
         .floor-buttons button, .route-step { border: 0; border-radius: 7px; padding: 9px 10px; background: #f1f5f2; color: #53665a; font: inherit; font-size: 12px; cursor: pointer; }
         .floor-buttons button[aria-pressed="true"] { background: #236348; color: #fff; }
         .floor-buttons button:focus-visible, .route-step:focus-visible { outline: 3px solid #83bca1; outline-offset: 3px; }
-        .sub-legend { position: absolute; bottom: 28px; left: 20px; z-index: 1000; max-width: 260px; padding: 12px 14px; border-radius: 12px; border: 1px solid #e4e9e5; background: #fff; font-size: 12px; box-shadow: 0 4px 24px #20382b14; }
-        .sub-legend summary { cursor: pointer; font-weight: 600; }
-        .legend-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 12px; margin-top: 12px; }
-        .legend-grid span { display: flex; align-items: center; gap: 6px; }
-        .legend-grid i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
-        .sub-legend p { margin: 10px 0 0; color: #738078; line-height: 1.5; }
+        .sub-panel summary { cursor: pointer; font-weight: 600; margin-top: 12px; }
+        .sub-panel .legend-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 12px; margin-top: 12px; }
+        .sub-panel .legend-grid span { display: flex; align-items: center; gap: 6px; }
+        .sub-panel .legend-grid i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+        .sub-panel p { margin: 10px 0 0; color: #738078; line-height: 1.5; }
+        .leaflet-subPlans-pane, .leaflet-subDetails-pane, .leaflet-subLabels-pane { transition: opacity .3s ease; }
         .stair-icon { color: #675389; border-color: #b9aec8; }
         .sub-room-label { background: none; border: 0; color: #31443a; font-family: system-ui, sans-serif; font-size: 11px; line-height: 1.3; text-align: center; }
+        .sub-label-content { animation: sub-label-fade .3s ease; }
+        @keyframes sub-label-fade { from { opacity: 0; } to { opacity: 1; } }
         .sub-label-content { width: 100%; }
         .sub-label-name { display: block; font-weight: 550; overflow-wrap: normal; }
         .sub-label-code { display: block; margin-top: 3px; font-size: 9px; color: #68776e; }
@@ -69,9 +74,8 @@
         .route-step { text-align: left; }
         @media (max-width: 480px) {
             .route-panel { top: 12px; left: 12px; max-width: calc(100% - 24px); padding: 16px; }
-            .floor-panel { top: auto; bottom: 96px; right: 12px; padding: 10px; }
-            .sub-legend { bottom: 28px; left: 12px; max-width: 200px; padding: 10px; }
-            .legend-grid { grid-template-columns: 1fr; }
+            .sub-panel { top: auto; bottom: 96px; right: 12px; width: 200px; padding: 10px; }
+            .sub-panel .legend-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -85,31 +89,31 @@
         <label class="entrance-toggle" for="showStairs">Show staircases<input id="showStairs" type="checkbox" role="switch" checked></label>
         <div id="routeSteps" aria-label="Route floor changes"></div>
     </section>
-    <aside id="subFloors" class="floor-panel" aria-label="SUB floor selector" hidden>
+    <aside id="subPanel" class="sub-panel" aria-label="SUB floors and legend">
         <strong id="subFloorName">SUB · Main</strong>
         <div class="floor-buttons">
             <button data-floor="0" aria-pressed="false">Lower</button>
             <button data-floor="1" aria-pressed="true">Main</button>
             <button data-floor="2" aria-pressed="false">Level 2</button>
         </div>
+        <details id="subLegend" open>
+            <summary>SUB legend</summary>
+            <div class="legend-grid">
+                <span><i style="background:#e3eed3"></i>Student space</span>
+                <span><i style="background:#f9e6d1"></i>Food</span>
+                <span><i style="background:#deecf4"></i>Services</span>
+                <span><i style="background:#dcebe2"></i>Businesses</span>
+                <span><i style="background:#f2dddd"></i>Venues</span>
+                <span><i style="background:#e7e9ed"></i>Offices</span>
+                <span><i style="background:#f3f6f3"></i>Corridors</span>
+                <span><i style="background:#675389"></i>Stair icons</span>
+                <span>WC · Washrooms</span>
+                <span>↕ · Lift</span>
+                <span>← / ↑ · Pedway</span>
+            </div>
+            <p>Traced from UASU’s 2024 plans.</p>
+        </details>
     </aside>
-    <details id="subLegend" class="sub-legend" open hidden>
-        <summary>SUB legend</summary>
-        <div class="legend-grid">
-            <span><i style="background:#e3eed3"></i>Student space</span>
-            <span><i style="background:#f9e6d1"></i>Food</span>
-            <span><i style="background:#deecf4"></i>Services</span>
-            <span><i style="background:#dcebe2"></i>Businesses</span>
-            <span><i style="background:#f2dddd"></i>Venues</span>
-            <span><i style="background:#e7e9ed"></i>Offices</span>
-            <span><i style="background:#f3f6f3"></i>Corridors</span>
-            <span><i style="background:#675389"></i>Stair icons</span>
-            <span>WC · Washrooms</span>
-            <span>↕ · Lift</span>
-            <span>← / ↑ · Pedway</span>
-        </div>
-        <p>Traced from UASU’s 2024 plans.</p>
-    </details>
     <div id="map"></div>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script type="module" src="map.js?v=sub-routing-3"></script>

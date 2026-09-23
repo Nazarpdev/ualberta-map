@@ -11,6 +11,7 @@ export function createSubPlan(map, router, onSelect) {
     const amenities = L.layerGroup();
     const renderer = L.svg({ pane: 'subPlans' });
     let current, frame;
+    let displayedLabels = new Set();
     let clipPath;
     const geo = (floor, [x, y]) => {
         const point = router.toGeo({ floor, x, y });
@@ -101,19 +102,31 @@ export function createSubPlan(map, router, onSelect) {
 
     const overlaps = (a, b) => a.left < b.right + 3 && a.right + 3 > b.left && a.top < b.bottom + 3 && a.bottom + 3 > b.top;
     function layoutLabels() {
+        const previousLabels = displayedLabels;
+        displayedLabels = new Set();
         labels.clearLayers(); amenities.clearLayers();
         if (!current) return;
         const container = map.getContainer(), mapRect = container.getBoundingClientRect();
+        // Lay out hidden labels at the entry zoom, including collision checks.
+        const layoutZoom = Math.max(19, map.getZoom());
+        const scale = map.getZoomScale(layoutZoom, map.getZoom());
+        const center = map.getSize().divideBy(2);
+        const layoutPoint = latlng => {
+            const p = map.latLngToContainerPoint(latlng);
+            return center.add(p.subtract(center).multiplyBy(scale));
+        };
         const occupied = [...container.querySelectorAll('.leaflet-marker-icon:not(.sub-room-label)')]
             .filter(el => Number(getComputedStyle(el).opacity) > 0)
             .map(el => {
                 const r = el.getBoundingClientRect();
-                return { left: r.left - mapRect.left, right: r.right - mapRect.left, top: r.top - mapRect.top, bottom: r.bottom - mapRect.top };
+                const x = center.x + ((r.left + r.right) / 2 - mapRect.left - center.x) * scale;
+                const y = center.y + ((r.top + r.bottom) / 2 - mapRect.top - center.y) * scale;
+                return { left: x - r.width / 2, right: x + r.width / 2, top: y - r.height / 2, bottom: y + r.height / 2 };
             });
         for (const space of current.spaces.filter(s => s.iconPoint).sort((a, b) => (a.icon === 'lift') - (b.icon === 'lift'))) {
             const center = geo(current.id, space.iconPoint);
             if (!withinBuilding(center[0], center[1])) continue;
-            const p = map.latLngToContainerPoint(center);
+            const p = layoutPoint(center);
             const rect = { left: p.x - 9, right: p.x + 9, top: p.y - 9, bottom: p.y + 9 };
             if (occupied.some(other => overlaps(rect, other))) continue;
             const symbol = document.createElement('span');
@@ -128,15 +141,15 @@ export function createSubPlan(map, router, onSelect) {
         }
         for (const node of router.nodes.values()) {
             if (node.floor !== current.id || node.kind !== 'room' || node.amenity) continue;
-            const p = map.latLngToContainerPoint([node.lat, node.lon]);
+            const p = layoutPoint([node.lat, node.lon]);
             occupied.push({ left: p.x - 6, right: p.x + 6, top: p.y - 6, bottom: p.y + 6 });
         }
         // Labels are constrained to an interior rectangle traced for each room.
         // At small zooms, fall back to room numbers; hide anything that cannot fit.
         const candidates = current.spaces.filter(s => s.labelBox).map(space => {
             const [x0, y0, x1, y1] = space.labelBox;
-            const a = map.latLngToContainerPoint(geo(current.id, [x0, y0]));
-            const b = map.latLngToContainerPoint(geo(current.id, [x1, y1]));
+            const a = layoutPoint(geo(current.id, [x0, y0]));
+            const b = layoutPoint(geo(current.id, [x1, y1]));
             return { space, width: Math.abs(a.x - b.x), height: Math.abs(a.y - b.y),
                 center: geo(current.id, [(x0 + x1) / 2, (y0 + y1) / 2]) };
         }).sort((a, b) => b.width * b.height - a.width * a.height);
@@ -170,10 +183,13 @@ export function createSubPlan(map, router, onSelect) {
             const fits = h <= height - 2 && element.scrollWidth <= w;
             probe.remove();
             if (!fits) continue;
-            const p = map.latLngToContainerPoint(center);
+            const p = layoutPoint(center);
             const rect = { left: p.x - w / 2, right: p.x + w / 2, top: p.y - h / 2, bottom: p.y + h / 2 };
             if (occupied.some(other => overlaps(rect, other))) continue;
             occupied.push(rect);
+            // A zoom-end refresh must not restart the fade on existing text.
+            if (previousLabels.has(space)) element.style.animation = 'none';
+            displayedLabels.add(space);
             const marker = L.marker(center, {
                 pane: 'subLabels', icon: L.divIcon({ className: 'sub-room-label', html: element, iconSize: [w, h], iconAnchor: [w / 2, h / 2] }),
                 title: space.name, keyboard: Boolean(space.node ?? space.destination),
@@ -186,10 +202,14 @@ export function createSubPlan(map, router, onSelect) {
         cancelAnimationFrame(frame);
         frame = requestAnimationFrame(layoutLabels);
     }
+    function closeTooltips() {
+        for (const group of [shapes, labels, amenities]) group.eachLayer(layer => layer.closeTooltip());
+    }
     function clear() {
         cancelAnimationFrame(frame); current = null;
+        displayedLabels.clear();
         shapes.clearLayers(); labels.clearLayers(); amenities.clearLayers();
         map.removeLayer(shapes); map.removeLayer(labels); map.removeLayer(amenities);
     }
-    return { draw, clear, refreshLabels };
+    return { draw, clear, refreshLabels, closeTooltips };
 }

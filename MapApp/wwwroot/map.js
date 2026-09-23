@@ -1,16 +1,22 @@
 import { createSubMap } from './sub-map.mjs?v=sub-routing-3';
 import { requestCampusRoute } from './route-client.mjs';
 
-const ualbertaBounds = [
-    [53.5170, -113.5350], // Tighter Southwest corner (University Ave / 116 St)
-    [53.5310, -113.5150]  // Tighter Northeast corner (Saskatchewan Dr / 112 St)
-];
+const centerLimit = L.latLngBounds(
+    [53.5170, -113.5350], // Southwest corner (University Ave / 116 St)
+    [53.5310, -113.5150]  // Northeast corner (Saskatchewan Dr / 112 St)
+).pad(0.2); // campus + a bit extra; applies to the center so it never changes with zoom
 
 const map = L.map('map', {
-    maxBounds: ualbertaBounds,
-    maxBoundsViscosity: 1.0,
-    minZoom: 15 // Increased from 14 to block zoom out further
+    minZoom: 15
 }).setView([53.5264, -113.5255], 16); // Start closer
+map.on('moveend', () => {
+    const center = map.getCenter();
+    const clamped = L.latLng(
+        Math.min(Math.max(center.lat, centerLimit.getSouth()), centerLimit.getNorth()),
+        Math.min(Math.max(center.lng, centerLimit.getWest()), centerLimit.getEast())
+    );
+    if (!center.equals(clamped)) map.setView(clamped, map.getZoom(), { animate: false });
+});
 map.zoomControl.setPosition('bottomright');
 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
