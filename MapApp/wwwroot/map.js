@@ -171,6 +171,44 @@ fetch('/map.geojson')
         toggle.parentElement.title = 'Entrance data could not be loaded. Refresh to try again.';
     });
 
+function smoothCoords(coords, radius = 5, arcSteps = 8) {
+    if (coords.length < 3) return coords;
+    const smooth = [coords[0]];
+    for (let i = 1; i < coords.length - 1; i++) {
+        const [lat0, lon0] = coords[i - 1];
+        const [lat1, lon1] = coords[i];
+        const [lat2, lon2] = coords[i + 1];
+        // Work in metres around the vertex so the curve size stays fixed
+        // instead of scaling with the adjoining segment lengths.
+        const kx = 111320 * Math.cos(lat1 * Math.PI / 180), ky = 111320;
+        const v1x = (lon1 - lon0) * kx, v1y = (lat1 - lat0) * ky;
+        const v2x = (lon2 - lon1) * kx, v2y = (lat2 - lat1) * ky;
+        const len1 = Math.hypot(v1x, v1y), len2 = Math.hypot(v2x, v2y);
+        if (len1 < 1e-6 || len2 < 1e-6) {
+            smooth.push(coords[i]);
+            continue;
+        }
+        const angle = Math.abs(Math.atan2(v1x * v2y - v1y * v2x, v1x * v2x + v1y * v2y));
+        if (angle < 0.15) {
+            smooth.push(coords[i]);
+            continue;
+        }
+        const r = Math.min(radius, len1 / 2, len2 / 2);
+        const ax = -v1x / len1 * r, ay = -v1y / len1 * r;
+        const bx = v2x / len2 * r, by = v2y / len2 * r;
+        // Quadratic bezier with the original vertex as control: tangent-smooth
+        // and hugging the corner instead of cutting across it.
+        for (let j = 0; j <= arcSteps; j++) {
+            const t = j / arcSteps;
+            const mx = (1 - t) * (1 - t) * ax + 2 * (1 - t) * t * 0 + t * t * bx;
+            const my = (1 - t) * (1 - t) * ay + 2 * (1 - t) * t * 0 + t * t * by;
+            smooth.push([lat1 + my / ky, lon1 + mx / kx]);
+        }
+    }
+    smooth.push(coords[coords.length - 1]);
+    return smooth;
+}
+
 function renderRoute() {
     routeLayer.clearLayers(); markerLayer.clearLayers();
     for (const marker of campusEntrances) {
@@ -185,7 +223,7 @@ function renderRoute() {
     }
     for (const segment of routeResult?.segments ?? []) {
         if (segment.floor != null && (!sub?.visible || segment.floor !== sub.floor)) continue;
-        L.polyline(segment.coords, { pane: 'routes', color: '#236348', weight: 5 }).addTo(routeLayer);
+        L.polyline(smoothCoords(segment.coords), { pane: 'routes', color: '#236348', weight: 5, lineJoin: 'round', lineCap: 'round' }).addTo(routeLayer);
     }
     sub?.refreshLabels();
 }
