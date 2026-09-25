@@ -1,4 +1,4 @@
-import { createSubMap } from './sub-map.mjs?v=sub-routing-3';
+import { createSubMap } from './sub-map.mjs?v=sub-routing-4';
 import { requestCampusRoute } from './route-client.mjs';
 
 const centerLimit = L.latLngBounds(
@@ -233,7 +233,9 @@ function renderRoute() {
             L.marker([point.lat, point.lon], { icon: selectionIcon, title: point.name ?? 'Selected location' }).addTo(markerLayer);
     }
     for (const segment of routeResult?.segments ?? []) {
-        if (segment.floor != null && (!sub?.visible || segment.floor !== sub.floor)) continue;
+        // Hide only other floors while the plan is visible; when zoomed out
+        // show every indoor leg so the full route stays on screen.
+        if (segment.floor != null && sub?.visible && segment.floor !== sub.floor) continue;
         L.polyline(smoothCoords(segment.coords), { pane: 'routes', color: '#236348', weight: 5, lineJoin: 'round', lineCap: 'round' }).addTo(routeLayer);
     }
     sub?.refreshLabels();

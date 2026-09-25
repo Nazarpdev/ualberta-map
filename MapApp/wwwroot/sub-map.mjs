@@ -1,4 +1,4 @@
-import { IndoorRouter, floorSegments } from './indoor-router.mjs?v=sub-routing-3';
+import { IndoorRouter, floorSegments } from './indoor-router.mjs?v=sub-routing-4';
 import { createSubPlan } from './sub-plan.mjs';
 import { requestCampusRoute } from './route-client.mjs';
 
@@ -184,7 +184,10 @@ export async function createSubMap(map, onSelect, onFloorChange) {
             return node ? { nodeId: node.id, spaceId: node.spaceId, floor: node.floor, lat: node.lat, lon: node.lon, name } : null;
         },
         click(lat, lon) {
-            if (!visible || !inside(lat, lon)) return { lat, lon };
+            // Resolve indoor points at any zoom; visibility only controls the
+            // drawn floor plan, not routing. Pins placed while zoomed out keep
+            // their floor so the indoor legs still appear after zooming in.
+            if (!inside(lat, lon)) return { lat, lon };
             const point = { lat, lon, floor, name: `SUB · ${floorName(floor)}` };
             if (!router.locate(point)) throw new Error('Select a room or an open indoor area.');
             return point;
