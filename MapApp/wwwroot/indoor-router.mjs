@@ -79,12 +79,11 @@ export class IndoorRouter {
         return result;
     }
 
-    // Markers attach only near traced corridors. Clicking an untraced room/wall
-    // cannot create a new straight-line shortcut across it; select its room dot.
+    // Open-area markers connect to visible corridors, including wide atriums.
+    // Room selections use their mapped destination instead of crossing walls.
     locate(endpoint) {
         if (endpoint.nodeId) return this.nodes.get(endpoint.nodeId) ?? null;
         // Named spaces without a traced doorway connect to the nearest corridor.
-        // Keep the proximity limit for arbitrary map clicks.
         if (endpoint.spaceId) {
             endpoint = this.spaces.get(endpoint.spaceId);
             if (!endpoint) return null;
@@ -99,11 +98,12 @@ export class IndoorRouter {
             const t = Math.max(0, Math.min(1, ((point.x - from.x) * dx + (point.y - from.y) * dy) / (dx * dx + dy * dy || 1)));
             const x = from.x + t * dx, y = from.y + t * dy;
             const d = Math.hypot(point.x - x, point.y - y);
+            if (!endpoint.spaceId && !this.clearCorridor({ ...point, floor: endpoint.floor }, { x, y })) continue;
             if (!best || d < best.offset) best = { ...endpoint, ...point, id: '',
                 projection: { x, y, floor: endpoint.floor, ...this.toGeo({ x, y, floor: endpoint.floor }) },
                 edge: [a, b], offset: d };
         }
-        return best && (endpoint.spaceId || best.offset <= 8) ? best : null;
+        return best;
     }
 
     route(start, end) {

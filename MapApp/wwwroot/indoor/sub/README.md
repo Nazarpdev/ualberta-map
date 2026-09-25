@@ -11,11 +11,14 @@ alignment to the campus footprint are schematic.
 - Click **SUB floor plans**, or zoom to level 19+ over SUB.
 - Switch **Lower / Main / Level 2** with the side buttons.
 - Search by room number or service name in either route input, or click a green
-  room dot or the room itself. Corridor clicks are supported near the traced paths; untraced rooms
-  and walls are rejected rather than connected with straight-line shortcuts.
+  room dot or the room itself. Clicking an open indoor area places a pin on the
+  selected floor and connects it to a corridor without crossing room walls.
+  Two nearby indoor pins can be routed independently.
 - Each route displays only its current-floor segment. Floor-change buttons name
   the staircase and select the next floor. Campus legs connect through one of
-  three mapped main-level entrances.
+  four mapped main-level entrances, including the public passage beside the
+  loading dock. That exit connects to the mapped crossing north of SUB through
+  an explicit outdoor link in `routing-overrides.geojson`.
 - **Show staircases** controls the single set of purple stair icons, not whether
    stairs may be used in a route. No staircase icons are embedded in the map artwork.
 - The southern atrium staircase on Lower and Main includes vector outlines,

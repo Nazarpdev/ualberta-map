@@ -2713,6 +2713,25 @@
   ],
   "nodes": [
     {
+      "id": "1:loading-exit-hall",
+      "floor": 1,
+      "x": 286,
+      "y": 529,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "1:entry-loading",
+      "floor": 1,
+      "x": 213,
+      "y": 529,
+      "kind": "entrance",
+      "name": "Loading dock-side entrance",
+      "code": null,
+      "campus": [53.525655, -113.52731900703]
+    },
+    {
       "id": "1:quad",
       "floor": 1,
       "x": 393,
@@ -4140,6 +4159,8 @@
     }
   ],
   "edges": [
+    ["1:alumni-hall", "1:loading-exit-hall"],
+    ["1:loading-exit-hall", "1:entry-loading"],
     [
       "1:quad",
       "1:east"

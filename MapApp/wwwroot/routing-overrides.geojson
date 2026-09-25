@@ -4,6 +4,34 @@
     {
       "type": "Feature",
       "properties": {
+        "@id": "local/sub-loading-side-door",
+        "entrance": "yes",
+        "name": "SUB loading dock-side entrance",
+        "note": "Door beside the loading dock in the UASU 2024 main-floor PDF; aligned to SUB's north wall. The public passage runs beside the dock, not through it."
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-113.52731900703, 53.525655]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "local/sub-loading-side-access",
+        "highway": "footway",
+        "note": "Short schematic connection across the loading-side apron from the PDF doorway to the south endpoint of mapped crossing way/1534778792. Reuses the crossing rather than inventing a new road crossing."
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-113.52731900703, 53.525655],
+          [-113.52733, 53.525725]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
         "@id": "local/cab-chemistry-indoor",
         "highway": "footway",
         "indoor": "corridor",

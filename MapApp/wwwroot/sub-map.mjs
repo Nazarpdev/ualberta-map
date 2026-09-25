@@ -112,7 +112,7 @@ export async function createSubMap(map, onSelect, onFloorChange) {
     function focus(value = floor) {
         setFloor(value);
         const zoom = Math.max(19, Math.min(20, map.getBoundsZoom(bounds, false, L.point(120, 120))));
-        map.setView(bounds.getCenter(), zoom, { animate: false });
+        map.setView(bounds.getCenter(), zoom, { animate: true });
     }
     map.on('resize', () => { if (window.matchMedia('(max-width: 480px)').matches) details.open = false; });
     render();
@@ -184,7 +184,10 @@ export async function createSubMap(map, onSelect, onFloorChange) {
             return node ? { nodeId: node.id, spaceId: node.spaceId, floor: node.floor, lat: node.lat, lon: node.lon, name } : null;
         },
         click(lat, lon) {
-            return { lat, lon };
+            if (!visible || !inside(lat, lon)) return { lat, lon };
+            const point = { lat, lon, floor, name: `SUB · ${floorName(floor)}` };
+            if (!router.locate(point)) throw new Error('Select a room or an open indoor area.');
+            return point;
         }
     };
 }

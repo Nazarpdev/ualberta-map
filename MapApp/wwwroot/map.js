@@ -138,6 +138,17 @@ fetch('/map.geojson')
         if (!res.ok) throw new Error(`Map data failed to load (${res.status})`);
         return res.json();
     })
+    .then(async data => {
+        // Show the same corrected doors and connections used by campus routing.
+        const response = await fetch('/routing-overrides.geojson');
+        if (!response.ok) throw new Error(`Map corrections failed to load (${response.status})`);
+        const corrections = await response.json();
+        const replaced = new Set(corrections.features.map(feature => feature.properties?.['@id']).filter(Boolean));
+        return { ...data, features: [
+            ...data.features.filter(feature => !replaced.has(feature.properties?.['@id'])),
+            ...corrections.features
+        ] };
+    })
     .then(data => {
         sub?.setFootprints(data.features);
         L.geoJSON(data, {
@@ -263,11 +274,12 @@ async function calculateRoute() {
 }
 
 function samePoint(a, b) {
+    if (a.floor !== b.floor) return false;
     const aId = a.nodeId ?? a.spaceId, bId = b.nodeId ?? b.spaceId;
     if (aId && bId) return aId === bId;
     const dLat = (a.lat - b.lat) * 111320;
     const dLon = (a.lon - b.lon) * 111320 * Math.cos(a.lat * Math.PI / 180);
-    return Math.hypot(dLat, dLon) < 10;
+    return Math.hypot(dLat, dLon) < (a.floor != null ? 0.5 : 10);
 }
 
 function selectPoint(point) {
