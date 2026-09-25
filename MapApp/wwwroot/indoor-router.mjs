@@ -3,6 +3,21 @@ export class IndoorRouter {
     constructor(data) {
         this.data = data;
         this.nodes = new Map(data.nodes.map(node => [node.id, { ...node, ...this.toGeo(node) }]));
+        this.spaces = new Map();
+        for (const floor of data.floors) {
+            floor.spaces.forEach((space, index) => {
+                if (space.node || space.destination) return;
+                const box = space.labelBox;
+                const points = space.polygon;
+                const center = space.iconPoint ?? (box ? [(box[0] + box[2]) / 2, (box[1] + box[3]) / 2]
+                    : points && [points.reduce((sum, p) => sum + p[0], 0) / points.length,
+                        points.reduce((sum, p) => sum + p[1], 0) / points.length]);
+                if (!center) return;
+                const point = { floor: floor.id, x: center[0], y: center[1] };
+                const id = `${floor.id}:space:${index}`;
+                this.spaces.set(id, { ...point, ...this.toGeo(point), spaceId: id, name: space.name, code: space.code });
+            });
+        }
         this.graph = new Map([...this.nodes.keys()].map(id => [id, []]));
         for (const [a, b] of data.edges) {
             const from = this.nodes.get(a), to = this.nodes.get(b);
@@ -68,6 +83,12 @@ export class IndoorRouter {
     // cannot create a new straight-line shortcut across it; select its room dot.
     locate(endpoint) {
         if (endpoint.nodeId) return this.nodes.get(endpoint.nodeId) ?? null;
+        // Named spaces without a traced doorway connect to the nearest corridor.
+        // Keep the proximity limit for arbitrary map clicks.
+        if (endpoint.spaceId) {
+            endpoint = this.spaces.get(endpoint.spaceId);
+            if (!endpoint) return null;
+        }
         const point = this.toPlan(endpoint);
         let best = null;
         for (const [a, b] of this.data.edges) {
@@ -82,7 +103,7 @@ export class IndoorRouter {
                 projection: { x, y, floor: endpoint.floor, ...this.toGeo({ x, y, floor: endpoint.floor }) },
                 edge: [a, b], offset: d };
         }
-        return best?.offset <= 8 ? best : null;
+        return best && (endpoint.spaceId || best.offset <= 8) ? best : null;
     }
 
     route(start, end) {

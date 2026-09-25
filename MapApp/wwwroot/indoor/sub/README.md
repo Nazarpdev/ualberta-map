@@ -17,7 +17,10 @@ alignment to the campus footprint are schematic.
   the staircase and select the next floor. Campus legs connect through one of
   three mapped main-level entrances.
 - **Show staircases** controls the single set of purple stair icons, not whether
-  stairs may be used in a route. No staircase icons are embedded in the map artwork.
+   stairs may be used in a route. No staircase icons are embedded in the map artwork.
+- The southern atrium staircase on Lower and Main includes vector outlines,
+  broad seating steps and narrow walking treads based on the source PDFs.
+  These floor-plan details remain visible when staircase icons are hidden.
 - The theatre **2-500** is intentionally routed to its main-level entrance.
 - **WC** badges mark washroom areas on each floor. Hover for the facilities shown
   on the source plan; select the badge or search for a washroom to route to its access point.

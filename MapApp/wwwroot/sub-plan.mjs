@@ -40,6 +40,7 @@ export function createSubPlan(map, router, onSelect) {
     const select = (layer, id) => {
         if (id) layer.on('click', () => onSelect(id));
     };
+    const destination = space => space.node ?? space.destination ?? `${current.id}:space:${current.spaces.indexOf(space)}`;
 
     function draw(floor) {
         clear(); current = floor;
@@ -62,19 +63,21 @@ export function createSubPlan(map, router, onSelect) {
             clipPath = clip.firstElementChild; updateClip();
         }
         for (const space of floor.spaces) {
-            if (!space.polygon) continue;
-            const layer = L.polygon(geoLine(floor.id, space.polygon, true), {
+            const box = space.labelBox;
+            const polygon = space.polygon ?? (box && [[box[0], box[1]], [box[2], box[1]], [box[2], box[3]], [box[0], box[3]]]);
+            if (!polygon) continue;
+            const layer = L.polygon(geoLine(floor.id, polygon, true), {
                 renderer, pane: 'subPlans', className: 'sub-space',
                 color: '#9daea3', weight: 1.2, fillColor: spaceColors[space.category],
-                fillOpacity: 1, bubblingMouseEvents: false
+                fillOpacity: space.polygon ? 1 : 0, stroke: Boolean(space.polygon), bubblingMouseEvents: false
             }).bindTooltip(text(`${space.code ? `${space.code} · ` : ''}${space.name}${space.note ? ` · ${space.note}` : ''}`)).addTo(shapes);
             if (clipPath) layer.getElement().setAttribute('clip-path', 'url(#sub-building-clip)');
-            if (space.node ?? space.destination) layer.getElement().dataset.room = space.node ?? space.destination;
-            select(layer, space.node ?? space.destination);
+            layer.getElement().dataset.room = destination(space);
+            select(layer, destination(space));
 
             // Cut a small opening in the wall at the traced room access point.
             const door = router.nodes.get(space.node);
-            if (!door) continue;
+            if (!door || !space.polygon) continue;
             let closest;
             for (let i = 0; i < space.polygon.length; i++) {
                 const a = space.polygon[i], b = space.polygon[(i + 1) % space.polygon.length];
@@ -97,6 +100,35 @@ export function createSubPlan(map, router, onSelect) {
                 renderer, pane: 'subPlans', color: '#9daea3', weight: 1.2, interactive: false
             }).addTo(shapes);
             if (clipPath) wall.getElement().setAttribute('clip-path', 'url(#sub-building-clip)');
+        }
+        // Atrium stairs: broad seating steps with a narrow walking flight,
+        // following the PDF pattern and aligned to the corrected south wing.
+        for (const stair of floor.staircases ?? []) {
+            const [a, b, c, d] = stair.corners;
+            const mix = (p, q, t) => p.map((value, i) => value + (q[i] - value) * t);
+            // Follow the actual wall slope rather than an inset rectangle.
+            const point = (across, along) => mix(mix(a, d, along), mix(b, c, along), across);
+            const outline = L.polygon(geoLine(floor.id, stair.corners, true), {
+                renderer, pane: 'subPlans', color: '#9daea3', weight: 1.2,
+                fillColor: '#e7ece7', fillOpacity: 1, interactive: false
+            }).addTo(shapes);
+            if (clipPath) outline.getElement().setAttribute('clip-path', 'url(#sub-building-clip)');
+            const lines = [];
+            for (let i = 0; i < stair.flights; i++) {
+                const along = i / stair.flights;
+                if (i) lines.push([point(0, along), point(1, along)]);
+                for (let j = 1; j <= 3; j++) {
+                    const tread = (i + j / 4) / stair.flights;
+                    lines.push([point(0, tread), point(1 / 3, tread)]);
+                }
+            }
+            lines.push([point(1 / 3, 0), point(1 / 3, 1)]);
+            for (const line of lines) {
+                const tread = L.polyline(geoLine(floor.id, line), {
+                    renderer, pane: 'subPlans', color: '#9daea3', weight: 1, interactive: false
+                }).addTo(shapes);
+                if (clipPath) tread.getElement().setAttribute('clip-path', 'url(#sub-building-clip)');
+            }
         }
     }
 
@@ -134,9 +166,9 @@ export function createSubPlan(map, router, onSelect) {
             symbol.setAttribute('aria-hidden', 'true');
             const marker = L.marker(center, {
                 pane: 'subDetails', icon: L.divIcon({ className: `sub-amenity-icon sub-${space.icon}`, html: symbol, iconSize: [18, 18], iconAnchor: [9, 9] }),
-                title: space.name, keyboard: Boolean(space.node), bubblingMouseEvents: false
+                title: space.name, keyboard: true, bubblingMouseEvents: false
             }).bindTooltip(text(`${space.name}${space.note ? ` · ${space.note}` : ''}`)).addTo(amenities);
-            select(marker, space.node);
+            select(marker, destination(space));
             occupied.push(rect);
         }
         for (const node of router.nodes.values()) {
@@ -192,10 +224,10 @@ export function createSubPlan(map, router, onSelect) {
             displayedLabels.add(space);
             const marker = L.marker(center, {
                 pane: 'subLabels', icon: L.divIcon({ className: 'sub-room-label', html: element, iconSize: [w, h], iconAnchor: [w / 2, h / 2] }),
-                title: space.name, keyboard: Boolean(space.node ?? space.destination),
-                interactive: Boolean(space.node ?? space.destination), bubblingMouseEvents: false
+                title: space.name, keyboard: true,
+                interactive: true, bubblingMouseEvents: false
             }).addTo(labels);
-            select(marker, space.node ?? space.destination);
+            select(marker, destination(space));
         }
     }
     function refreshLabels() {

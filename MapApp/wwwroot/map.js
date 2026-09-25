@@ -225,7 +225,8 @@ async function calculateRoute() {
 }
 
 function samePoint(a, b) {
-    if (a.nodeId && b.nodeId) return a.nodeId === b.nodeId;
+    const aId = a.nodeId ?? a.spaceId, bId = b.nodeId ?? b.spaceId;
+    if (aId && bId) return aId === bId;
     const dLat = (a.lat - b.lat) * 111320;
     const dLon = (a.lon - b.lon) * 111320 * Math.cos(a.lat * Math.PI / 180);
     return Math.hypot(dLat, dLon) < 10;

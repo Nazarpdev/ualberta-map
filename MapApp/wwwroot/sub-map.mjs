@@ -32,14 +32,15 @@ export async function createSubMap(map, onSelect, onFloorChange) {
     };
     const plan = createSubPlan(map, router, selectRoom);
     function selectRoom(id) {
-        const node = router.nodes.get(id);
+        const node = router.nodes.get(id) ?? router.spaces.get(id);
+        if (!node) return;
         if (node.floor !== floor) setFloor(node.floor);
-        onSelect({ nodeId: node.id, floor: node.floor, lat: node.lat, lon: node.lon, name: title(node) });
+        onSelect({ nodeId: node.id, spaceId: node.spaceId, floor: node.floor, lat: node.lat, lon: node.lon, name: title(node) });
     }
     const stairsIcon = L.divIcon({ className: 'entrance-icon stair-icon', iconSize: [26, 26], iconAnchor: [13, 13],
         html: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 20h6v-6h6V8h6V3"/></svg>' });
     const text = value => { const span = document.createElement('span'); span.textContent = value; return span; };
-    const title = node => `SUB ${node.code} · ${node.name}`;
+    const title = node => `SUB${node.code ? ` ${node.code}` : ''} · ${node.name}`;
     const floorName = value => data.floors.find(f => f.id === value).name;
     function setFloor(value) {
         floor = value;
@@ -117,7 +118,7 @@ export async function createSubMap(map, onSelect, onFloorChange) {
     render();
     update();
 
-    const names = new Map([...router.nodes.values()].filter(n => n.kind === 'room').map(n => [title(n), n]));
+    const names = new Map([...router.nodes.values()].filter(n => n.kind === 'room').concat([...router.spaces.values()]).map(n => [title(n), n]));
     function inside(lat, lon) {
         // Use the actual campus footprint rather than its bounding rectangle.
         return outline.some(ring => {
@@ -180,7 +181,7 @@ export async function createSubMap(map, onSelect, onFloorChange) {
         locations: Object.fromEntries([...names].map(([name, n]) => [name, [n.lat, n.lon]])),
         endpoint(name) {
             const node = names.get(name) ?? (name === data.building ? router.nodes.get('1:entry-north') : null);
-            return node ? { nodeId: node.id, floor: node.floor, lat: node.lat, lon: node.lon, name } : null;
+            return node ? { nodeId: node.id, spaceId: node.spaceId, floor: node.floor, lat: node.lat, lon: node.lon, name } : null;
         },
         click(lat, lon) {
             return { lat, lon };
