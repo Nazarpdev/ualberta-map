@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-70 -80 1040 1160" font-family="system-ui,sans-serif">
+<rect x="-70" y="-80" width="1040" height="1160" fill="white"/>
+<text x="0" y="-35" font-size="34" font-weight="600" fill="#222222">CSC Level 1 — diagram rebuild (review, not yet fitted)</text>
+<path d="M0,0L820,0L820,743L900,743L900,1000L0,1000Z" fill="#b5bab5" stroke="#222222" stroke-width="5"/>
+<path d="M0,200 C-28,210 -28,270 0,282 Z" fill="#b5bab5" stroke="#222222" stroke-width="3"/>
+<rect x="795" y="208" width="25" height="459" fill="#b5bab5" stroke="white" stroke-width="2"/>
+<rect x="780" y="667" width="40" height="76" fill="#b5bab5" stroke="white" stroke-width="2"/>
+<rect x="10" y="0" width="220" height="125" fill="#585e5d" stroke="white" stroke-width="2"/>
+<text x="120.0" y="62.5" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">1-05</text>
+<rect x="230" y="0" width="100" height="125" fill="#585e5d" stroke="white" stroke-width="2"/>
+<text x="280.0" y="62.5" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">WC</text>
+<rect x="330" y="0" width="110" height="125" fill="#585e5d" stroke="white" stroke-width="2"/>
+<text x="385.0" y="62.5" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">WC</text>
+<rect x="450" y="0" width="170" height="111" fill="#585e5d" stroke="white" stroke-width="2"/>
+<text x="535.0" y="55.5" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">1-13</text>
+<rect x="0" y="306" width="225" height="166" fill="#585e5d" stroke="white" stroke-width="2"/>
+<text x="112.5" y="389.0" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">1-67</text>
+<rect x="0" y="472" width="225" height="195" fill="#585e5d" stroke="white" stroke-width="2"/>
+<text x="112.5" y="569.5" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">1-59</text>
+<rect x="0" y="667" width="225" height="180" fill="#585e5d" stroke="white" stroke-width="2"/>
+<text x="112.5" y="757.0" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">1-53</text>
+<rect x="20" y="847" width="200" height="84" fill="#585e5d" stroke="white" stroke-width="2"/>
+<text x="120.0" y="889.0" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">1-49</text>
+<rect x="340" y="347" width="65" height="84" fill="#585e5d" stroke="white" stroke-width="2"/>
+<text x="372.5" y="389.0" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">1-66</text>
+<rect x="405" y="347" width="65" height="84" fill="#585e5d" stroke="white" stroke-width="2"/>
+<text x="437.5" y="389.0" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">1-24</text>
+<rect x="340" y="431" width="65" height="55" fill="#585e5d" stroke="white" stroke-width="2"/>
+<text x="372.5" y="458.5" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">1-64</text>
+<rect x="405" y="431" width="65" height="55" fill="#585e5d" stroke="white" stroke-width="2"/>
+<text x="437.5" y="458.5" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">1-26</text>
+<rect x="340" y="486" width="130" height="153" fill="#585e5d" stroke="white" stroke-width="2"/>
+<text x="405.0" y="562.5" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">1-28</text>
+<rect x="340" y="639" width="130" height="62" fill="#585e5d" stroke="white" stroke-width="2"/>
+<text x="405.0" y="670.0" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">1-32</text>
+<rect x="340" y="701" width="130" height="77" fill="#585e5d" stroke="white" stroke-width="2"/>
+<text x="405.0" y="739.5" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">1-40</text>
+<rect x="580" y="215" width="215" height="139" fill="#585e5d" stroke="white" stroke-width="2"/>
+<text x="687.5" y="284.5" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">1-21</text>
+<rect x="580" y="354" width="215" height="139" fill="#585e5d" stroke="white" stroke-width="2"/>
+<text x="687.5" y="423.5" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">1-25</text>
+<rect x="580" y="493" width="215" height="174" fill="#585e5d" stroke="white" stroke-width="2"/>
+<text x="687.5" y="580.0" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">1-29</text>
+<rect x="580" y="667" width="70" height="76" fill="#585e5d" stroke="white" stroke-width="2"/>
+<text x="615.0" y="705.0" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">1-33</text>
+<rect x="650" y="667" width="70" height="76" fill="#585e5d" stroke="white" stroke-width="2"/>
+<text x="685.0" y="705.0" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">1-35</text>
+<rect x="720" y="667" width="60" height="76" fill="#585e5d" stroke="white" stroke-width="2"/>
+<text x="750.0" y="705.0" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">1-37</text>
+<rect x="220" y="847" width="240" height="84" fill="#585e5d" stroke="white" stroke-width="2"/>
+<text x="340.0" y="889.0" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">1-47</text>
+<rect x="460" y="847" width="70" height="84" fill="#585e5d" stroke="white" stroke-width="2"/>
+<text x="495.0" y="889.0" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">1-41</text>
+<rect x="530" y="847" width="60" height="84" fill="#585e5d" stroke="white" stroke-width="2"/>
+<text x="560.0" y="889.0" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">1-39</text>
+<path d="M350,333L350,285L375,264L445,264L470,285L470,333Z" fill="none" stroke="white" stroke-width="3"/>
+<circle cx="410" cy="299" r="24" fill="#222222"/>
+<text x="410" y="299" font-size="22" fill="white" text-anchor="middle" dominant-baseline="central">E</text>
+<circle cx="110" cy="257" r="24" fill="#222222"/>
+<text x="110" y="257" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">S</text>
+<circle cx="740" cy="167" r="24" fill="#222222"/>
+<text x="740" y="167" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">S</text>
+<circle cx="570" cy="910" r="24" fill="#222222"/>
+<text x="570" y="910" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">S</text>
+<circle cx="840" cy="896" r="24" fill="#222222"/>
+<text x="840" y="896" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">S</text>
+<circle cx="140" cy="208" r="14" fill="#222222"/>
+<text x="140" y="208" font-size="16" fill="white" text-anchor="middle" dominant-baseline="central">☎</text>
+<circle cx="700" cy="910" r="14" fill="#222222"/>
+<text x="700" y="910" font-size="16" fill="white" text-anchor="middle" dominant-baseline="central">☎</text>
+<text x="625" y="882" font-size="20" fill="#222222" text-anchor="middle">Access to basement</text>
+<text x="625" y="906" font-size="20" fill="#222222" text-anchor="middle">lecture theatres ↓</text>
+<text x="760" y="837" font-size="18" fill="#c0392b" text-anchor="middle">YOU ARE HERE ↑</text>
+<text x="790" y="955" font-size="20" fill="#222222" text-anchor="middle">Athabasca Hall Access →</text>
+</svg>

@@ -1,0 +1,387 @@
+import { createSubMap } from './sub-map.mjs';
+import { createCscMap } from './csc-map.mjs';
+import { requestCampusRoute } from './route-client.mjs';
+import type { CampusRoute } from './route-client.mjs';
+import type { IndoorBuilding, IndoorOption, RouteResult, SelectedPoint } from './indoor-building.mjs';
+import type * as GeoJSON from 'geojson';
+
+const centerLimit = L.latLngBounds(
+    [53.5170, -113.5350], // Southwest corner (University Ave / 116 St)
+    [53.5310, -113.5150]  // Northeast corner (Saskatchewan Dr / 112 St)
+).pad(0.2); // campus + a bit extra; applies to the center so it never changes with zoom
+
+const map = L.map('map', {
+    minZoom: 15
+}).setView([53.5264, -113.5255], 16); // Start closer
+map.on('moveend', () => {
+    const center = map.getCenter();
+    const clamped = L.latLng(
+        Math.min(Math.max(center.lat, centerLimit.getSouth()), centerLimit.getNorth()),
+        Math.min(Math.max(center.lng, centerLimit.getWest()), centerLimit.getEast())
+    );
+    if (!center.equals(clamped)) map.setView(clamped, map.getZoom(), { animate: false });
+});
+map.zoomControl!.setPosition('bottomright');
+
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    className: 'base-tiles',
+    maxNativeZoom: 19,
+    maxZoom: 22,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+}).addTo(map);
+
+let locations: Record<string, [number, number]> = {};
+let sub: IndoorBuilding | undefined, csc: IndoorBuilding | undefined;
+const indoorBuildings: IndoorBuilding[] = [];
+const campusEntrances: L.Marker[] = [];
+let startPoint: SelectedPoint | null = null, endPoint: SelectedPoint | null = null, routeResult: RouteResult | null = null;
+let requestVersion = 0;
+const routeLayer = L.layerGroup().addTo(map);
+const markerLayer = L.layerGroup().addTo(map);
+const selectionIcon = L.divIcon({
+    className: 'selection-marker', iconSize: [36, 46], iconAnchor: [18, 42],
+    html: '<svg width="36" height="46" viewBox="0 0 36 46" aria-hidden="true">'
+        + '<ellipse class="pin-shadow" cx="19" cy="42" rx="10" ry="3" fill="#20382b" opacity=".25"/>'
+        + '<path d="M18 2C10 2 4 8 4 16c0 10 14 26 14 26s14-16 14-26C32 8 26 2 18 2Z" fill="#338bc4" stroke="#246c9a" stroke-width="1.5"/>'
+        + '<circle cx="18" cy="16" r="6" fill="#fff" stroke="#246c9a" stroke-width="1.5"/></svg>'
+});
+map.createPane('routes'); map.getPane('routes')!.style.zIndex = '450';
+for (const [key, create] of [['sub', createSubMap], ['csc', createCscMap]] as const) {
+    try {
+        const building = await create(map, selectPoint, renderRoute);
+        indoorBuildings.push(building);
+        if (key === 'sub') sub = building;
+        else csc = building;
+    } catch (error) {
+        console.error(error);
+    }
+}
+if (!indoorBuildings.length) (document.getElementById('showStairs') as HTMLInputElement).disabled = true;
+
+const buildingFor = (point: SelectedPoint | null | undefined): IndoorBuilding | undefined =>
+    point?.building ? indoorBuildings.find(building => building.building === point.building) : undefined;
+
+function setupAutocomplete(input: HTMLInputElement) {
+    let matches: string[] = [];
+    let activeIndex = -1;
+
+    const list = document.createElement('div');
+    list.className = 'ac-list';
+    list.style.display = 'none';
+    input.parentElement!.appendChild(list);
+
+    const close = () => {
+        list.style.display = 'none';
+        activeIndex = -1;
+    };
+
+    const render = () => {
+        list.innerHTML = '';
+        matches.forEach((name, i) => {
+            const item = document.createElement('div');
+            item.className = 'ac-item' + (i === activeIndex ? ' ac-active' : '');
+            item.textContent = name;
+            item.addEventListener('mousedown', (e) => {
+                e.preventDefault(); // keep focus on the input
+                input.value = name;
+                close();
+            });
+            list.appendChild(item);
+        });
+        list.style.display = matches.length ? 'block' : 'none';
+    };
+
+    input.addEventListener('input', () => {
+        const q = input.value.trim().toLowerCase();
+        if (!q) { matches = []; close(); return; }
+        matches = Object.keys(locations)
+            .filter(n => n.toLowerCase().includes(q))
+            .sort((a, b) => a.toLowerCase().indexOf(q) - b.toLowerCase().indexOf(q))
+            .slice(0, 10);
+        activeIndex = matches.length ? 0 : -1; // highlight top result by default
+        render();
+    });
+
+    input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            if (!matches.length) return;
+            e.preventDefault();
+            input.value = matches[activeIndex >= 0 ? activeIndex : 0];
+            close();
+        } else if (e.key === 'ArrowDown' && matches.length) {
+            e.preventDefault();
+            activeIndex = (activeIndex + 1) % matches.length;
+            render();
+        } else if (e.key === 'ArrowUp' && matches.length) {
+            e.preventDefault();
+            activeIndex = (activeIndex - 1 + matches.length) % matches.length;
+            render();
+        } else if (e.key === 'Escape') {
+            close();
+        }
+    });
+
+    input.addEventListener('blur', close);
+}
+
+fetch('/api/locations')
+    .then(res => res.json())
+    .then((data: Record<string, [number, number]>) => {
+        locations = Object.assign({}, data, ...indoorBuildings.map(building => building.locations));
+        setupAutocomplete(document.getElementById('startLoc') as HTMLInputElement);
+        setupAutocomplete(document.getElementById('endLoc') as HTMLInputElement);
+    });
+
+const entranceLayer = L.layerGroup().addTo(map);
+const entranceIcon = L.divIcon({
+    className: 'entrance-icon',
+    html: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V3h14v18M3 21h18M8 21V6l8-1v16"/><path d="M12 13h1"/></svg>',
+    iconSize: [26, 26],
+    iconAnchor: [13, 13]
+});
+const isEntrance = (feature: GeoJSON.Feature): boolean => feature.geometry?.type === 'Point'
+    && Boolean(feature.properties?.entrance) && feature.properties!.entrance !== 'no';
+
+(document.getElementById('showEntrances') as HTMLInputElement).addEventListener('change', (event) => {
+    const target = event.target as HTMLInputElement;
+    if (target.checked) entranceLayer.addTo(map);
+    else map.removeLayer(entranceLayer);
+});
+
+fetch('/map.geojson')
+    .then(res => {
+        if (!res.ok) throw new Error(`Map data failed to load (${res.status})`);
+        return res.json();
+    })
+    .then(async (data: GeoJSON.FeatureCollection) => {
+        // Show the same corrected doors and connections used by campus routing.
+        const response = await fetch('/routing-overrides.geojson');
+        if (!response.ok) throw new Error(`Map corrections failed to load (${response.status})`);
+        const corrections = (await response.json()) as { features: GeoJSON.Feature[] };
+        const replaced = new Set(corrections.features.map(feature => feature.properties?.['@id']).filter(Boolean));
+        return { ...data, features: [
+            ...data.features.filter(feature => !replaced.has(feature.properties?.['@id'])),
+            ...corrections.features
+        ] } as GeoJSON.FeatureCollection;
+    })
+    .then((data: GeoJSON.FeatureCollection) => {
+        indoorBuildings.forEach(building => building.setFootprints(data.features));
+        L.geoJSON(data, {
+            filter: (feature: GeoJSON.Feature) => !isEntrance(feature),
+            style: { color: '#8fa99b', weight: 1, opacity: 0.6, fillOpacity: 0.08 }
+        }).addTo(map);
+        L.geoJSON(data, {
+            filter: isEntrance,
+            pointToLayer: (feature: GeoJSON.Feature, latlng: L.LatLng) => {
+                const type = feature.properties!.entrance as string;
+                const label = feature.properties!.name || (type === 'yes' ? 'Entrance' : `${type.charAt(0).toUpperCase()}${type.slice(1)} entrance`);
+                const tooltip = document.createElement('span');
+                tooltip.textContent = label;
+                const marker = L.marker(latlng, {
+                    icon: entranceIcon,
+                    title: label,
+                    keyboard: false,
+                    zIndexOffset: -1000,
+                    bubblingMouseEvents: true
+                }).bindTooltip(tooltip, { direction: 'top', offset: [0, -10] });
+                campusEntrances.push(marker);
+                return marker;
+            }
+        }).addTo(entranceLayer);
+    })
+    .catch((error: unknown) => {
+        console.error(error);
+        const toggle = document.getElementById('showEntrances') as HTMLInputElement;
+        toggle.checked = false;
+        toggle.disabled = true;
+        toggle.parentElement!.title = 'Entrance data could not be loaded. Refresh to try again.';
+    });
+
+function smoothCoords(coords: [number, number][], radius = 5, arcSteps = 8): [number, number][] {
+    if (coords.length < 3) return coords;
+    const smooth: [number, number][] = [coords[0]];
+    for (let i = 1; i < coords.length - 1; i++) {
+        const [lat0, lon0] = coords[i - 1];
+        const [lat1, lon1] = coords[i];
+        const [lat2, lon2] = coords[i + 1];
+        // Work in metres around the vertex so the curve size stays fixed
+        // instead of scaling with the adjoining segment lengths.
+        const kx = 111320 * Math.cos(lat1 * Math.PI / 180), ky = 111320;
+        const v1x = (lon1 - lon0) * kx, v1y = (lat1 - lat0) * ky;
+        const v2x = (lon2 - lon1) * kx, v2y = (lat2 - lat1) * ky;
+        const len1 = Math.hypot(v1x, v1y), len2 = Math.hypot(v2x, v2y);
+        if (len1 < 1e-6 || len2 < 1e-6) {
+            smooth.push(coords[i]);
+            continue;
+        }
+        const angle = Math.abs(Math.atan2(v1x * v2y - v1y * v2x, v1x * v2x + v1y * v2y));
+        if (angle < 0.15) {
+            smooth.push(coords[i]);
+            continue;
+        }
+        const r = Math.min(radius, len1 / 2, len2 / 2);
+        const ax = -v1x / len1 * r, ay = -v1y / len1 * r;
+        const bx = v2x / len2 * r, by = v2y / len2 * r;
+        // Quadratic bezier with the original vertex as control: tangent-smooth
+        // and hugging the corner instead of cutting across it.
+        for (let j = 0; j <= arcSteps; j++) {
+            const t = j / arcSteps;
+            const mx = (1 - t) * (1 - t) * ax + 2 * (1 - t) * t * 0 + t * t * bx;
+            const my = (1 - t) * (1 - t) * ay + 2 * (1 - t) * t * 0 + t * t * by;
+            smooth.push([lat1 + my / ky, lon1 + mx / kx]);
+        }
+    }
+    smooth.push(coords[coords.length - 1]);
+    return smooth;
+}
+
+function renderRoute(): void {
+    routeLayer.clearLayers(); markerLayer.clearLayers();
+    for (const marker of campusEntrances) {
+        const point = marker.getLatLng();
+        const hidden = indoorBuildings.some(building => building.visible && building.floor !== 1 && building.contains(point.lat, point.lng));
+        marker.setOpacity(hidden ? 0 : 1);
+        const element = marker.getElement();
+        if (element) element.style.pointerEvents = hidden ? 'none' : '';
+    }
+    for (const point of [startPoint, endPoint]) {
+        const building = buildingFor(point);
+        if (point && (point.floor == null || !building?.visible || point.floor === building.floor))
+            L.marker([point.lat, point.lon], { icon: selectionIcon, title: point.name ?? 'Selected location' }).addTo(markerLayer);
+    }
+    for (const segment of routeResult?.segments ?? []) {
+        // Hide only other floors while that building plan is visible.
+        const building = indoorBuildings.find(item => item.building === segment.building);
+        if (segment.floor != null && building?.visible && segment.floor !== building.floor) continue;
+        L.polyline(smoothCoords(segment.coords), { pane: 'routes', color: '#236348', weight: 5, lineJoin: 'round', lineCap: 'round' }).addTo(routeLayer);
+    }
+    indoorBuildings.forEach(building => building.refreshLabels());
+}
+
+interface CrossOption { start: IndoorOption; end: IndoorOption; campus: CampusRoute; cost: number }
+
+async function crossBuildingRoute(startBuilding: IndoorBuilding, endBuilding: IndoorBuilding, preferIndoor: boolean): Promise<RouteResult> {
+    const starts = startBuilding.indoorOptions(startPoint as SelectedPoint, true);
+    const ends = endBuilding.indoorOptions(endPoint as SelectedPoint, false);
+    const options = await Promise.all(starts.flatMap(start =>
+        ends.map(async (end): Promise<CrossOption | null> => {
+            const from = startBuilding.campusPoint(start.portal);
+            const to = endBuilding.campusPoint(end.portal);
+            const campus = await requestCampusRoute(from, to, {
+                preferIndoor, avoidSub: startBuilding.avoidSub || endBuilding.avoidSub
+            });
+            if (!campus.coordinates.length) return null;
+            return { start, end, campus, cost: start.cost + campus.cost + end.cost };
+        })));
+    const best = options.filter((option): option is CrossOption => option !== null).sort((a, b) => a.cost - b.cost)[0];
+    if (!best) throw new Error('No mapped route found.');
+    const outdoor = [[best.start.portal.lat, best.start.portal.lon], ...best.campus.coordinates,
+        [best.end.portal.lat, best.end.portal.lon]] as [number, number][];
+    return {
+        segments: [
+            ...startBuilding.indoorSegments(best.start.indoor.points),
+            { floor: null, coords: outdoor, building: null },
+            ...endBuilding.indoorSegments(best.end.indoor.points)
+        ],
+        transitions: [
+            ...startBuilding.transitionsFor(best.start.indoor.points),
+            ...endBuilding.transitionsFor(best.end.indoor.points)
+        ]
+    };
+}
+
+async function calculateRoute(): Promise<void> {
+    const version = ++requestVersion;
+    routeResult = null; renderRoute();
+    document.getElementById('routeSteps')!.replaceChildren();
+    try {
+        let result: RouteResult;
+        const preferIndoor = (document.getElementById('preferIndoor') as HTMLInputElement).checked;
+        const startBuilding = buildingFor(startPoint), endBuilding = buildingFor(endPoint);
+        if (startBuilding && endBuilding && startBuilding !== endBuilding)
+            result = await crossBuildingRoute(startBuilding, endBuilding, preferIndoor);
+        else if (startBuilding || endBuilding)
+            result = await (startBuilding ?? endBuilding!)!.route(startPoint as SelectedPoint, endPoint as SelectedPoint, { preferIndoor });
+        else {
+            const route = await requestCampusRoute(startPoint as SelectedPoint, endPoint as SelectedPoint, { preferIndoor });
+            result = { segments: [{ floor: null, coords: route.coordinates, building: null }], transitions: [] };
+        }
+        if (version !== requestVersion) return;
+        routeResult = result;
+        if (!routeResult.segments.some(segment => segment.coords.length)) throw new Error('No mapped route found.');
+        const steps = document.getElementById('routeSteps')!;
+        for (const transition of routeResult.transitions) {
+            const button = document.createElement('button');
+            button.className = 'route-step'; button.textContent = transition.text;
+            button.onclick = () => indoorBuildings.find(building => building.building === transition.building)?.focus(transition.to);
+            steps.appendChild(button);
+        }
+        const indoor = startBuilding ?? endBuilding;
+        if (indoor) indoor.focus((startBuilding ? startPoint!.floor : endPoint!.floor) as number);
+        else {
+            const coords = routeResult.segments.flatMap(s => s.coords);
+            map.fitBounds(L.latLngBounds(coords), { padding: [50, 50], maxZoom: 19 });
+        }
+        renderRoute();
+    } catch (error) {
+        if (version !== requestVersion) return;
+        routeResult = null; renderRoute();
+    }
+}
+
+function samePoint(a: SelectedPoint, b: SelectedPoint): boolean {
+    if (a.building !== b.building || a.floor !== b.floor) return false;
+    const aId = a.nodeId ?? a.spaceId, bId = b.nodeId ?? b.spaceId;
+    if (aId && bId) return aId === bId;
+    const dLat = (a.lat - b.lat) * 111320;
+    const dLon = (a.lon - b.lon) * 111320 * Math.cos(a.lat * Math.PI / 180);
+    return Math.hypot(dLat, dLon) < (a.floor != null ? 0.5 : 10);
+}
+
+function selectPoint(point: SelectedPoint): void {
+    if (startPoint && !endPoint && samePoint(point, startPoint)) {
+        ++requestVersion;
+        startPoint = null; routeResult = null;
+        (document.getElementById('startLoc') as HTMLInputElement).value = '';
+        document.getElementById('routeSteps')!.replaceChildren();
+        renderRoute();
+        return;
+    }
+    if (!startPoint || endPoint) {
+        ++requestVersion;
+        startPoint = point; endPoint = null; routeResult = null;
+        (document.getElementById('startLoc') as HTMLInputElement).value = point.name ?? '';
+        (document.getElementById('endLoc') as HTMLInputElement).value = '';
+        document.getElementById('routeSteps')!.replaceChildren();
+        renderRoute();
+    } else {
+        endPoint = point;
+        (document.getElementById('endLoc') as HTMLInputElement).value = point.name ?? '';
+        calculateRoute();
+    }
+}
+
+map.on('click', (event: L.LeafletMouseEvent) => {
+    try {
+        const building = indoorBuildings.find(item => item.contains(event.latlng.lat, event.latlng.lng));
+        selectPoint(building ? building.click(event.latlng.lat, event.latlng.lng) : { lat: event.latlng.lat, lon: event.latlng.lng });
+    } catch (error) { /* invalid indoor click: ignore */ }
+});
+map.on('zoomend moveend', renderRoute);
+(document.getElementById('preferIndoor') as HTMLInputElement).addEventListener('change', () => {
+    if (startPoint && endPoint) calculateRoute();
+});
+
+(document.getElementById('routeBtn') as HTMLButtonElement).onclick = () => {
+    const resolve = (id: string, previous: SelectedPoint | null): SelectedPoint => {
+        const name = (document.getElementById(id) as HTMLInputElement).value;
+        if (!name && previous) return previous;
+        if (!locations[name]) throw new Error('Choose a location from the suggestions, or place a marker.');
+        return indoorBuildings.map(building => building.endpoint(name)).find(Boolean)
+            ?? { lat: locations[name]![0], lon: locations[name]![1], name };
+    };
+    try {
+        const start = resolve('startLoc', startPoint), end = resolve('endLoc', endPoint);
+        startPoint = start; endPoint = end; calculateRoute();
+    } catch (error) { /* invalid location: ignore */ }
+};

@@ -71,11 +71,14 @@ python tools/build-sub.py
 
 Checks from the repository root:
 
-```powershell
-node --test RoutingChecks/indoor.test.mjs
+```sh
+npm install
+npm test
 dotnet run --project RoutingChecks -- MapApp/wwwroot/map.geojson
 ```
 
-`RoutingChecks/sub-ui.cjs` is an optional Playwright/Edge browser smoke check. Start
-the app on port 5287 (or set `SUB_TEST_URL`), install Playwright in your test
-environment, and run `node RoutingChecks/sub-ui.cjs`.
+The Node tests run against the built modules in `MapApp/wwwroot/` after `npm
+run build` (`npm test` does both). `RoutingChecks/sub-ui.cjs` is an optional
+Playwright/Edge browser smoke check. Start the app on port 5287 (or set
+`SUB_TEST_URL`), install Playwright in your test environment, and run `node
+RoutingChecks/sub-ui.cjs`.

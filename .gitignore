@@ -1,0 +1,9 @@
+# npm toolchain (TypeScript client build)
+node_modules/
+
+# macOS metadata
+.DS_Store
+
+# .NET build artifacts
+bin/
+obj/

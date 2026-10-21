@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "es2022",
+    "lib": [
+      "es2022",
+      "dom"
+    ],
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "outDir": "../wwwroot",
+    "strict": true,
+    "noEmitOnError": true,
+    "skipLibCheck": true,
+    "types": [
+      "leaflet",
+      "geojson"
+    ],
+    "forceConsistentCasingInFileNames": true,
+    "sourceMap": false,
+    "allowUmdGlobalAccess": true
+  }
+}

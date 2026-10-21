@@ -9,6 +9,13 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.12" />
     <PackageReference Include="NetTopologySuite.IO.GeoJSON" Version="4.0.0" />
+    <Content Remove="client/**" />
   </ItemGroup>
+
+  <!-- The wwwroot JS modules are compiled from MapApp/client TypeScript.
+       Set SkipClientBuild=true (or remove node_modules) to build without npm. -->
+  <Target Name="BuildClient" BeforeTargets="BeforeBuild" Condition="'$(SkipClientBuild)' != 'true' And Exists('$(MSBuildThisFileDirectory)../node_modules')">
+    <Exec Command="npm run build" WorkingDirectory="$(MSBuildThisFileDirectory).." StandardOutputImportance="Low" />
+  </Target>
 
 </Project>
