@@ -15,3 +15,7 @@ export async function requestCampusRoute(start, end, { preferIndoor = false, avo
         throw new Error('The route server has not applied the selected preference. Restart the app and refresh this page.');
     return route;
 }
+export async function requestCampusLocations() {
+    const response = await fetch('/api/locations');
+    return (await response.json());
+}

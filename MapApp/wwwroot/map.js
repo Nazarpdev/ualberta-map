@@ -1,6 +1,6 @@
 import { createSubMap } from './sub-map.mjs';
 import { createCscMap } from './csc-map.mjs';
-import { requestCampusRoute } from './route-client.mjs';
+import { requestCampusLocations, requestCampusRoute } from './route-client.mjs';
 const centerLimit = L.latLngBounds([53.5170, -113.5350], // Southwest corner (University Ave / 116 St)
 [53.5310, -113.5150] // Northeast corner (Saskatchewan Dr / 112 St)
 ).pad(0.2); // campus + a bit extra; applies to the center so it never changes with zoom
@@ -117,9 +117,8 @@ function setupAutocomplete(input) {
     });
     input.addEventListener('blur', close);
 }
-fetch('/api/locations')
-    .then(res => res.json())
-    .then((data) => {
+requestCampusLocations()
+    .then(data => {
     locations = Object.assign({}, data, ...indoorBuildings.map(building => building.locations));
     setupAutocomplete(document.getElementById('startLoc'));
     setupAutocomplete(document.getElementById('endLoc'));

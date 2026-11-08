@@ -3,7 +3,15 @@ using Microsoft.AspNetCore.StaticFiles;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSingleton<RoutingService>();
+builder.Services.AddControllers();
+// Resolve map data from the web root so the app works regardless of the working directory.
+builder.Services.AddSingleton<IRoutingService>(services =>
+{
+    var webRoot = services.GetRequiredService<IWebHostEnvironment>().WebRootPath;
+    return new RoutingService(
+        Path.Combine(webRoot, "map.geojson"),
+        Path.Combine(webRoot, "routing-overrides.geojson"));
+});
 
 var app = builder.Build();
 
@@ -21,12 +29,6 @@ app.UseStaticFiles(new StaticFileOptions
     }
 });
 
-app.MapGet("/api/route", (double slat, double slon, double elat, double elon, RoutingService rs,
-    string? startName = null, string? endName = null, bool avoidSub = false, bool preferIndoor = false, bool includeCost = false) =>
-{
-    var route = rs.GetRouteDetails(slat, slon, elat, elon, startName, endName, avoidSub, preferIndoor);
-    return includeCost ? Results.Ok(new { route.Coordinates, route.Cost, preferIndoor }) : Results.Ok(route.Coordinates);
-});
-app.MapGet("/api/locations", (RoutingService rs) => rs.GetLocations());
+app.MapControllers();
 
 app.Run();

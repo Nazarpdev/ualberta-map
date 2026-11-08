@@ -1,10 +1,11 @@
+using MapApp.Models;
 using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
 
 namespace MapApp.Services
 {
-    public class RoutingService
+    public class RoutingService : IRoutingService
     {
         // Corners belong to one building even when adjacent footprints share coordinates.
         private sealed record Node(Coordinate Position, Geometry? InteriorOf = null)
@@ -26,8 +27,6 @@ namespace MapApp.Services
         {
             "footway", "path", "pedestrian", "steps", "cycleway"
         };
-
-        public RoutingService() : this("wwwroot/map.geojson", "wwwroot/routing-overrides.geojson") { }
 
         public RoutingService(string geoJsonPath, string? overridesPath = null)
         {
@@ -230,8 +229,6 @@ namespace MapApp.Services
             string? startName = null, string? endName = null, bool avoidSub = false, bool preferIndoor = false)
             => GetRouteDetails(slat, slon, elat, elon, startName, endName, avoidSub, preferIndoor).Coordinates;
 
-        public record RouteDetails(List<double[]> Coordinates, double Cost);
-
         public RouteDetails GetRouteDetails(double slat, double slon, double elat, double elon,
             string? startName = null, string? endName = null, bool avoidSub = false, bool preferIndoor = false)
         {
@@ -261,7 +258,7 @@ namespace MapApp.Services
                 var cost = graph[requestedStart].FirstOrDefault(e => e.neighbor.Position.Equals2D(requestedEnd)).distance;
                 return new([[slat, slon], [elat, elon]], cost);
             }
-            if (starts.Count == 0 || ends.Count == 0) return new([], 0);
+            if (starts.Count == 0 || ends.Count == 0) return RouteDetails.Empty;
 
             // Join projections on the same mapped segment without a detour to its vertices.
             if (startProjection != null && endProjection != null)
@@ -289,7 +286,7 @@ namespace MapApp.Services
                     queue.Enqueue(neighbor, next);
                 }
             }
-            if (end == null) return new([], 0);
+            if (end == null) return RouteDetails.Empty;
             var nodePath = new List<Node> { end };
             while (prev.TryGetValue(nodePath[^1], out var parent)) nodePath.Add(parent);
             nodePath.Reverse();

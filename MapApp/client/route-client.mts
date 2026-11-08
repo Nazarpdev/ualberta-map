@@ -1,4 +1,4 @@
-// Shared by ordinary campus routes and the campus legs of SUB routes.
+// Client for the campus routing API. Shared by ordinary campus routes and the campus legs of SUB routes.
 import type { GeoPoint } from './indoor-router.mjs';
 
 export interface CampusRoute {
@@ -26,4 +26,11 @@ export async function requestCampusRoute(
     if (!Array.isArray(route.coordinates) || route.preferIndoor !== preferIndoor)
         throw new Error('The route server has not applied the selected preference. Restart the app and refresh this page.');
     return route;
+}
+
+export type CampusLocations = Record<string, [number, number]>;
+
+export async function requestCampusLocations(): Promise<CampusLocations> {
+    const response = await fetch('/api/locations');
+    return (await response.json()) as CampusLocations;
 }

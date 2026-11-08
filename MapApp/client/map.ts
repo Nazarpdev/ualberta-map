@@ -1,6 +1,6 @@
 import { createSubMap } from './sub-map.mjs';
 import { createCscMap } from './csc-map.mjs';
-import { requestCampusRoute } from './route-client.mjs';
+import { requestCampusLocations, requestCampusRoute } from './route-client.mjs';
 import type { CampusRoute } from './route-client.mjs';
 import type { IndoorBuilding, IndoorOption, RouteResult, SelectedPoint } from './indoor-building.mjs';
 import type * as GeoJSON from 'geojson';
@@ -124,9 +124,8 @@ function setupAutocomplete(input: HTMLInputElement) {
     input.addEventListener('blur', close);
 }
 
-fetch('/api/locations')
-    .then(res => res.json())
-    .then((data: Record<string, [number, number]>) => {
+requestCampusLocations()
+    .then(data => {
         locations = Object.assign({}, data, ...indoorBuildings.map(building => building.locations));
         setupAutocomplete(document.getElementById('startLoc') as HTMLInputElement);
         setupAutocomplete(document.getElementById('endLoc') as HTMLInputElement);

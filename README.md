@@ -16,7 +16,7 @@ in `MapApp/wwwroot/` (no bundler; Leaflet stays a global loaded by `index.html`)
 
 ```sh
 npm install
-npm run build   # tsc -p MapApp/tsconfig.json → MapApp/wwwroot
+npm run build   # tsc -p MapApp/client/tsconfig.json → MapApp/wwwroot
 npm test        # build, then node --test RoutingChecks/*.test.mjs
 ```
 

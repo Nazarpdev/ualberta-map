@@ -1,6 +1,11 @@
 @MapApp_HostAddress = http://localhost:5005
 
-GET {{MapApp_HostAddress}}/weatherforecast/
+GET {{MapApp_HostAddress}}/api/locations
+Accept: application/json
+
+###
+
+GET {{MapApp_HostAddress}}/api/route?slat=53.52641&slon=-113.52477&elat=53.52602&elon=-113.52455&includeCost=true
 Accept: application/json
 
 ###
