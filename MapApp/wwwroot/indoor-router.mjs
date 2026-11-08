@@ -1,10 +1,21 @@
 // Small floor-aware graph; shared by the browser and Node regression checks.
 /** Swap the components of a coordinate/timeline pair. */
 const swap = ([a, b]) => [b, a];
+/** How far corner waypoints sit from the wall corner they go around, in plan units. */
+const CORNER_OFFSET = 1.5;
+// Routing works on the floor geometry, not only the traced corridor lines.
+// Rooms, partitions and the footprint are obstacles; a shortest path around
+// obstacles only ever bends at their corners. So the graph is every corner
+// (nudged into open floor), every traced node and every room doorway, linked
+// wherever two of them can see each other. Traced edges are kept for links that
+// geometry can't express: stairs between floors, room access, outdoor parkade.
 export class IndoorRouter {
     data;
+    /** Traced nodes from the map data (rooms, stairs, entrances, corridors). */
     nodes;
     spaces;
+    /** Everything routes can pass through: traced nodes, doorways and corner waypoints. */
+    points;
     graph;
     constructor(data) {
         this.data = data;
@@ -21,22 +32,113 @@ export class IndoorRouter {
                         points.reduce((sum, p) => sum + p[1], 0) / points.length]);
                 if (!center)
                     return;
+                // The vertex average of an L-shaped room can fall outside it.
+                if (points && !space.iconPoint && !box && !inside(center, points))
+                    [center[0], center[1]] = interiorPoint(points, center);
                 const point = { floor: floor.id, x: center[0], y: center[1] };
                 const id = `${floor.id}:space:${index}`;
-                this.spaces.set(id, { ...point, ...this.toGeo(point), spaceId: id, name: space.name, code: space.code });
+                this.spaces.set(id, { ...point, ...this.toGeo(point), spaceId: id, name: space.name, code: space.code,
+                    area: space.category === 'Corridors' ? undefined : space.polygon });
             });
         }
-        this.graph = new Map([...this.nodes.keys()].map(id => [id, []]));
-        for (const [a, b] of data.edges) {
-            const from = this.nodes.get(a), to = this.nodes.get(b);
+        this.points = new Map(this.nodes);
+        const edges = this.addDoorways(data);
+        for (const floor of data.floors)
+            this.addCorners(floor);
+        this.graph = new Map([...this.points.keys()].map(id => [id, []]));
+        const link = (a, b, cost) => {
+            this.graph.get(a).push({ id: b, cost });
+            this.graph.get(b).push({ id: a, cost });
+        };
+        for (const [a, b] of edges) {
+            const from = this.points.get(a), to = this.points.get(b);
             if (!from || !to)
                 throw new Error(`Unknown indoor edge ${a}–${b}`);
             if (from.floor !== to.floor && (from.kind !== 'stairs' || to.kind !== 'stairs'))
                 throw new Error('Floor changes must use stairs');
-            const cost = from.floor === to.floor ? distance(from, to) : 12;
-            this.graph.get(a).push({ id: b, cost });
-            this.graph.get(b).push({ id: a, cost });
+            link(a, b, from.floor === to.floor ? distance(from, to) : 12);
         }
+        for (const floor of data.floors) {
+            const onFloor = [...this.points.values()].filter(point => point.floor === floor.id);
+            for (let i = 0; i < onFloor.length; i++)
+                for (let j = i + 1; j < onFloor.length; j++) {
+                    const from = onFloor[i], to = onFloor[j];
+                    if (this.graph.get(from.id).some(edge => edge.id === to.id))
+                        continue;
+                    if (this.clearCorridor(from, to))
+                        link(from.id, to.id, distance(from, to));
+                }
+        }
+    }
+    // Traced room nodes sit inside their room (a little, or at its centre), where no
+    // straight line can reach them. Add a doorway where the room's access edge first
+    // leaves open floor, so routes aim at the door and then step into the room.
+    addDoorways(data) {
+        const edges = data.edges.map(([a, b]) => [a, b]);
+        for (const floor of data.floors) {
+            const obstacles = floor.spaces.filter(space => space.polygon && space.category !== 'Corridors').map(space => space.polygon);
+            for (const space of floor.spaces) {
+                const room = space.node ? this.nodes.get(space.node) : undefined;
+                if (!room || !space.polygon || !inside([room.x, room.y], space.polygon))
+                    continue;
+                const access = edges.filter(edge => edge.includes(room.id));
+                if (access.length !== 1)
+                    continue;
+                const edge = access[0];
+                const outside = this.points.get(edge[0] === room.id ? edge[1] : edge[0]);
+                const from = [outside.x, outside.y];
+                const door = firstCrossing(from, [room.x, room.y], this.isOpen(floor, from) ? obstacles : [space.polygon]);
+                if (!door)
+                    continue;
+                const id = `${room.id}:door`, point = { floor: room.floor, x: door[0], y: door[1] };
+                this.points.set(id, { ...point, ...this.toGeo(point), id, kind: 'corridor', name: room.name });
+                edge.splice(0, 2, outside.id, id);
+                edges.push([id, room.id]);
+            }
+        }
+        return edges;
+    }
+    // Waypoints just off every wall corner that juts into open floor.
+    addCorners(floor) {
+        const seen = new Set();
+        const add = (x, y) => {
+            const key = `${Math.round(x * 2)}:${Math.round(y * 2)}`;
+            if (seen.has(key) || !this.isOpen(floor, [x, y]))
+                return;
+            seen.add(key);
+            const id = `${floor.id}:corner:${seen.size}`, point = { floor: floor.id, x, y };
+            this.points.set(id, { ...point, ...this.toGeo(point), id, kind: 'corridor', name: '' });
+        };
+        // Step out along the corner's bisector; corners that point the other way
+        // land inside the obstacle and are dropped by isOpen.
+        const bisect = (v, prev, next, sign) => {
+            const a = unit(v, prev), b = unit(v, next);
+            if (!a || !b)
+                return;
+            const dx = a[0] + b[0], dy = a[1] + b[1], len = Math.hypot(dx, dy);
+            if (len < 1e-6)
+                return;
+            add(v[0] + sign * dx / len * CORNER_OFFSET, v[1] + sign * dy / len * CORNER_OFFSET);
+        };
+        const rings = [floor.footprint ?? [], ...floor.spaces
+                .filter(space => space.polygon && space.category !== 'Corridors').map(space => space.polygon)];
+        for (const ring of rings)
+            ring.forEach((v, i) => bisect(v, ring[(i + ring.length - 1) % ring.length], ring[(i + 1) % ring.length], 1));
+        for (const line of floor.partitions ?? [])
+            line.forEach((v, i) => {
+                if (i > 0 && i < line.length - 1) {
+                    bisect(v, line[i - 1], line[i + 1], 1);
+                    bisect(v, line[i - 1], line[i + 1], -1);
+                    return;
+                }
+                const along = unit(v, line[i === 0 ? 1 : i - 1]);
+                if (along)
+                    add(v[0] + along[0] * CORNER_OFFSET, v[1] + along[1] * CORNER_OFFSET);
+            });
+    }
+    /** Inside the footprint and outside every room and other obstacle. */
+    isOpen(floor, point) {
+        return !!floor.footprint && inside(point, floor.footprint) && !floor.spaces.some(space => space.polygon && space.category !== 'Corridors' && inside(point, space.polygon));
     }
     toGeo({ floor, x, y }) {
         const calibration = this.data.floors.find(f => f.id === floor).registration;
@@ -84,12 +186,11 @@ export class IndoorRouter {
         }
         return result;
     }
-    // Open-area markers connect to visible corridors, including wide atriums.
-    // Room selections use their mapped destination instead of crossing walls.
+    // Markers and door-less rooms link to every point they can see; a door-less
+    // room ignores its own walls, so routes enter it from the nearest side.
     locate(endpoint) {
         if (endpoint.nodeId)
             return this.nodes.get(endpoint.nodeId) ?? null;
-        // Named spaces without a traced doorway connect to the nearest corridor.
         if (endpoint.spaceId) {
             const space = this.spaces.get(endpoint.spaceId);
             if (!space)
@@ -97,52 +198,44 @@ export class IndoorRouter {
             endpoint = space;
         }
         // Geo endpoints always carry a floor and geographic position here.
-        const point = this.toPlan({ floor: endpoint.floor, lat: endpoint.lat, lon: endpoint.lon });
-        let best = null;
-        for (const [a, b] of this.data.edges) {
-            const from = this.nodes.get(a), to = this.nodes.get(b);
-            if (from.floor !== endpoint.floor || to.floor !== endpoint.floor)
-                continue;
-            if (from.kind === 'room' || to.kind === 'room')
-                continue;
-            const dx = to.x - from.x, dy = to.y - from.y;
-            const t = Math.max(0, Math.min(1, ((point.x - from.x) * dx + (point.y - from.y) * dy) / (dx * dx + dy * dy || 1)));
-            const x = from.x + t * dx, y = from.y + t * dy;
-            const d = Math.hypot(point.x - x, point.y - y);
-            if (!endpoint.spaceId && !this.clearCorridor({ ...point, floor: endpoint.floor }, { x, y }))
-                continue;
-            if (!best || d < best.offset)
-                best = { ...endpoint, ...point, id: '',
-                    projection: { x, y, floor: endpoint.floor, ...this.toGeo({ x, y, floor: endpoint.floor }) },
-                    edge: [a, b], offset: d };
-        }
-        return best;
+        const floor = endpoint.floor;
+        const point = { ...endpoint, ...this.toPlan({ floor, lat: endpoint.lat, lon: endpoint.lon }), floor, id: '' };
+        return this.visible(point).length ? point : null;
+    }
+    /** Routing points on the same floor with a clear line to this point. */
+    visible(point) {
+        const onFloor = [...this.points.values()].filter(other => other.floor === point.floor);
+        const seen = onFloor.filter(other => this.clearCorridor(point, other, point.area ? [point.area] : []));
+        // A door-less room enclosed by other rooms: fall back to its nearest point.
+        const passable = onFloor.filter(other => other.kind !== 'room');
+        if (!seen.length && point.area && passable.length)
+            return [passable.reduce((a, b) => distance(a, point) < distance(b, point) ? a : b)];
+        return seen;
     }
     route(start, end) {
         const first = this.locate(start), last = this.locate(end);
         if (!first || !last)
             return null;
-        const nodes = new Map(this.nodes);
+        const points = new Map(this.points);
         const graph = new Map([...this.graph].map(([id, edges]) => [id, [...edges]]));
         const connect = (a, b) => {
-            const cost = distance(nodes.get(a), nodes.get(b));
+            const cost = distance(points.get(a), points.get(b));
             graph.get(a).push({ id: b, cost });
             graph.get(b).push({ id: a, cost });
         };
         const attach = (point, id) => {
             if (point.id)
                 return point.id;
-            nodes.set(id, { ...point, id });
+            points.set(id, { ...point, id });
             graph.set(id, []);
-            nodes.set(`${id}-path`, { ...point.projection, id: `${id}-path` });
-            graph.set(`${id}-path`, []);
-            connect(id, `${id}-path`);
-            point.edge.forEach(node => connect(`${id}-path`, node));
+            for (const other of this.visible(point))
+                connect(id, other.id);
             return id;
         };
         const a = attach(first, '@start'), b = attach(last, '@end');
-        if (!first.id && !last.id && first.edge.join('|') === last.edge.join('|'))
-            connect('@start-path', '@end-path');
+        const areas = [first.area, last.area].filter((area) => !!area);
+        if (!first.id && !last.id && first.floor === last.floor && this.clearCorridor(first, last, areas))
+            connect(a, b);
         const costs = new Map([[a, 0]]);
         const prev = new Map();
         const open = new Set([a]);
@@ -151,6 +244,9 @@ export class IndoorRouter {
             open.delete(current);
             if (current === b)
                 break;
+            // Rooms are destinations, never shortcuts.
+            if (current !== a && points.get(current).kind === 'room')
+                continue;
             for (const edge of graph.get(current)) {
                 const cost = costs.get(current) + edge.cost;
                 if (cost >= (costs.get(edge.id) ?? Infinity))
@@ -165,10 +261,10 @@ export class IndoorRouter {
         const path = [b];
         while (prev.has(path[0]))
             path.unshift(prev.get(path[0]));
-        const points = this.shorten(path.map(id => nodes.get(id)));
-        const cost = points.slice(1).reduce((sum, point, i) => sum +
-            (point.floor === points[i].floor ? distance(points[i], point) : 12), 0);
-        return { points, cost };
+        const route = this.shorten(path.map(id => points.get(id)));
+        const cost = route.slice(1).reduce((sum, point, i) => sum +
+            (point.floor === route[i].floor ? distance(route[i], point) : 12), 0);
+        return { points: route, cost };
     }
     shorten(path) {
         const points = [path[0]];
@@ -185,16 +281,27 @@ export class IndoorRouter {
         }
         return points;
     }
-    clearCorridor(from, to) {
+    /** True when a straight walk stays in open floor; `ignore` lists room outlines it may cross. */
+    clearCorridor(from, to, ignore = []) {
         const floor = this.data.floors.find(f => f.id === from.floor);
-        const a = [from.x, from.y], b = [to.x, to.y];
+        // Doors and entrances sit exactly on walls. Pull both ends in slightly so
+        // touching a wall at an endpoint is not a crossing; otherwise the route
+        // detours past the door to a corridor node and doubles back in a V.
+        const length = Math.hypot(to.x - from.x, to.y - from.y);
+        const trim = length > 0 ? Math.min(0.5, length / 4) / length : 0;
+        const a = [from.x + (to.x - from.x) * trim, from.y + (to.y - from.y) * trim];
+        const b = [to.x - (to.x - from.x) * trim, to.y - (to.y - from.y) * trim];
         const crosses = (polygon) => polygon.some((p, i) => intersects(a, b, p, polygon[(i + 1) % polygon.length]));
         if (!floor.footprint || !inside(a, floor.footprint) || !inside(b, floor.footprint) || crosses(floor.footprint))
             return false;
         if ((floor.partitions ?? []).some(line => line.slice(1).some((p, i) => intersects(a, b, line[i], p))))
             return false;
+        // Keep a little clearance from wall corners so routes don't graze them,
+        // except right at the endpoints, where doors meet room corners.
+        const grazes = (polygon) => polygon.some(p => segmentDistance(p, a, b) < 1
+            && Math.hypot(p[0] - a[0], p[1] - a[1]) > 2 && Math.hypot(p[0] - b[0], p[1] - b[1]) > 2);
         return !(floor.spaces ?? []).some(space => space.polygon && space.category !== 'Corridors'
-            && (inside(a, space.polygon) || inside(b, space.polygon) || crosses(space.polygon)));
+            && !ignore.includes(space.polygon) && (inside(a, space.polygon) || inside(b, space.polygon) || crosses(space.polygon) || grazes(space.polygon)));
     }
 }
 function inside([x, y], polygon) {
@@ -205,6 +312,48 @@ function inside([x, y], polygon) {
             result = !result;
     }
     return result;
+}
+/** The point inside the polygon nearest to `near`, sampled on a 20×20 grid. */
+function interiorPoint(polygon, near) {
+    const xs = polygon.map(p => p[0]), ys = polygon.map(p => p[1]);
+    const [x0, x1, y0, y1] = [Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys)];
+    let best = polygon[0], bestDistance = Infinity;
+    for (let i = 0.5; i < 20; i++)
+        for (let j = 0.5; j < 20; j++) {
+            const p = [x0 + (x1 - x0) * i / 20, y0 + (y1 - y0) * j / 20];
+            const d = Math.hypot(p[0] - near[0], p[1] - near[1]);
+            if (d < bestDistance && inside(p, polygon)) {
+                best = p;
+                bestDistance = d;
+            }
+        }
+    return best;
+}
+function unit(from, to) {
+    const dx = from[0] - to[0], dy = from[1] - to[1], len = Math.hypot(dx, dy);
+    return len < 1e-9 ? null : [dx / len, dy / len];
+}
+function segmentDistance([x, y], a, b) {
+    const dx = b[0] - a[0], dy = b[1] - a[1];
+    const t = Math.max(0, Math.min(1, ((x - a[0]) * dx + (y - a[1]) * dy) / (dx * dx + dy * dy || 1)));
+    return Math.hypot(x - a[0] - t * dx, y - a[1] - t * dy);
+}
+/** Where segment a→b first crosses any of the polygons' outlines (closest to a), if at all. */
+function firstCrossing(a, b, polygons) {
+    let best = Infinity;
+    const dx = b[0] - a[0], dy = b[1] - a[1];
+    for (const polygon of polygons)
+        polygon.forEach((c, i) => {
+            const d = polygon[(i + 1) % polygon.length];
+            const ex = d[0] - c[0], ey = d[1] - c[1], denom = dx * ey - dy * ex;
+            if (Math.abs(denom) < 1e-12)
+                return;
+            const t = ((c[0] - a[0]) * ey - (c[1] - a[1]) * ex) / denom;
+            const u = ((c[0] - a[0]) * dy - (c[1] - a[1]) * dx) / denom;
+            if (t > 1e-9 && t <= 1 && u >= 0 && u <= 1 && t < best)
+                best = t;
+        });
+    return best === Infinity ? null : [a[0] + dx * best, a[1] + dy * best];
 }
 function intersects(a, b, c, d) {
     const cross = (p, q, r) => (q[0] - p[0]) * (r[1] - p[1]) - (q[1] - p[1]) * (r[0] - p[0]);

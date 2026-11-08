@@ -189,9 +189,15 @@ fetch('/map.geojson')
     toggle.disabled = true;
     toggle.parentElement.title = 'Entrance data could not be loaded. Refresh to try again.';
 });
-function smoothCoords(coords, radius = 5, arcSteps = 8) {
+// Corner rounding limits: indoor floors have open space, outdoor paths are narrow.
+const SMOOTHING = {
+    indoor: { radius: 25, maxOffset: 4 },
+    outdoor: { radius: 8, maxOffset: 1 }
+};
+function smoothCoords(coords, indoor, arcSteps = 12) {
     if (coords.length < 3)
         return coords;
+    const { radius, maxOffset } = indoor ? SMOOTHING.indoor : SMOOTHING.outdoor;
     const smooth = [coords[0]];
     for (let i = 1; i < coords.length - 1; i++) {
         const [lat0, lon0] = coords[i - 1];
@@ -207,20 +213,21 @@ function smoothCoords(coords, radius = 5, arcSteps = 8) {
             smooth.push(coords[i]);
             continue;
         }
-        const angle = Math.abs(Math.atan2(v1x * v2y - v1y * v2x, v1x * v2x + v1y * v2y));
-        if (angle < 0.15) {
+        const turn = Math.abs(Math.atan2(v1x * v2y - v1y * v2x, v1x * v2x + v1y * v2y));
+        if (turn < 0.15) {
             smooth.push(coords[i]);
             continue;
         }
-        const r = Math.min(radius, len1 / 2, len2 / 2);
+        // The curve's midpoint lies r·sin(turn/2)/2 from the vertex. Shrink the radius
+        // so it never strays more than maxOffset: sharp V turns on a path stay on it.
+        const r = Math.min(radius, len1 / 2, len2 / 2, 2 * maxOffset / Math.sin(turn / 2));
         const ax = -v1x / len1 * r, ay = -v1y / len1 * r;
         const bx = v2x / len2 * r, by = v2y / len2 * r;
-        // Quadratic bezier with the original vertex as control: tangent-smooth
-        // and hugging the corner instead of cutting across it.
+        // Quadratic bezier with the original vertex as control (at the origin here).
         for (let j = 0; j <= arcSteps; j++) {
             const t = j / arcSteps;
-            const mx = (1 - t) * (1 - t) * ax + 2 * (1 - t) * t * 0 + t * t * bx;
-            const my = (1 - t) * (1 - t) * ay + 2 * (1 - t) * t * 0 + t * t * by;
+            const mx = (1 - t) * (1 - t) * ax + t * t * bx;
+            const my = (1 - t) * (1 - t) * ay + t * t * by;
             smooth.push([lat1 + my / ky, lon1 + mx / kx]);
         }
     }
@@ -248,7 +255,7 @@ function renderRoute() {
         const building = indoorBuildings.find(item => item.building === segment.building);
         if (segment.floor != null && building?.visible && segment.floor !== building.floor)
             continue;
-        L.polyline(smoothCoords(segment.coords), { pane: 'routes', color: '#236348', weight: 5, lineJoin: 'round', lineCap: 'round' }).addTo(routeLayer);
+        L.polyline(smoothCoords(segment.coords, segment.floor != null), { pane: 'routes', color: '#236348', weight: 5, lineJoin: 'round', lineCap: 'round' }).addTo(routeLayer);
     }
     indoorBuildings.forEach(building => building.refreshLabels());
 }
