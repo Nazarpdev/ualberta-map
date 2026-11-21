@@ -12,7 +12,8 @@ export type CampusEndpoint = GeoPoint & { name?: string };
 export async function requestCampusRoute(
     start: CampusEndpoint,
     end: CampusEndpoint,
-    { preferIndoor = false, avoidSub = false }: { preferIndoor?: boolean; avoidSub?: boolean } = {}
+    { preferIndoor = false, avoidSub = false, avoidBuildings = [] }:
+        { preferIndoor?: boolean; avoidSub?: boolean; avoidBuildings?: string[] } = {}
 ): Promise<CampusRoute> {
     const params = new URLSearchParams({
         slat: String(start.lat), slon: String(start.lon), elat: String(end.lat), elon: String(end.lon),
@@ -20,7 +21,8 @@ export async function requestCampusRoute(
     });
     if (start.name) params.set('startName', start.name);
     if (end.name) params.set('endName', end.name);
-    const response = await fetch(`/api/route?${params}`, { cache: 'no-store' });
+    for (const building of avoidBuildings) params.append('avoidBuildings', building);
+    const response = await fetch(`./api/route?${params}`, { cache: 'no-store' });
     if (!response.ok) throw new Error('Could not calculate a campus route');
     const route = (await response.json()) as CampusRoute;
     if (!Array.isArray(route.coordinates) || route.preferIndoor !== preferIndoor)
@@ -31,6 +33,7 @@ export async function requestCampusRoute(
 export type CampusLocations = Record<string, [number, number]>;
 
 export async function requestCampusLocations(): Promise<CampusLocations> {
-    const response = await fetch('/api/locations');
+    const response = await fetch('./api/locations');
+    if (!response.ok) throw new Error('Could not load campus locations');
     return (await response.json()) as CampusLocations;
 }

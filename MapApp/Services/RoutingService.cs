@@ -57,9 +57,9 @@ namespace MapApp.Services
                     if (name == "Students' Union Building") _subBuildings.Add(geometry);
                 }
                 if (geometry is Point point && Tag(feature, "entrance") is string entrance
-                    && entrance is not ("no" or "emergency" or "exit"))
+                    && entrance is not ("no" or "emergency" or "exit") && AllowsPedestrians(feature))
                     entrances.Add(point.Coordinate);
-                if (geometry is not LineString line) continue;
+                if (geometry is not LineString line || !AllowsPedestrians(feature)) continue;
 
                 var walkable = PedestrianHighways.Contains(Tag(feature, "highway") ?? "")
                     || Tag(feature, "indoor") == "corridor";
@@ -133,6 +133,9 @@ namespace MapApp.Services
 
         private static string? Tag(IFeature feature, string key)
             => feature.Attributes?.Exists(key) == true ? feature.Attributes[key]?.ToString() : null;
+
+        private static bool AllowsPedestrians(IFeature feature)
+            => (Tag(feature, "foot") ?? Tag(feature, "access")) is not ("no" or "private");
 
         private bool VisibleInside(Geometry building, Coordinate a, Coordinate b)
         {
@@ -230,7 +233,8 @@ namespace MapApp.Services
             => GetRouteDetails(slat, slon, elat, elon, startName, endName, avoidSub, preferIndoor).Coordinates;
 
         public RouteDetails GetRouteDetails(double slat, double slon, double elat, double elon,
-            string? startName = null, string? endName = null, bool avoidSub = false, bool preferIndoor = false)
+            string? startName = null, string? endName = null, bool avoidSub = false, bool preferIndoor = false,
+            IReadOnlyCollection<string>? avoidBuildings = null)
         {
             var requestedStart = new Coordinate(slon, slat);
             var requestedEnd = new Coordinate(elon, elat);
@@ -238,15 +242,20 @@ namespace MapApp.Services
             var endBuilding = BuildingAt(requestedEnd, endName);
             // Request-local edges keep concurrent routes from modifying the singleton graph.
             var graph = _graph.ToDictionary(p => p.Key, p => new List<(Node neighbor, double distance, bool indoor)>(p.Value));
-            // Indoor requests hand off at a specific SUB entrance. Their campus leg
-            // must not enter another door and take the old footprint shortcut through SUB.
-            if (avoidSub)
+            // Use exterior paths up to the specific doors handed off to the indoor router.
+            var excluded = new HashSet<Geometry>();
+            if (avoidSub) excluded.UnionWith(_subBuildings);
+            foreach (var name in avoidBuildings ?? [])
+                if (_locations.TryGetValue(name, out var geometry) && _connections.ContainsKey(geometry))
+                    excluded.Add(geometry);
+            if (excluded.Count > 0)
             {
                 foreach (var (node, edges) in graph)
-                    edges.RemoveAll(edge => _subBuildings.Any(building =>
-                        new LineString([node.Position, edge.neighbor.Position]).Relate(building, "T********")));
-                if (startBuilding != null && _subBuildings.Contains(startBuilding)) startBuilding = null;
-                if (endBuilding != null && _subBuildings.Contains(endBuilding)) endBuilding = null;
+                    edges.RemoveAll(edge => excluded.Any(building =>
+                        building.EnvelopeInternal.Intersects(node.Position, edge.neighbor.Position)
+                        && new LineString([node.Position, edge.neighbor.Position]).Relate(building, "T********")));
+                if (startBuilding != null && excluded.Contains(startBuilding)) startBuilding = null;
+                if (endBuilding != null && excluded.Contains(endBuilding)) endBuilding = null;
             }
             var starts = Attach(requestedStart, startBuilding, startName != null, graph, out var startProjection);
             var ends = Attach(requestedEnd, endBuilding, endName != null, graph, out var endProjection);

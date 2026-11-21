@@ -3,7 +3,7 @@ export function createCscMap(map, onSelect, onFloorChange) {
     // Level 1 only: a single floor needs no side panel, just its own panes.
     const options = {
         key: 'csc',
-        dataUrl: '/indoor/csc/map.json',
+        dataUrl: './indoor/csc/map.json',
         panel: null,
         panes: { plans: 'cscPlans', details: 'cscDetails', labels: 'cscLabels' },
         titlePrefix: 'CSC',

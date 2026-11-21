@@ -65,7 +65,8 @@ export function createSubPlan(
     const select = (layer: L.Layer, id?: string) => {
         if (id) layer.on('click', () => onSelect(id));
     };
-    const destination = (space: IndoorSpace): string => {
+    const destination = (space: IndoorSpace): string | undefined => {
+        if (space.selectable === false) return undefined;
         const floor = current as IndoorFloor;
         return space.node ?? space.destination ?? `${floor.id}:space:${floor.spaces.indexOf(space)}`;
     };
@@ -73,13 +74,14 @@ export function createSubPlan(
     function draw(floor: IndoorFloor) {
         clear(); current = floor;
         shapes.addTo(map); labels.addTo(map); amenities.addTo(map);
-        const outline = L.polygon(footprint ?? geoLine(floor.id, floor.footprint as XY[], true), {
+        const outline = L.polygon(geoLine(floor.id, floor.footprint as XY[], true), {
             renderer, pane: panes.plans, className: 'sub-footprint',
             fillColor: spaceColors.Corridors, fillOpacity: 1, color: '#87988d', weight: 2,
             interactive: false
         }).addTo(shapes);
         if (footprint) {
-            const svg = (outline.getElement() as SVGPathElement).ownerSVGElement as SVGSVGElement;
+            const outlinePath = outline.getElement() as SVGPathElement;
+            const svg = outlinePath.ownerSVGElement as SVGSVGElement;
             let clip = svg.querySelector(`#${clipId}`) as SVGClipPathElement | null;
             if (!clip) {
                 clip = document.createElementNS('http://www.w3.org/2000/svg', 'clipPath') as SVGClipPathElement;
@@ -90,19 +92,24 @@ export function createSubPlan(
             }
             clipPath = clip.firstElementChild as SVGPathElement;
             updateClip();
+            outlinePath.setAttribute('clip-path', `url(#${clipId})`);
         }
         for (const space of floor.spaces) {
             const box = space.labelBox;
             const polygon = space.polygon ?? (box ? [[box[0], box[1]], [box[2], box[1]], [box[2], box[3]], [box[0], box[3]]] as XY[] : undefined);
             if (!polygon) continue;
+            const id = destination(space);
             const layer = L.polygon(geoLine(floor.id, polygon, true), {
-                renderer, pane: panes.plans, className: 'sub-space',
-                color: '#9daea3', weight: 1.2, fillColor: spaceColors[space.category],
-                fillOpacity: space.polygon ? 1 : 0, stroke: Boolean(space.polygon), bubblingMouseEvents: false
-            }).bindTooltip(text(`${space.code ? `${space.code} · ` : ''}${space.name}${space.note ? ` · ${space.note}` : ''}`)).addTo(shapes);
+                renderer, pane: panes.plans, className: id ? 'sub-space' : '',
+                color: '#9daea3', weight: 1.2, fillColor: spaceColors[space.category] ?? spaceColors.Offices,
+                fillOpacity: space.polygon ? 1 : 0, stroke: Boolean(space.polygon), interactive: Boolean(id), bubblingMouseEvents: false
+            }).addTo(shapes);
             if (clipPath) layer.getElement()!.setAttribute('clip-path', `url(#${clipId})`);
-            (layer.getElement() as SVGPathElement).dataset.room = destination(space);
-            select(layer, destination(space));
+            if (id) {
+                (layer.getElement() as SVGPathElement).dataset.room = id;
+                layer.bindTooltip(text(`${space.code ? `${space.code} · ` : ''}${space.name}${space.note ? ` · ${space.note}` : ''}`));
+                select(layer, id);
+            }
 
             // Cut a small opening in the wall at the traced room access point.
             const door = router.nodes.get(space.node as string);
@@ -223,9 +230,10 @@ export function createSubPlan(
             element.className = 'sub-label-content';
             const name = document.createElement('span'); name.className = 'sub-label-name';
             name.textContent = space.label ?? space.name; element.appendChild(name);
-            if (!space.icon && (space.code || space.note)) {
+            const secondaryText = space.code ?? space.note;
+            if (!space.icon && secondaryText && secondaryText !== name.textContent) {
                 const code = document.createElement('span'); code.className = 'sub-label-code';
-                code.textContent = space.code ?? space.note ?? ''; element.appendChild(code);
+                code.textContent = secondaryText; element.appendChild(code);
             }
             const probe = document.createElement('div');
             probe.className = 'sub-room-label';
@@ -252,12 +260,13 @@ export function createSubPlan(
             // A zoom-end refresh must not restart the fade on existing text.
             if (previousLabels.has(space)) element.style.animation = 'none';
             displayedLabels.add(space);
+            const id = destination(space);
             const marker = L.marker(labelCenter, {
                 pane: panes.labels, icon: L.divIcon({ className: 'sub-room-label', html: element, iconSize: [w, h], iconAnchor: [w / 2, h / 2] }),
-                title: space.name, keyboard: true,
-                interactive: true, bubblingMouseEvents: false
+                title: space.name, keyboard: Boolean(id),
+                interactive: Boolean(id), bubblingMouseEvents: false
             }).addTo(labels);
-            select(marker, destination(space));
+            select(marker, id);
         }
     }
     function refreshLabels() {

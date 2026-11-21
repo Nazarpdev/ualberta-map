@@ -19,6 +19,9 @@ public sealed class RouteRequest
     /// <summary>Exclude edges through the Students' Union Building (used for indoor SUB handoffs).</summary>
     public bool AvoidSub { get; init; }
 
+    /// <summary>Named building footprints handled by the client’s indoor routes.</summary>
+    public string[] AvoidBuildings { get; init; } = [];
+
     /// <summary>Penalise outdoor edges so covered routes are preferred.</summary>
     public bool PreferIndoor { get; init; }
 

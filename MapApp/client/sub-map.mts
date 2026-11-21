@@ -5,7 +5,7 @@ export function createSubMap(map: L.Map, onSelect: (point: SelectedPoint) => voi
     // Three floors with the shared side panel and its floor buttons.
     const options: IndoorBuildingOptions = {
         key: 'sub',
-        dataUrl: '/indoor/sub/map.json',
+        dataUrl: './indoor/sub/map.json',
         panel: document.getElementById('subPanel'),
         panes: { plans: 'subPlans', details: 'subDetails', labels: 'subLabels' },
         titlePrefix: 'SUB',

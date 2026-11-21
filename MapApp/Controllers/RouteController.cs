@@ -12,7 +12,7 @@ public sealed class RouteController(IRoutingService routing) : ControllerBase
     public IActionResult Get([FromQuery] RouteRequest request)
     {
         var route = routing.GetRouteDetails(request.Slat, request.Slon, request.Elat, request.Elon,
-            request.StartName, request.EndName, request.AvoidSub, request.PreferIndoor);
+            request.StartName, request.EndName, request.AvoidSub, request.PreferIndoor, request.AvoidBuildings);
         return request.IncludeCost
             ? Ok(new RouteResponse(route.Coordinates, route.Cost, request.PreferIndoor))
             : Ok(route.Coordinates);

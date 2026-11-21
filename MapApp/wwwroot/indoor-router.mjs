@@ -23,7 +23,7 @@ export class IndoorRouter {
         this.spaces = new Map();
         for (const floor of data.floors) {
             floor.spaces.forEach((space, index) => {
-                if (space.node || space.destination)
+                if (space.node || space.destination || space.selectable === false)
                     return;
                 const box = space.labelBox;
                 const points = space.polygon;

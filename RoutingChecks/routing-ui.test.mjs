@@ -3,12 +3,18 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
 const subData = JSON.parse(readFileSync(new URL('../MapApp/wwwroot/indoor/sub/map.json', import.meta.url)));
+// These event tests need a loaded indoor building, while the indoor suite exercises its geometry.
+const planFixture = {
+    ...subData, footprint: undefined, nodes: [], edges: [],
+    floors: subData.floors.map(floor => ({ ...floor, spaces: [], partitions: [], staircases: [] }))
+};
 const settle = async () => { for (let i = 0; i < 5; i++) await new Promise(resolve => setImmediate(resolve)); };
 
 // Exercise the real map event handlers, SUB adapter, and shared request client.
 // Leaflet/DOM drawing is stubbed; routing and preference propagation are not.
 for (const withSub of [true, false]) {
-    test(`checkbox reaches the API and recalculates marker routes (SUB loaded: ${withSub})`, async () => {
+    test(`checkbox reaches the API and recalculates marker routes (SUB loaded: ${withSub})`, async t => {
+        t.mock.method(console, 'error', () => {});
         const saved = Object.fromEntries(['L', 'document', 'window', 'fetch', 'requestAnimationFrame', 'cancelAnimationFrame']
             .map(key => [key, globalThis[key]]));
         const elements = new Map(), mapEvents = new Map(), requests = [];
@@ -17,9 +23,10 @@ for (const withSub of [true, false]) {
             value: '', checked: false, style: {}, events: new Map(),
             addEventListener(type, handler) { this.events.set(type, handler); },
             appendChild() {}, replaceChildren() {}, querySelectorAll: () => [],
+            querySelector: () => null, classList: { remove() {}, toggle() {} },
             parentElement: { appendChild() {} }
         });
-        const layer = () => ({ addTo() { return this; }, clearLayers() {} });
+        const layer = () => ({ addTo() { return this; }, clearLayers() { return this; }, addData() { return this; }, eachLayer() {} });
         const map = {
             setView() { return this; }, zoomControl: { setPosition() {} },
             createPane() {}, getPane: () => ({ style: {} }),
@@ -37,14 +44,16 @@ for (const withSub of [true, false]) {
             globalThis.cancelAnimationFrame = () => {};
             globalThis.L = {
                 map: () => map, layerGroup: layer, tileLayer: layer, svg: () => ({}),
-                latLngBounds: () => ({}), divIcon: () => ({}), geoJSON: layer,
-                marker: layer, polyline: layer
+                latLngBounds: () => ({ pad() { return this; } }), divIcon: () => ({}), geoJSON: layer,
+                marker: layer, polyline: layer, polygon: layer
             };
             globalThis.fetch = async (url, options) => {
-                if (url === '/indoor/sub/map.json') return { ok: withSub, json: async () => subData };
-                if (url === '/api/locations') return { json: async () => ({}) };
-                if (url === '/map.geojson') return { ok: true, json: async () => ({ features: [] }) };
-                const params = new URL(url, 'http://localhost').searchParams;
+                const request = new URL(url, 'http://localhost');
+                if (request.pathname === '/indoor/sub/map.json') return { ok: withSub, json: async () => planFixture };
+                if (request.pathname.startsWith('/indoor/')) return { ok: false };
+                if (request.pathname === '/api/locations') return { ok: true, json: async () => ({}) };
+                if (request.pathname.endsWith('.geojson')) return { ok: true, json: async () => ({ features: [] }) };
+                const params = request.searchParams;
                 requests.push({ params, options });
                 return { ok: true, json: async () => ({
                     coordinates: [[53.525262, -113.523927], [53.528026, -113.525568]],
