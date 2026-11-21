@@ -10,20 +10,185 @@
       -113.526295
     ]
   ],
+  "footprint": [
+    [
+      -113.527918,
+      53.525652
+    ],
+    [
+      -113.527936,
+      53.525652
+    ],
+    [
+      -113.527949,
+      53.525652
+    ],
+    [
+      -113.52795,
+      53.525619
+    ],
+    [
+      -113.527955,
+      53.525367
+    ],
+    [
+      -113.527947,
+      53.525031
+    ],
+    [
+      -113.527947,
+      53.525006
+    ],
+    [
+      -113.527948,
+      53.52499
+    ],
+    [
+      -113.527408,
+      53.524989
+    ],
+    [
+      -113.527409,
+      53.524948
+    ],
+    [
+      -113.527407,
+      53.524907
+    ],
+    [
+      -113.526795,
+      53.524906
+    ],
+    [
+      -113.526796,
+      53.524937
+    ],
+    [
+      -113.526739,
+      53.524936
+    ],
+    [
+      -113.526739,
+      53.524989
+    ],
+    [
+      -113.526699,
+      53.524989
+    ],
+    [
+      -113.526295,
+      53.52499
+    ],
+    [
+      -113.526295,
+      53.525011
+    ],
+    [
+      -113.526296,
+      53.525095
+    ],
+    [
+      -113.526296,
+      53.525226
+    ],
+    [
+      -113.526297,
+      53.52532
+    ],
+    [
+      -113.526299,
+      53.525375
+    ],
+    [
+      -113.5263,
+      53.525407
+    ],
+    [
+      -113.526303,
+      53.525442
+    ],
+    [
+      -113.526711,
+      53.525444
+    ],
+    [
+      -113.526711,
+      53.52546
+    ],
+    [
+      -113.526773,
+      53.525459
+    ],
+    [
+      -113.526846,
+      53.525459
+    ],
+    [
+      -113.526847,
+      53.525655
+    ],
+    [
+      -113.527116,
+      53.525655
+    ],
+    [
+      -113.52734,
+      53.525655
+    ],
+    [
+      -113.527894,
+      53.525652
+    ],
+    [
+      -113.527918,
+      53.525652
+    ]
+  ],
+  "registration": {
+    "source": "OSM way/217652077 and mapped entrances; loading-side door from the UASU main floor plan",
+    "westCorrection": {
+      "south": 53.524989,
+      "center": 53.5254266875,
+      "north": 53.525655,
+      "east": -113.526773,
+      "west": -113.527955,
+      "delta": -5.9687499998517524e-05
+    }
+  },
   "source": "UASU SUB floor plans, 2024",
   "floors": [
     {
       "id": 0,
       "name": "Lower",
       "file": "SUB-lower2024.pdf",
-      "staircases": [
-        { "corners": [[642.832558, 354.120482], [688, 354.120482], [687.687441, 457.760984], [642.832558, 457.760984]], "flights": 8 }
-      ],
       "crop": [
         190,
         174,
         688,
         772
+      ],
+      "staircases": [
+        {
+          "corners": [
+            [
+              642.832558,
+              354.120482
+            ],
+            [
+              688,
+              354.120482
+            ],
+            [
+              687.687441,
+              457.760984
+            ],
+            [
+              642.832558,
+              457.760984
+            ]
+          ],
+          "flights": 8
+        }
       ],
       "footprint": [
         [
@@ -448,7 +613,8 @@
         },
         {
           "node": "0:0-64",
-          "label": "ATB Financial",
+          "label": "0-64",
+          "note": "The former ATB branch is closed. ATMs are on Main.",
           "polygon": [
             [
               539,
@@ -485,9 +651,9 @@
             594,
             412
           ],
-          "name": "ATB Financial",
+          "name": "Room",
           "code": "0-64",
-          "category": "Businesses"
+          "category": "Offices"
         },
         {
           "node": "0:0-68A",
@@ -908,7 +1074,7 @@
         },
         {
           "node": "0:0-11",
-          "label": "Student Group Workrooms",
+          "label": "Student Group Flex Space",
           "polygon": [
             [
               433,
@@ -941,7 +1107,7 @@
             496,
             751
           ],
-          "name": "Student Group Workrooms",
+          "name": "Student Group Flex Space",
           "code": "0-11",
           "category": "Services"
         },
@@ -1048,20 +1214,94 @@
           ],
           "labelOnly": true
         }
-      ]
+      ],
+      "registration": {
+        "x": [
+          [
+            190,
+            53.525655
+          ],
+          [
+            353,
+            53.525452928571426
+          ],
+          [
+            425,
+            53.52533142937853
+          ],
+          [
+            660.074766,
+            53.524948
+          ],
+          [
+            667.153488,
+            53.524925384615386
+          ],
+          [
+            688,
+            53.524906
+          ]
+        ],
+        "y": [
+          [
+            174,
+            -113.5263
+          ],
+          [
+            314,
+            -113.5267323125
+          ],
+          [
+            408.365554,
+            -113.52694606320384
+          ],
+          [
+            575.308434,
+            -113.527409
+          ],
+          [
+            676,
+            -113.52775369947271
+          ],
+          [
+            772,
+            -113.527955
+          ]
+        ]
+      }
     },
     {
       "id": 1,
       "name": "Main",
       "file": "SUB-main2024.pdf",
-      "staircases": [
-        { "corners": [[604, 349.385542], [643, 349.385542], [642.730119, 448], [604, 448]], "flights": 8 }
-      ],
       "crop": [
         213,
         178,
         643,
         747
+      ],
+      "staircases": [
+        {
+          "corners": [
+            [
+              604,
+              349.385542
+            ],
+            [
+              643,
+              349.385542
+            ],
+            [
+              642.730119,
+              448
+            ],
+            [
+              604,
+              448
+            ]
+          ],
+          "flights": 8
+        }
       ],
       "footprint": [
         [
@@ -1069,8 +1309,16 @@
           367
         ],
         [
-          326,
+          321,
           367
+        ],
+        [
+          321,
+          342
+        ],
+        [
+          326,
+          342
         ],
         [
           326,
@@ -1129,8 +1377,16 @@
           559.504217
         ],
         [
-          594.775701,
-          744.600602
+          595.3498,
+          627
+        ],
+        [
+          604,
+          627
+        ],
+        [
+          604,
+          747
         ],
         [
           213,
@@ -1310,8 +1566,8 @@
           "category": "Businesses"
         },
         {
-          "node": "1:1-12",
-          "label": "Teapsy",
+          "node": "1:1-11",
+          "label": "Bestea",
           "polygon": [
             [
               323,
@@ -1336,13 +1592,14 @@
             350,
             492
           ],
-          "name": "Teapsy",
-          "code": "1-12",
+          "name": "Bestea Chillout Café",
+          "code": "1-11",
           "category": "Food"
         },
         {
           "name": "ATMs",
           "category": "Services",
+          "note": "Includes the ATB ATM",
           "polygon": [
             [
               295,
@@ -1916,7 +2173,69 @@
           "code": "Parkade",
           "category": "Corridors"
         }
-      ]
+      ],
+      "registration": {
+        "x": [
+          [
+            213,
+            53.525655
+          ],
+          [
+            321,
+            53.525459
+          ],
+          [
+            377,
+            53.525442
+          ],
+          [
+            393,
+            53.525407
+          ],
+          [
+            570,
+            53.524989
+          ],
+          [
+            604,
+            53.524948
+          ],
+          [
+            643,
+            53.524906
+          ]
+        ],
+        "y": [
+          [
+            178,
+            -113.5263
+          ],
+          [
+            318,
+            -113.526711
+          ],
+          [
+            350,
+            -113.526773
+          ],
+          [
+            367,
+            -113.526847
+          ],
+          [
+            529,
+            -113.52731900703
+          ],
+          [
+            559.846988,
+            -113.527409
+          ],
+          [
+            747,
+            -113.527955
+          ]
+        ]
+      }
     },
     {
       "id": 2,
@@ -2117,7 +2436,8 @@
         },
         {
           "node": "2:2-400",
-          "label": "First Peoples’ House",
+          "label": "2-400",
+          "note": "First Peoples’ House moved to Education Centre South, East Wing, Level 1, Room 55.",
           "polygon": [
             [
               360,
@@ -2142,9 +2462,9 @@
             430,
             427
           ],
-          "name": "First Peoples’ House",
+          "name": "Room",
           "code": "2-400",
-          "category": "Services"
+          "category": "Offices"
         },
         {
           "node": "2:2-600",
@@ -2203,7 +2523,8 @@
         },
         {
           "node": "2:2-727",
-          "label": "Transition Year Program",
+          "label": "2-727",
+          "note": "The Transition Year Program moved with First Peoples’ House to Education Centre South.",
           "polygon": [
             [
               457,
@@ -2236,9 +2557,9 @@
             486,
             422
           ],
-          "name": "Transition Year Program",
+          "name": "Room",
           "code": "2-727",
-          "category": "Services"
+          "category": "Offices"
         },
         {
           "node": "2:2-725",
@@ -2708,7 +3029,45 @@
           "code": "Ag-Pedway",
           "category": "Corridors"
         }
-      ]
+      ],
+      "registration": {
+        "x": [
+          [
+            244,
+            53.525655
+          ],
+          [
+            379,
+            53.525452928571426
+          ],
+          [
+            465,
+            53.52533142937853
+          ],
+          [
+            638,
+            53.524989
+          ]
+        ],
+        "y": [
+          [
+            165,
+            -113.5263
+          ],
+          [
+            322,
+            -113.5267323125
+          ],
+          [
+            669,
+            -113.52775369947271
+          ],
+          [
+            754,
+            -113.527955
+          ]
+        ]
+      }
     }
   ],
   "nodes": [
@@ -2729,7 +3088,10 @@
       "kind": "entrance",
       "name": "Loading dock-side entrance",
       "code": null,
-      "campus": [53.525655, -113.52731900703]
+      "campus": [
+        53.525655,
+        -113.52731900703
+      ]
     },
     {
       "id": "1:quad",
@@ -2932,7 +3294,7 @@
     {
       "id": "1:stage-hall",
       "floor": 1,
-      "x": 489,
+      "x": 501,
       "y": 480,
       "kind": "corridor",
       "name": null,
@@ -2941,7 +3303,7 @@
     {
       "id": "1:stage",
       "floor": 1,
-      "x": 489,
+      "x": 501,
       "y": 514,
       "kind": "corridor",
       "name": null,
@@ -3142,13 +3504,13 @@
       "category": "Businesses"
     },
     {
-      "id": "1:1-12",
+      "id": "1:1-11",
       "floor": 1,
       "x": 350,
       "y": 480,
       "kind": "room",
-      "name": "Teapsy",
-      "code": "1-12",
+      "name": "Bestea Chillout Café",
+      "code": "1-11",
       "category": "Food"
     },
     {
@@ -3214,7 +3576,7 @@
     {
       "id": "1:1-82",
       "floor": 1,
-      "x": 478,
+      "x": 492,
       "y": 514,
       "kind": "room",
       "name": "SUBstage",
@@ -3533,12 +3895,12 @@
     {
       "id": "2:2-400",
       "floor": 2,
-      "x": 437,
+      "x": 441,
       "y": 385,
       "kind": "room",
-      "name": "First Peoples’ House",
+      "name": "Room",
       "code": "2-400",
-      "category": "Services"
+      "category": "Offices"
     },
     {
       "id": "2:2-600",
@@ -3593,12 +3955,12 @@
     {
       "id": "2:2-727",
       "floor": 2,
-      "x": 459,
-      "y": 366,
+      "x": 457,
+      "y": 377,
       "kind": "room",
-      "name": "Transition Year Program",
+      "name": "Room",
       "code": "2-727",
-      "category": "Services"
+      "category": "Offices"
     },
     {
       "id": "2:2-725",
@@ -3842,10 +4204,28 @@
       "code": null
     },
     {
+      "id": "0:juniper-hall",
+      "floor": 0,
+      "x": 253,
+      "y": 374,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
       "id": "0:meeting-n",
       "floor": 0,
       "x": 253,
-      "y": 365,
+      "y": 361,
+      "kind": "corridor",
+      "name": null,
+      "code": null
+    },
+    {
+      "id": "0:cypress-turn",
+      "floor": 0,
+      "x": 276,
+      "y": 438,
       "kind": "corridor",
       "name": null,
       "code": null
@@ -3977,10 +4357,23 @@
       "code": null
     },
     {
+      "id": "0:entry-plaza",
+      "floor": 0,
+      "x": 660.074766,
+      "y": 575.308434,
+      "kind": "entrance",
+      "name": "SUB Plaza entrance",
+      "code": null,
+      "campus": [
+        53.524948,
+        -113.527409
+      ]
+    },
+    {
       "id": "0:0-31",
       "floor": 0,
       "x": 241,
-      "y": 365,
+      "y": 361,
       "kind": "room",
       "name": "Marigold Room",
       "code": "0-31",
@@ -3990,7 +4383,7 @@
       "id": "0:0-33",
       "floor": 0,
       "x": 241,
-      "y": 375,
+      "y": 374,
       "kind": "room",
       "name": "Juniper Room",
       "code": "0-33",
@@ -4079,12 +4472,12 @@
     {
       "id": "0:0-64",
       "floor": 0,
-      "x": 579,
-      "y": 425,
+      "x": 578,
+      "y": 421,
       "kind": "room",
-      "name": "ATB Financial",
+      "name": "Room",
       "code": "0-64",
-      "category": "Businesses"
+      "category": "Offices"
     },
     {
       "id": "0:0-71",
@@ -4112,7 +4505,7 @@
       "x": 475,
       "y": 659,
       "kind": "room",
-      "name": "Student Group Workrooms",
+      "name": "Student Group Flex Space",
       "code": "0-11",
       "category": "Services"
     },
@@ -4159,8 +4552,14 @@
     }
   ],
   "edges": [
-    ["1:alumni-hall", "1:loading-exit-hall"],
-    ["1:loading-exit-hall", "1:entry-loading"],
+    [
+      "1:alumni-hall",
+      "1:loading-exit-hall"
+    ],
+    [
+      "1:loading-exit-hall",
+      "1:entry-loading"
+    ],
     [
       "1:quad",
       "1:east"
@@ -4343,7 +4742,7 @@
     ],
     [
       "1:mart-n",
-      "1:1-12"
+      "1:1-11"
     ],
     [
       "1:mart-n",
@@ -4631,10 +5030,18 @@
     ],
     [
       "0:meeting-j",
+      "0:juniper-hall"
+    ],
+    [
+      "0:juniper-hall",
       "0:meeting-n"
     ],
     [
       "0:meeting-j",
+      "0:cypress-turn"
+    ],
+    [
+      "0:cypress-turn",
       "0:cypress-hall"
     ],
     [
@@ -4698,11 +5105,15 @@
       "0:atrium-stairs"
     ],
     [
+      "0:plaza-hall",
+      "0:entry-plaza"
+    ],
+    [
       "0:meeting-n",
       "0:0-31"
     ],
     [
-      "0:meeting-n",
+      "0:juniper-hall",
       "0:0-33"
     ],
     [

@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { IndoorRouter, floorSegments } from '../MapApp/wwwroot/indoor-router.mjs';
+import { IndoorRouter, distance, floorSegments } from '../MapApp/wwwroot/indoor-router.mjs';
 
 const data = JSON.parse(readFileSync(new URL('../MapApp/wwwroot/indoor/sub/map.json', import.meta.url)));
 const router = new IndoorRouter(data);
@@ -60,11 +60,11 @@ test('unmapped wall/room clicks cannot create straight-line shortcuts', () => {
     assert.equal(router.locate({ floor: 2, ...router.toGeo({ floor: 2, x: 300, y: 410 }) }), null);
 });
 
-test('two corridor markers attach to their segment without a vertex detour', () => {
+test('two corridor pins use a direct route when the segment is clear', () => {
     const start = { floor: 2, ...router.toGeo({ floor: 2, x: 449, y: 410 }) };
     const end = { floor: 2, ...router.toGeo({ floor: 2, x: 449, y: 418 }) };
     const path = router.route(start, end);
-    assert.equal(path.points.length, 4);
+    assert.equal(path.points.length, 2);
     assert.equal(path.points[0].lat, start.lat);
     assert.equal(path.points.at(-1).lon, end.lon);
     assert.ok(path.points.every(n => n.floor === 2));
@@ -127,7 +127,7 @@ test('adjacent rooms have shared wall segments rather than thin accidental gaps'
     }));
     for (const [a, b] of [
         ['0:0-31', '0:0-33'], ['0:0-41', '0:0-49'], ['0:0-60', '0:0-64'], ['0:0-09', '0:0-11'],
-        ['1:1-40', '1:1-44'], ['1:1-10', '1:1-60'], ['1:1-12', '1:1-10'], ['1:1-80', '1:1-81'],
+        ['1:1-40', '1:1-44'], ['1:1-10', '1:1-60'], ['1:1-11', '1:1-10'], ['1:1-80', '1:1-81'],
         ['2:2-000', '2:2-100'], ['2:2-100', '2:2-200'], ['2:2-200', '2:2-400'],
         ['2:2-400', '2:2-300'], ['2:2-600', '2:2-725'], ['2:2-725', '2:2-705'],
         ['2:2-702', '2:2-707'], ['2:2-701', '2:2-800'], ['2:2-800', '2:2-900']
@@ -142,7 +142,57 @@ test('pedways and washrooms are reachable on their correct floors', () => {
     }
     const parkade = route('1:1-81', '1:Parkade');
     assert.ok(parkade.points.every(n => n.floor === 1));
-    const entry = parkade.points.findIndex(n => n.id === '1:parkade-door');
-    assert.ok(entry >= 0);
-    assert.ok(parkade.points.slice(entry).every(n => n.x > 588), 'Pedway must run beside, not through, the food bank');
+    assert.ok(parkade.points.some(n => n.x > 588 && n.y < 627), 'Route must approach the pedway from the open lobby');
+    for (let i = 1; i < parkade.points.length; i++) {
+        const a = parkade.points[i - 1], b = parkade.points[i];
+        if (a.y >= 627 || b.y < 627) continue;
+        const x = a.x + (627 - a.y) / (b.y - a.y) * (b.x - a.x);
+        assert.ok(x > 588, 'Pedway must run beside the food bank');
+        assert.ok(parkade.points.slice(i).every(point => point.x > 588));
+    }
+});
+
+test('outside SUB links meet the registered doors and linked stairs align across floors', () => {
+    for (const node of router.nodes.values()) {
+        if (node.kind !== 'entrance') continue;
+        assert.ok(Math.abs(node.lat - node.campus[0]) < 1e-7, node.id);
+        assert.ok(Math.abs(node.lon - node.campus[1]) < 1e-7, node.id);
+    }
+    for (const [from, to] of data.edges) {
+        const a = router.nodes.get(from), b = router.nodes.get(to);
+        if (a.floor === b.floor) continue;
+        assert.ok(Math.abs(a.lat - b.lat) < 1e-7, from);
+        assert.ok(Math.abs(a.lon - b.lon) < 1e-7, to);
+    }
+    const plaza = route('0:entry-plaza', '0:0-31');
+    assert.ok(plaza.points.every(point => point.floor === 0));
+});
+
+test('University Commons Level 1 destinations route from every mapped public door without cutting through rooms', () => {
+    const commonsData = JSON.parse(readFileSync(new URL('../MapApp/wwwroot/indoor/commons/map.json', import.meta.url)));
+    const campus = JSON.parse(readFileSync(new URL('../MapApp/wwwroot/map.geojson', import.meta.url)));
+    const commons = new IndoorRouter(commonsData);
+    const entrances = [...commons.nodes.values()].filter(node => node.kind === 'entrance');
+    assert.equal(entrances.length, 3);
+    for (const entrance of entrances) {
+        const [lat, lon] = entrance.campus;
+        assert.ok(campus.features.some(({ geometry, properties }) => geometry.type === 'Point'
+            && geometry.coordinates[0] === lon && geometry.coordinates[1] === lat
+            && properties.level === '1' && properties.entrance === 'yes'), entrance.id);
+        assert.ok(distance(entrance, { lat, lon }) < 2, entrance.id);
+        for (const destination of commons.nodes.values()) {
+            if (destination.kind !== 'room' && destination.kind !== 'stairs') continue;
+            const path = commons.route({ nodeId: entrance.id }, { nodeId: destination.id });
+            assert.ok(path, destination.id);
+            assert.equal(path.points.at(-1).id, destination.id);
+            assert.ok(path.points.every(point => point.floor === 1));
+            const ownRoom = commonsData.floors[0].spaces.find(space => space.node === destination.id)?.polygon;
+            for (let i = 1; i < path.points.length; i++) {
+                const from = path.points[i - 1], to = path.points[i];
+                const ignore = ownRoom && to.id === destination.id ? [ownRoom] : [];
+                assert.ok(commons.clearCorridor(from, to, ignore), `${from.id} → ${to.id}`);
+            }
+        }
+    }
+    assert.equal(commons.spaces.size, 0, 'Unlabelled rooms must not become searchable destinations');
 });

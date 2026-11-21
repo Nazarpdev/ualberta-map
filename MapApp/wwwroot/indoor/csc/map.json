@@ -10,7 +10,7 @@
       -113.526745
     ]
   ],
-  "source": "CSC Level 1 wayfinding plan",
+  "source": "Photograph of the posted CSC Level 1 wayfinding plan",
   "floors": [
     {
       "id": 1,
@@ -24,56 +24,300 @@
       "footprint": [
         [
           0,
-          1000
+          966
         ],
         [
           0,
-          89
+          390
         ],
         [
-          743,
-          89
+          92,
+          390
         ],
         [
-          743,
+          92,
+          294
+        ],
+        [
+          244,
+          294
+        ],
+        [
+          244,
+          210
+        ],
+        [
+          810,
+          210
+        ],
+        [
+          810,
           0
         ],
         [
-          1000,
+          954,
           0
         ],
         [
+          954,
+          151
+        ],
+        [
           1000,
+          151
+        ],
+        [
+          1000,
+          277
+        ],
+        [
+          965,
+          277
+        ],
+        [
+          965,
+          474
+        ],
+        [
+          1000,
+          474
+        ],
+        [
+          1000,
+          955
+        ],
+        [
+          898,
+          955
+        ],
+        [
+          898,
           1000
+        ],
+        [
+          330,
+          1000
+        ],
+        [
+          330,
+          918
+        ],
+        [
+          164,
+          918
+        ],
+        [
+          164,
+          966
         ]
       ],
       "partitions": [
         [
           [
-            75,
-            744
+            107,
+            737
           ],
           [
-            75,
-            700
-          ],
-          [
-            125,
-            700
+            107,
+            702
           ]
         ],
         [
           [
-            70,
-            511
+            130,
+            702
           ],
           [
-            70,
-            556
+            164,
+            702
+          ]
+        ],
+        [
+          [
+            95,
+            546
           ],
           [
-            125,
-            556
+            95,
+            581
+          ]
+        ],
+        [
+          [
+            117,
+            581
+          ],
+          [
+            164,
+            581
+          ]
+        ],
+        [
+          [
+            66,
+            546
+          ],
+          [
+            164,
+            546
+          ],
+          [
+            164,
+            474
+          ]
+        ],
+        [
+          [
+            92,
+            390
+          ],
+          [
+            151,
+            390
+          ]
+        ],
+        [
+          [
+            164,
+            770
+          ],
+          [
+            179,
+            770
+          ]
+        ],
+        [
+          [
+            264,
+            918
+          ],
+          [
+            264,
+            808
+          ]
+        ],
+        [
+          [
+            264,
+            787
+          ],
+          [
+            264,
+            738
+          ]
+        ],
+        [
+          [
+            248,
+            770
+          ],
+          [
+            264,
+            770
+          ]
+        ],
+        [
+          [
+            286,
+            738
+          ],
+          [
+            310,
+            738
+          ]
+        ],
+        [
+          [
+            330,
+            918
+          ],
+          [
+            330,
+            738
+          ]
+        ],
+        [
+          [
+            206,
+            345
+          ],
+          [
+            206,
+            474
+          ],
+          [
+            244,
+            474
+          ]
+        ],
+        [
+          [
+            810,
+            474
+          ],
+          [
+            844,
+            474
+          ]
+        ],
+        [
+          [
+            888,
+            474
+          ],
+          [
+            898,
+            474
+          ]
+        ],
+        [
+          [
+            810,
+            282
+          ],
+          [
+            848,
+            282
+          ]
+        ],
+        [
+          [
+            898,
+            396
+          ],
+          [
+            898,
+            315
+          ]
+        ],
+        [
+          [
+            898,
+            396
+          ],
+          [
+            965,
+            396
+          ]
+        ],
+        [
+          [
+            898,
+            277
+          ],
+          [
+            965,
+            277
+          ]
+        ],
+        [
+          [
+            933,
+            277
+          ],
+          [
+            933,
+            249
           ]
         ]
       ],
@@ -83,27 +327,28 @@
           "polygon": [
             [
               0,
-              989
+              966
             ],
             [
               0,
-              744
+              737
             ],
             [
-              125,
-              744
+              164,
+              737
             ],
             [
-              125,
-              989
+              164,
+              966
             ]
           ],
           "labelBox": [
             8,
-            752,
-            117,
-            981
+            745,
+            156,
+            958
           ],
+          "note": "Computer lab",
           "name": "Room 1-05",
           "code": "1-05",
           "category": "Services"
@@ -112,87 +357,85 @@
           "node": "1:WC-M",
           "icon": "washroom",
           "iconPoint": [
-            62,
-            689
+            61,
+            696
           ],
-          "note": "Men's washroom",
           "polygon": [
             [
               0,
-              744
+              737
             ],
             [
               0,
-              633
+              653
             ],
             [
-              125,
-              633
+              164,
+              653
             ],
             [
-              125,
-              744
+              164,
+              737
             ]
           ],
           "name": "Men's washroom",
           "code": "WC-M",
-          "category": "Offices"
+          "category": "Services"
         },
         {
           "node": "1:WC-W",
           "icon": "washroom",
           "iconPoint": [
-            62,
-            572
+            61,
+            600
           ],
-          "note": "Women's washroom",
           "polygon": [
             [
               0,
-              633
+              653
             ],
             [
               0,
-              511
+              546
             ],
             [
-              125,
-              511
+              164,
+              546
             ],
             [
-              125,
-              633
+              164,
+              653
             ]
           ],
           "name": "Women's washroom",
           "code": "WC-W",
-          "category": "Offices"
+          "category": "Services"
         },
         {
           "node": "1:1-13",
           "polygon": [
             [
               0,
-              500
+              546
             ],
             [
               0,
-              311
+              390
             ],
             [
-              111,
-              311
+              66,
+              390
             ],
             [
-              111,
-              500
+              66,
+              546
             ]
           ],
           "labelBox": [
             8,
-            319,
-            103,
-            492
+            398,
+            58,
+            538
           ],
           "name": "Room 1-13",
           "code": "1-13",
@@ -202,28 +445,29 @@
           "node": "1:1-67",
           "polygon": [
             [
-              306,
+              330,
               1000
             ],
             [
-              306,
-              750
+              330,
+              798
             ],
             [
-              472,
-              750
+              519,
+              798
             ],
             [
-              472,
+              519,
               1000
             ]
           ],
           "labelBox": [
-            314,
-            758,
-            464,
+            338,
+            806,
+            511,
             992
           ],
+          "note": "Computer lab",
           "name": "Room 1-67",
           "code": "1-67",
           "category": "Services"
@@ -232,28 +476,29 @@
           "node": "1:1-59",
           "polygon": [
             [
-              472,
+              519,
               1000
             ],
             [
-              472,
-              750
+              519,
+              740
             ],
             [
-              667,
-              750
+              718,
+              740
             ],
             [
-              667,
+              718,
               1000
             ]
           ],
           "labelBox": [
-            480,
-            758,
-            659,
+            527,
+            748,
+            710,
             992
           ],
+          "note": "Computer lab",
           "name": "Room 1-59",
           "code": "1-59",
           "category": "Services"
@@ -262,28 +507,37 @@
           "node": "1:1-53",
           "polygon": [
             [
-              667,
+              718,
               1000
             ],
             [
-              667,
-              750
+              718,
+              740
             ],
             [
-              847,
-              750
+              868,
+              740
             ],
             [
-              847,
+              868,
+              803
+            ],
+            [
+              898,
+              803
+            ],
+            [
+              898,
               1000
             ]
           ],
           "labelBox": [
-            675,
-            758,
-            839,
+            726,
+            748,
+            860,
             992
           ],
+          "note": "Computer lab",
           "name": "Room 1-53",
           "code": "1-53",
           "category": "Services"
@@ -292,27 +546,27 @@
           "node": "1:1-49",
           "polygon": [
             [
-              847,
-              978
+              898,
+              955
             ],
             [
-              847,
-              756
-            ],
-            [
-              1000,
-              756
+              898,
+              774
             ],
             [
               1000,
-              978
+              774
+            ],
+            [
+              1000,
+              955
             ]
           ],
           "labelBox": [
-            855,
-            764,
+            906,
+            782,
             992,
-            970
+            947
           ],
           "name": "Room 1-49",
           "code": "1-49",
@@ -322,27 +576,27 @@
           "node": "1:1-47",
           "polygon": [
             [
-              847,
-              756
+              898,
+              774
             ],
             [
-              847,
-              489
-            ],
-            [
-              1000,
-              489
+              898,
+              551
             ],
             [
               1000,
-              756
+              551
+            ],
+            [
+              1000,
+              774
             ]
           ],
           "labelBox": [
-            855,
-            497,
+            906,
+            559,
             992,
-            748
+            766
           ],
           "name": "Room 1-47",
           "code": "1-47",
@@ -352,27 +606,27 @@
           "node": "1:1-41",
           "polygon": [
             [
-              847,
-              489
+              898,
+              551
             ],
             [
-              847,
-              411
-            ],
-            [
-              1000,
-              411
+              898,
+              474
             ],
             [
               1000,
-              489
+              474
+            ],
+            [
+              1000,
+              551
             ]
           ],
           "labelBox": [
-            855,
-            419,
+            906,
+            482,
             992,
-            481
+            543
           ],
           "name": "Room 1-41",
           "code": "1-41",
@@ -382,27 +636,27 @@
           "node": "1:1-39",
           "polygon": [
             [
-              847,
-              411
+              898,
+              474
             ],
             [
-              847,
-              344
+              898,
+              396
             ],
             [
-              1000,
-              344
+              965,
+              396
             ],
             [
-              1000,
-              411
+              965,
+              474
             ]
           ],
           "labelBox": [
-            855,
-            352,
-            992,
-            403
+            906,
+            404,
+            957,
+            466
           ],
           "name": "Room 1-39",
           "code": "1-39",
@@ -412,27 +666,27 @@
           "node": "1:1-66",
           "polygon": [
             [
-              347,
-              622
+              333,
+              678
             ],
             [
-              347,
-              550
+              333,
+              606
             ],
             [
-              431,
-              550
+              419,
+              606
             ],
             [
-              431,
-              622
+              419,
+              678
             ]
           ],
           "labelBox": [
-            355,
-            558,
-            423,
-            614
+            341,
+            614,
+            411,
+            670
           ],
           "name": "Room 1-66",
           "code": "1-66",
@@ -442,27 +696,27 @@
           "node": "1:1-24",
           "polygon": [
             [
-              347,
-              550
+              333,
+              606
             ],
             [
-              347,
-              478
+              333,
+              535
             ],
             [
-              431,
-              478
+              419,
+              535
             ],
             [
-              431,
-              550
+              419,
+              606
             ]
           ],
           "labelBox": [
-            355,
-            486,
-            423,
-            542
+            341,
+            543,
+            411,
+            598
           ],
           "name": "Room 1-24",
           "code": "1-24",
@@ -472,27 +726,27 @@
           "node": "1:1-64",
           "polygon": [
             [
-              431,
-              622
+              419,
+              678
             ],
             [
-              431,
-              550
+              419,
+              606
             ],
             [
-              486,
-              550
+              493,
+              606
             ],
             [
-              486,
-              622
+              493,
+              678
             ]
           ],
           "labelBox": [
-            439,
-            558,
-            478,
-            614
+            427,
+            614,
+            485,
+            670
           ],
           "name": "Room 1-64",
           "code": "1-64",
@@ -502,27 +756,27 @@
           "node": "1:1-26",
           "polygon": [
             [
-              431,
-              550
+              419,
+              606
             ],
             [
-              431,
-              478
+              419,
+              535
             ],
             [
-              486,
-              478
+              493,
+              535
             ],
             [
-              486,
-              550
+              493,
+              606
             ]
           ],
           "labelBox": [
-            439,
-            486,
-            478,
-            542
+            427,
+            543,
+            485,
+            598
           ],
           "name": "Room 1-26",
           "code": "1-26",
@@ -532,27 +786,27 @@
           "node": "1:1-28",
           "polygon": [
             [
-              486,
-              622
+              493,
+              678
             ],
             [
-              486,
-              478
+              493,
+              535
             ],
             [
-              639,
-              478
+              667,
+              535
             ],
             [
-              639,
-              622
+              667,
+              678
             ]
           ],
           "labelBox": [
-            494,
-            486,
-            631,
-            614
+            501,
+            543,
+            659,
+            670
           ],
           "name": "Room 1-28",
           "code": "1-28",
@@ -562,28 +816,29 @@
           "node": "1:1-32",
           "polygon": [
             [
-              639,
-              622
+              667,
+              678
             ],
             [
-              639,
-              478
+              667,
+              535
             ],
             [
-              701,
-              478
+              739,
+              535
             ],
             [
-              701,
-              622
+              739,
+              678
             ]
           ],
           "labelBox": [
-            647,
-            486,
-            693,
-            614
+            675,
+            543,
+            731,
+            670
           ],
+          "note": "Computing Science Help Desk",
           "name": "Room 1-32",
           "code": "1-32",
           "category": "Offices"
@@ -592,27 +847,27 @@
           "node": "1:1-40",
           "polygon": [
             [
-              701,
-              622
+              739,
+              678
             ],
             [
-              701,
-              478
+              739,
+              535
             ],
             [
-              778,
-              478
+              838,
+              535
             ],
             [
-              778,
-              622
+              838,
+              678
             ]
           ],
           "labelBox": [
-            709,
-            486,
-            770,
-            614
+            747,
+            543,
+            830,
+            670
           ],
           "name": "Room 1-40",
           "code": "1-40",
@@ -622,80 +877,68 @@
           "node": "1:1-21",
           "polygon": [
             [
-              215,
-              356
+              244,
+              474
             ],
             [
-              215,
-              117
+              244,
+              210
             ],
             [
-              354,
-              117
+              369,
+              210
             ],
             [
-              354,
-              356
+              369,
+              474
             ]
           ],
           "labelBox": [
-            223,
-            125,
-            346,
-            348
+            252,
+            218,
+            361,
+            466
           ],
+          "note": "Computer lab",
           "name": "Room 1-21",
           "code": "1-21",
           "category": "Services"
         },
         {
-          "name": "Utility room",
-          "category": "Offices",
-          "polygon": [
-            [
-              354,
-              322
-            ],
-            [
-              354,
-              356
-            ],
-            [
-              400,
-              356
-            ],
-            [
-              400,
-              322
-            ]
-          ]
-        },
-        {
           "node": "1:1-25",
           "polygon": [
             [
-              354,
-              356
+              369,
+              444
             ],
             [
-              354,
-              117
+              369,
+              210
             ],
             [
-              493,
-              117
+              545,
+              210
             ],
             [
-              493,
-              356
+              545,
+              474
+            ],
+            [
+              414,
+              474
+            ],
+            [
+              414,
+              444
             ]
           ],
           "labelBox": [
-            362,
-            125,
-            485,
-            348
+            377,
+            218,
+            537,
+            436
           ],
+          "note": "Computer lab",
           "name": "Room 1-25",
           "code": "1-25",
           "category": "Services"
@@ -704,28 +947,29 @@
           "node": "1:1-29",
           "polygon": [
             [
-              493,
-              356
+              545,
+              474
             ],
             [
-              493,
-              117
+              545,
+              210
             ],
             [
-              667,
-              117
+              734,
+              210
             ],
             [
-              667,
-              356
+              734,
+              474
             ]
           ],
           "labelBox": [
-            501,
-            125,
-            659,
-            348
+            553,
+            218,
+            726,
+            466
           ],
+          "note": "Computer lab",
           "name": "Room 1-29",
           "code": "1-29",
           "category": "Services"
@@ -734,27 +978,27 @@
           "node": "1:1-33",
           "polygon": [
             [
-              667,
-              356
+              734,
+              474
             ],
             [
-              667,
-              278
+              734,
+              420
             ],
             [
-              743,
-              278
+              810,
+              420
             ],
             [
-              743,
-              356
+              810,
+              474
             ]
           ],
           "labelBox": [
-            675,
-            286,
-            735,
-            348
+            742,
+            428,
+            802,
+            466
           ],
           "name": "Room 1-33",
           "code": "1-33",
@@ -764,27 +1008,27 @@
           "node": "1:1-35",
           "polygon": [
             [
-              667,
-              278
+              734,
+              420
             ],
             [
-              667,
-              200
+              734,
+              365
             ],
             [
-              743,
-              200
+              810,
+              365
             ],
             [
-              743,
-              278
+              810,
+              420
             ]
           ],
           "labelBox": [
-            675,
-            208,
-            735,
-            270
+            742,
+            373,
+            802,
+            412
           ],
           "name": "Room 1-35",
           "code": "1-35",
@@ -794,88 +1038,96 @@
           "node": "1:1-37",
           "polygon": [
             [
-              667,
-              200
+              734,
+              365
             ],
             [
-              667,
-              133
+              734,
+              282
             ],
             [
-              743,
-              133
+              810,
+              282
             ],
             [
-              743,
-              200
+              810,
+              365
             ]
           ],
           "labelBox": [
-            675,
-            141,
-            735,
-            192
+            742,
+            290,
+            802,
+            357
           ],
           "name": "Room 1-37",
           "code": "1-37",
           "category": "Offices"
         },
         {
-          "name": "Lift",
-          "category": "Corridors",
+          "node": "1:lift",
           "icon": "lift",
           "iconPoint": [
-            299,
-            544
+            301,
+            606
           ],
           "polygon": [
             [
-              347,
-              611
+              333,
+              678
             ],
             [
-              285,
-              611
+              268,
+              678
             ],
             [
-              264,
+              268,
+              650
+            ],
+            [
+              286,
+              635
+            ],
+            [
+              286,
               583
             ],
             [
-              264,
-              506
+              268,
+              565
             ],
             [
-              285,
-              478
+              268,
+              535
             ],
             [
-              347,
-              478
+              333,
+              535
             ]
-          ]
+          ],
+          "name": "Lift",
+          "code": null,
+          "category": "Services"
         },
         {
           "name": "Campus phone",
           "category": "Services",
           "icon": "phone",
           "iconPoint": [
-            208,
-            844
+            246,
+            839
           ],
-          "arrow": "☎",
-          "note": "Campus phone"
+          "arrow": "☎"
         },
         {
           "name": "Campus phone",
           "category": "Services",
           "icon": "phone",
           "iconPoint": [
-            910,
-            222
+            911,
+            262
           ],
-          "arrow": "☎",
-          "note": "Campus phone"
+          "arrow": "☎"
         },
         {
           "node": "1:Athabasca",
@@ -883,33 +1135,15 @@
           "shortLabel": "Athabasca →",
           "icon": "pedway",
           "iconPoint": [
-            880,
-            30
+            932,
+            22
           ],
           "arrow": "→",
-          "polygon": [
-            [
-              840,
-              0
-            ],
-            [
-              840,
-              60
-            ],
-            [
-              920,
-              60
-            ],
-            [
-              920,
-              0
-            ]
-          ],
           "labelBox": [
-            845,
-            70,
-            915,
-            150
+            921,
+            35,
+            950,
+            178
           ],
           "name": "Access to Athabasca Hall",
           "code": "Athabasca",
@@ -917,13 +1151,83 @@
         },
         {
           "name": "Access to basement lecture theatres",
+          "destination": "1:south-stairs",
           "category": "Corridors",
           "labelOnly": true,
           "labelBox": [
-            840,
-            180,
-            930,
-            240
+            858,
+            282,
+            898,
+            445
+          ]
+        },
+        {
+          "name": "Unlabelled enclosure",
+          "category": "Building structure",
+          "selectable": false,
+          "polygon": [
+            [
+              369,
+              474
+            ],
+            [
+              369,
+              444
+            ],
+            [
+              414,
+              444
+            ],
+            [
+              414,
+              474
+            ]
+          ]
+        },
+        {
+          "name": "Unlabelled enclosure",
+          "category": "Building structure",
+          "selectable": false,
+          "polygon": [
+            [
+              386,
+              764
+            ],
+            [
+              386,
+              737
+            ],
+            [
+              450,
+              737
+            ],
+            [
+              450,
+              764
+            ]
+          ]
+        },
+        {
+          "name": "Unlabelled enclosure",
+          "category": "Building structure",
+          "selectable": false,
+          "polygon": [
+            [
+              734,
+              282
+            ],
+            [
+              734,
+              210
+            ],
+            [
+              810,
+              210
+            ],
+            [
+              810,
+              282
+            ]
           ]
         }
       ]
@@ -931,289 +1235,488 @@
   ],
   "nodes": [
     {
-      "id": "1:n-entry",
+      "id": "1:1-05-approach",
       "floor": 1,
-      "x": 60,
-      "y": 290,
+      "x": 173,
+      "y": 748,
       "kind": "corridor",
       "name": null,
       "code": null
     },
     {
-      "id": "1:nc-e",
+      "id": "1:1-05",
       "floor": 1,
-      "x": 210,
-      "y": 330,
+      "x": 160,
+      "y": 748,
+      "kind": "room",
+      "name": "Room 1-05",
+      "code": "1-05",
+      "category": "Services"
+    },
+    {
+      "id": "1:WC-M-approach",
+      "floor": 1,
+      "x": 173,
+      "y": 719,
       "kind": "corridor",
       "name": null,
       "code": null
     },
     {
-      "id": "1:nc",
+      "id": "1:WC-M",
       "floor": 1,
-      "x": 200,
-      "y": 520,
+      "x": 160,
+      "y": 719,
+      "kind": "room",
+      "name": "Men's washroom",
+      "code": "WC-M",
+      "category": "Services",
+      "amenity": "washroom"
+    },
+    {
+      "id": "1:WC-W-approach",
+      "floor": 1,
+      "x": 173,
+      "y": 564,
       "kind": "corridor",
       "name": null,
       "code": null
     },
     {
-      "id": "1:nc-w",
+      "id": "1:WC-W",
       "floor": 1,
-      "x": 200,
-      "y": 750,
+      "x": 160,
+      "y": 564,
+      "kind": "room",
+      "name": "Women's washroom",
+      "code": "WC-W",
+      "category": "Services",
+      "amenity": "washroom"
+    },
+    {
+      "id": "1:1-13-approach",
+      "floor": 1,
+      "x": 51,
+      "y": 381,
       "kind": "corridor",
       "name": null,
       "code": null
     },
     {
-      "id": "1:w-top",
+      "id": "1:1-13",
       "floor": 1,
-      "x": 300,
-      "y": 750,
+      "x": 51,
+      "y": 394,
+      "kind": "room",
+      "name": "Room 1-13",
+      "code": "1-13",
+      "category": "Services"
+    },
+    {
+      "id": "1:1-67-approach",
+      "floor": 1,
+      "x": 366,
+      "y": 789,
       "kind": "corridor",
       "name": null,
       "code": null
     },
     {
-      "id": "1:w-entry",
+      "id": "1:1-67",
       "floor": 1,
-      "x": 285,
-      "y": 900,
+      "x": 366,
+      "y": 802,
+      "kind": "room",
+      "name": "Room 1-67",
+      "code": "1-67",
+      "category": "Services"
+    },
+    {
+      "id": "1:1-59-approach",
+      "floor": 1,
+      "x": 708,
+      "y": 731,
       "kind": "corridor",
       "name": null,
       "code": null
     },
     {
-      "id": "1:wc-n",
+      "id": "1:1-59",
       "floor": 1,
-      "x": 340,
-      "y": 665,
+      "x": 708,
+      "y": 744,
+      "kind": "room",
+      "name": "Room 1-59",
+      "code": "1-59",
+      "category": "Services"
+    },
+    {
+      "id": "1:1-53-approach",
+      "floor": 1,
+      "x": 844,
+      "y": 731,
       "kind": "corridor",
       "name": null,
       "code": null
     },
     {
-      "id": "1:w66",
+      "id": "1:1-53",
       "floor": 1,
-      "x": 515,
-      "y": 665,
+      "x": 844,
+      "y": 744,
+      "kind": "room",
+      "name": "Room 1-53",
+      "code": "1-53",
+      "category": "Services"
+    },
+    {
+      "id": "1:1-49-approach",
+      "floor": 1,
+      "x": 889,
+      "y": 793,
       "kind": "corridor",
       "name": null,
       "code": null
     },
     {
-      "id": "1:w64",
+      "id": "1:1-49",
       "floor": 1,
-      "x": 575,
-      "y": 665,
+      "x": 902,
+      "y": 793,
+      "kind": "room",
+      "name": "Room 1-49",
+      "code": "1-49",
+      "category": "Offices"
+    },
+    {
+      "id": "1:1-47-approach",
+      "floor": 1,
+      "x": 889,
+      "y": 721,
       "kind": "corridor",
       "name": null,
       "code": null
     },
     {
-      "id": "1:w28",
+      "id": "1:1-47",
       "floor": 1,
-      "x": 660,
-      "y": 665,
+      "x": 902,
+      "y": 721,
+      "kind": "room",
+      "name": "Room 1-47",
+      "code": "1-47",
+      "category": "Services"
+    },
+    {
+      "id": "1:1-41-approach",
+      "floor": 1,
+      "x": 889,
+      "y": 511,
       "kind": "corridor",
       "name": null,
       "code": null
     },
     {
-      "id": "1:w32",
+      "id": "1:1-41",
       "floor": 1,
-      "x": 745,
-      "y": 665,
+      "x": 902,
+      "y": 511,
+      "kind": "room",
+      "name": "Room 1-41",
+      "code": "1-41",
+      "category": "Offices"
+    },
+    {
+      "id": "1:1-39-approach",
+      "floor": 1,
+      "x": 889,
+      "y": 409,
       "kind": "corridor",
       "name": null,
       "code": null
     },
     {
-      "id": "1:w53",
+      "id": "1:1-39",
       "floor": 1,
-      "x": 765,
-      "y": 665,
+      "x": 902,
+      "y": 409,
+      "kind": "room",
+      "name": "Room 1-39",
+      "code": "1-39",
+      "category": "Offices"
+    },
+    {
+      "id": "1:1-66-approach",
+      "floor": 1,
+      "x": 405,
+      "y": 687,
       "kind": "corridor",
       "name": null,
       "code": null
     },
     {
-      "id": "1:w40",
+      "id": "1:1-66",
       "floor": 1,
-      "x": 805,
-      "y": 665,
+      "x": 405,
+      "y": 674,
+      "kind": "room",
+      "name": "Room 1-66",
+      "code": "1-66",
+      "category": "Offices"
+    },
+    {
+      "id": "1:1-24-approach",
+      "floor": 1,
+      "x": 407,
+      "y": 526,
       "kind": "corridor",
       "name": null,
       "code": null
     },
     {
-      "id": "1:wc-s",
+      "id": "1:1-24",
       "floor": 1,
-      "x": 860,
-      "y": 690,
+      "x": 407,
+      "y": 539,
+      "kind": "room",
+      "name": "Room 1-24",
+      "code": "1-24",
+      "category": "Offices"
+    },
+    {
+      "id": "1:1-64-approach",
+      "floor": 1,
+      "x": 459,
+      "y": 687,
       "kind": "corridor",
       "name": null,
       "code": null
     },
     {
-      "id": "1:sw-j",
+      "id": "1:1-64",
       "floor": 1,
-      "x": 875,
-      "y": 715,
+      "x": 459,
+      "y": 674,
+      "kind": "room",
+      "name": "Room 1-64",
+      "code": "1-64",
+      "category": "Offices"
+    },
+    {
+      "id": "1:1-26-approach",
+      "floor": 1,
+      "x": 461,
+      "y": 526,
       "kind": "corridor",
       "name": null,
       "code": null
     },
     {
-      "id": "1:sc-w",
+      "id": "1:1-26",
       "floor": 1,
-      "x": 890,
-      "y": 740,
+      "x": 461,
+      "y": 539,
+      "kind": "room",
+      "name": "Room 1-26",
+      "code": "1-26",
+      "category": "Offices"
+    },
+    {
+      "id": "1:1-28-approach",
+      "floor": 1,
+      "x": 584,
+      "y": 687,
       "kind": "corridor",
       "name": null,
       "code": null
     },
     {
-      "id": "1:sc47",
+      "id": "1:1-28",
       "floor": 1,
-      "x": 890,
-      "y": 615,
+      "x": 584,
+      "y": 674,
+      "kind": "room",
+      "name": "Room 1-28",
+      "code": "1-28",
+      "category": "Services"
+    },
+    {
+      "id": "1:1-32-approach",
+      "floor": 1,
+      "x": 681,
+      "y": 526,
       "kind": "corridor",
       "name": null,
       "code": null
     },
     {
-      "id": "1:sc-m",
+      "id": "1:1-32",
       "floor": 1,
-      "x": 890,
-      "y": 500,
+      "x": 681,
+      "y": 539,
+      "kind": "room",
+      "name": "Room 1-32",
+      "code": "1-32",
+      "category": "Offices"
+    },
+    {
+      "id": "1:1-40-approach",
+      "floor": 1,
+      "x": 847,
+      "y": 545,
       "kind": "corridor",
       "name": null,
       "code": null
     },
     {
-      "id": "1:sc41",
+      "id": "1:1-40",
       "floor": 1,
-      "x": 890,
-      "y": 440,
+      "x": 834,
+      "y": 545,
+      "kind": "room",
+      "name": "Room 1-40",
+      "code": "1-40",
+      "category": "Offices"
+    },
+    {
+      "id": "1:1-21-approach",
+      "floor": 1,
+      "x": 298,
+      "y": 483,
       "kind": "corridor",
       "name": null,
       "code": null
     },
     {
-      "id": "1:sc-e",
+      "id": "1:1-21",
       "floor": 1,
-      "x": 890,
-      "y": 350,
+      "x": 298,
+      "y": 470,
+      "kind": "room",
+      "name": "Room 1-21",
+      "code": "1-21",
+      "category": "Services"
+    },
+    {
+      "id": "1:1-25-approach",
+      "floor": 1,
+      "x": 425,
+      "y": 483,
       "kind": "corridor",
       "name": null,
       "code": null
     },
     {
-      "id": "1:cc-se",
+      "id": "1:1-25",
       "floor": 1,
-      "x": 860,
-      "y": 330,
+      "x": 425,
+      "y": 470,
+      "kind": "room",
+      "name": "Room 1-25",
+      "code": "1-25",
+      "category": "Services"
+    },
+    {
+      "id": "1:1-29-approach",
+      "floor": 1,
+      "x": 578,
+      "y": 483,
       "kind": "corridor",
       "name": null,
       "code": null
     },
     {
-      "id": "1:cc-n",
+      "id": "1:1-29",
       "floor": 1,
-      "x": 280,
-      "y": 395,
+      "x": 578,
+      "y": 470,
+      "kind": "room",
+      "name": "Room 1-29",
+      "code": "1-29",
+      "category": "Services"
+    },
+    {
+      "id": "1:1-33-approach",
+      "floor": 1,
+      "x": 819,
+      "y": 466,
       "kind": "corridor",
       "name": null,
       "code": null
     },
     {
-      "id": "1:cc21",
+      "id": "1:1-33",
       "floor": 1,
-      "x": 395,
-      "y": 395,
+      "x": 806,
+      "y": 466,
+      "kind": "room",
+      "name": "Room 1-33",
+      "code": "1-33",
+      "category": "Offices"
+    },
+    {
+      "id": "1:1-35-approach",
+      "floor": 1,
+      "x": 819,
+      "y": 407,
       "kind": "corridor",
       "name": null,
       "code": null
     },
     {
-      "id": "1:cc-m",
+      "id": "1:1-35",
       "floor": 1,
-      "x": 550,
-      "y": 395,
+      "x": 806,
+      "y": 407,
+      "kind": "room",
+      "name": "Room 1-35",
+      "code": "1-35",
+      "category": "Offices"
+    },
+    {
+      "id": "1:1-37-approach",
+      "floor": 1,
+      "x": 819,
+      "y": 292,
       "kind": "corridor",
       "name": null,
       "code": null
     },
     {
-      "id": "1:cc29",
+      "id": "1:1-37",
       "floor": 1,
-      "x": 670,
-      "y": 395,
+      "x": 806,
+      "y": 292,
+      "kind": "room",
+      "name": "Room 1-37",
+      "code": "1-37",
+      "category": "Offices"
+    },
+    {
+      "id": "1:lift-approach",
+      "floor": 1,
+      "x": 277,
+      "y": 606,
       "kind": "corridor",
       "name": null,
       "code": null
     },
     {
-      "id": "1:cc-s",
+      "id": "1:lift",
       "floor": 1,
-      "x": 800,
-      "y": 395,
-      "kind": "corridor",
-      "name": null,
-      "code": null
-    },
-    {
-      "id": "1:elev-hall",
-      "floor": 1,
-      "x": 330,
-      "y": 530,
-      "kind": "corridor",
-      "name": null,
-      "code": null
-    },
-    {
-      "id": "1:se-hall",
-      "floor": 1,
-      "x": 930,
-      "y": 270,
-      "kind": "corridor",
-      "name": null,
-      "code": null
-    },
-    {
-      "id": "1:lobby-e",
-      "floor": 1,
-      "x": 950,
-      "y": 150,
-      "kind": "corridor",
-      "name": null,
-      "code": null
-    },
-    {
-      "id": "1:se-lobby",
-      "floor": 1,
-      "x": 900,
-      "y": 150,
-      "kind": "corridor",
-      "name": null,
-      "code": null
-    },
-    {
-      "id": "1:lob35",
-      "floor": 1,
-      "x": 850,
-      "y": 200,
-      "kind": "corridor",
-      "name": null,
-      "code": null
+      "x": 290,
+      "y": 606,
+      "kind": "room",
+      "name": "Lift",
+      "code": null,
+      "category": "Services",
+      "amenity": "lift"
     },
     {
       "id": "1:entry-west",
       "floor": 1,
-      "x": 262,
-      "y": 922,
+      "x": 207,
+      "y": 918,
       "kind": "entrance",
       "name": "West entrance",
       "code": null,
@@ -1225,8 +1728,8 @@
     {
       "id": "1:entry-south",
       "floor": 1,
-      "x": 962,
-      "y": 210,
+      "x": 1000,
+      "y": 212,
       "kind": "entrance",
       "name": "South entrance",
       "code": null,
@@ -1238,8 +1741,8 @@
     {
       "id": "1:entry-north",
       "floor": 1,
-      "x": 26,
-      "y": 296,
+      "x": 92,
+      "y": 344,
       "kind": "entrance",
       "name": "North entrance",
       "code": null,
@@ -1249,28 +1752,10 @@
       ]
     },
     {
-      "id": "1:s-entry",
-      "floor": 1,
-      "x": 945,
-      "y": 220,
-      "kind": "corridor",
-      "name": null,
-      "code": null
-    },
-    {
-      "id": "1:bump",
-      "floor": 1,
-      "x": 970,
-      "y": 360,
-      "kind": "corridor",
-      "name": null,
-      "code": null
-    },
-    {
       "id": "1:nw-stairs",
       "floor": 1,
-      "x": 257,
-      "y": 878,
+      "x": 298,
+      "y": 844,
       "kind": "stairs",
       "name": "Northwest stairs",
       "code": null
@@ -1278,8 +1763,8 @@
     {
       "id": "1:ne-stairs",
       "floor": 1,
-      "x": 167,
-      "y": 178,
+      "x": 211,
+      "y": 333,
       "kind": "stairs",
       "name": "Northeast stairs",
       "code": null
@@ -1287,268 +1772,26 @@
     {
       "id": "1:south-stairs",
       "floor": 1,
-      "x": 910,
-      "y": 367,
+      "x": 934,
+      "y": 348,
       "kind": "stairs",
-      "name": "South stairs",
+      "name": "Access to basement lecture theatres",
       "code": null
     },
     {
       "id": "1:se-stairs",
       "floor": 1,
-      "x": 896,
-      "y": 67,
+      "x": 884,
+      "y": 113,
       "kind": "stairs",
       "name": "Southeast stairs",
       "code": null
     },
     {
-      "id": "1:1-05",
-      "floor": 1,
-      "x": 62.5,
-      "y": 866.5,
-      "kind": "room",
-      "name": "Room 1-05",
-      "code": "1-05",
-      "category": "Services"
-    },
-    {
-      "id": "1:WC-M",
-      "floor": 1,
-      "x": 62.5,
-      "y": 688.5,
-      "kind": "room",
-      "name": "Men's washroom",
-      "code": "WC-M",
-      "category": "Offices",
-      "amenity": "washroom"
-    },
-    {
-      "id": "1:WC-W",
-      "floor": 1,
-      "x": 62.5,
-      "y": 572.0,
-      "kind": "room",
-      "name": "Women's washroom",
-      "code": "WC-W",
-      "category": "Offices",
-      "amenity": "washroom"
-    },
-    {
-      "id": "1:1-13",
-      "floor": 1,
-      "x": 55.5,
-      "y": 405.5,
-      "kind": "room",
-      "name": "Room 1-13",
-      "code": "1-13",
-      "category": "Services"
-    },
-    {
-      "id": "1:1-67",
-      "floor": 1,
-      "x": 389.0,
-      "y": 875.0,
-      "kind": "room",
-      "name": "Room 1-67",
-      "code": "1-67",
-      "category": "Services"
-    },
-    {
-      "id": "1:1-59",
-      "floor": 1,
-      "x": 569.5,
-      "y": 875.0,
-      "kind": "room",
-      "name": "Room 1-59",
-      "code": "1-59",
-      "category": "Services"
-    },
-    {
-      "id": "1:1-53",
-      "floor": 1,
-      "x": 757.0,
-      "y": 875.0,
-      "kind": "room",
-      "name": "Room 1-53",
-      "code": "1-53",
-      "category": "Services"
-    },
-    {
-      "id": "1:1-49",
-      "floor": 1,
-      "x": 923.5,
-      "y": 867.0,
-      "kind": "room",
-      "name": "Room 1-49",
-      "code": "1-49",
-      "category": "Offices"
-    },
-    {
-      "id": "1:1-47",
-      "floor": 1,
-      "x": 923.5,
-      "y": 622.5,
-      "kind": "room",
-      "name": "Room 1-47",
-      "code": "1-47",
-      "category": "Services"
-    },
-    {
-      "id": "1:1-41",
-      "floor": 1,
-      "x": 923.5,
-      "y": 450.0,
-      "kind": "room",
-      "name": "Room 1-41",
-      "code": "1-41",
-      "category": "Offices"
-    },
-    {
-      "id": "1:1-39",
-      "floor": 1,
-      "x": 923.5,
-      "y": 377.5,
-      "kind": "room",
-      "name": "Room 1-39",
-      "code": "1-39",
-      "category": "Offices"
-    },
-    {
-      "id": "1:1-66",
-      "floor": 1,
-      "x": 389.0,
-      "y": 586.0,
-      "kind": "room",
-      "name": "Room 1-66",
-      "code": "1-66",
-      "category": "Offices"
-    },
-    {
-      "id": "1:1-24",
-      "floor": 1,
-      "x": 389.0,
-      "y": 514.0,
-      "kind": "room",
-      "name": "Room 1-24",
-      "code": "1-24",
-      "category": "Offices"
-    },
-    {
-      "id": "1:1-64",
-      "floor": 1,
-      "x": 458.5,
-      "y": 586.0,
-      "kind": "room",
-      "name": "Room 1-64",
-      "code": "1-64",
-      "category": "Offices"
-    },
-    {
-      "id": "1:1-26",
-      "floor": 1,
-      "x": 458.5,
-      "y": 514.0,
-      "kind": "room",
-      "name": "Room 1-26",
-      "code": "1-26",
-      "category": "Offices"
-    },
-    {
-      "id": "1:1-28",
-      "floor": 1,
-      "x": 562.5,
-      "y": 550.0,
-      "kind": "room",
-      "name": "Room 1-28",
-      "code": "1-28",
-      "category": "Services"
-    },
-    {
-      "id": "1:1-32",
-      "floor": 1,
-      "x": 670.0,
-      "y": 550.0,
-      "kind": "room",
-      "name": "Room 1-32",
-      "code": "1-32",
-      "category": "Offices"
-    },
-    {
-      "id": "1:1-40",
-      "floor": 1,
-      "x": 739.5,
-      "y": 550.0,
-      "kind": "room",
-      "name": "Room 1-40",
-      "code": "1-40",
-      "category": "Offices"
-    },
-    {
-      "id": "1:1-21",
-      "floor": 1,
-      "x": 284.5,
-      "y": 236.5,
-      "kind": "room",
-      "name": "Room 1-21",
-      "code": "1-21",
-      "category": "Services"
-    },
-    {
-      "id": "1:1-25",
-      "floor": 1,
-      "x": 423.5,
-      "y": 236.5,
-      "kind": "room",
-      "name": "Room 1-25",
-      "code": "1-25",
-      "category": "Services"
-    },
-    {
-      "id": "1:1-29",
-      "floor": 1,
-      "x": 580.0,
-      "y": 236.5,
-      "kind": "room",
-      "name": "Room 1-29",
-      "code": "1-29",
-      "category": "Services"
-    },
-    {
-      "id": "1:1-33",
-      "floor": 1,
-      "x": 705.0,
-      "y": 317.0,
-      "kind": "room",
-      "name": "Room 1-33",
-      "code": "1-33",
-      "category": "Offices"
-    },
-    {
-      "id": "1:1-35",
-      "floor": 1,
-      "x": 705.0,
-      "y": 239.0,
-      "kind": "room",
-      "name": "Room 1-35",
-      "code": "1-35",
-      "category": "Offices"
-    },
-    {
-      "id": "1:1-37",
-      "floor": 1,
-      "x": 705.0,
-      "y": 166.5,
-      "kind": "room",
-      "name": "Room 1-37",
-      "code": "1-37",
-      "category": "Offices"
-    },
-    {
       "id": "1:Athabasca",
       "floor": 1,
-      "x": 880.0,
-      "y": 30.0,
+      "x": 945,
+      "y": 7,
       "kind": "room",
       "name": "Access to Athabasca Hall",
       "code": "Athabasca",
@@ -1558,268 +1801,108 @@
   ],
   "edges": [
     [
-      "1:n-entry",
-      "1:nc-e"
-    ],
-    [
-      "1:nc-e",
-      "1:nc"
-    ],
-    [
-      "1:nc",
-      "1:nc-w"
-    ],
-    [
-      "1:nc-w",
-      "1:w-top"
-    ],
-    [
-      "1:w-top",
-      "1:w-entry"
-    ],
-    [
-      "1:w-top",
-      "1:wc-n"
-    ],
-    [
-      "1:wc-n",
-      "1:w66"
-    ],
-    [
-      "1:w66",
-      "1:w64"
-    ],
-    [
-      "1:w64",
-      "1:w28"
-    ],
-    [
-      "1:w28",
-      "1:w32"
-    ],
-    [
-      "1:w32",
-      "1:w53"
-    ],
-    [
-      "1:w53",
-      "1:w40"
-    ],
-    [
-      "1:w40",
-      "1:wc-s"
-    ],
-    [
-      "1:wc-s",
-      "1:sw-j"
-    ],
-    [
-      "1:sw-j",
-      "1:sc-w"
-    ],
-    [
-      "1:sc-w",
-      "1:sc47"
-    ],
-    [
-      "1:sc47",
-      "1:sc-m"
-    ],
-    [
-      "1:sc-m",
-      "1:sc41"
-    ],
-    [
-      "1:sc41",
-      "1:sc-e"
-    ],
-    [
-      "1:sc-e",
-      "1:cc-se"
-    ],
-    [
-      "1:cc-n",
-      "1:cc21"
-    ],
-    [
-      "1:cc21",
-      "1:cc-m"
-    ],
-    [
-      "1:cc-m",
-      "1:cc29"
-    ],
-    [
-      "1:cc29",
-      "1:cc-s"
-    ],
-    [
-      "1:cc-s",
-      "1:cc-se"
-    ],
-    [
-      "1:nc",
-      "1:elev-hall"
-    ],
-    [
-      "1:elev-hall",
-      "1:cc-n"
-    ],
-    [
-      "1:nc-e",
-      "1:cc-n"
-    ],
-    [
-      "1:cc-se",
-      "1:se-hall"
-    ],
-    [
-      "1:se-hall",
-      "1:lobby-e"
-    ],
-    [
-      "1:lobby-e",
-      "1:se-lobby"
-    ],
-    [
-      "1:se-hall",
-      "1:lob35"
-    ],
-    [
-      "1:w-entry",
-      "1:entry-west"
-    ],
-    [
-      "1:s-entry",
-      "1:entry-south"
-    ],
-    [
-      "1:n-entry",
-      "1:entry-north"
-    ],
-    [
-      "1:se-lobby",
-      "1:s-entry"
-    ],
-    [
-      "1:se-hall",
-      "1:bump"
-    ],
-    [
-      "1:w-top",
-      "1:nw-stairs"
-    ],
-    [
-      "1:nc-e",
-      "1:ne-stairs"
-    ],
-    [
-      "1:sc-e",
-      "1:south-stairs"
-    ],
-    [
-      "1:se-lobby",
-      "1:se-stairs"
-    ],
-    [
-      "1:nc-w",
+      "1:1-05-approach",
       "1:1-05"
     ],
     [
-      "1:nc",
+      "1:WC-M-approach",
       "1:WC-M"
     ],
     [
-      "1:nc",
+      "1:WC-W-approach",
       "1:WC-W"
     ],
     [
-      "1:nc",
+      "1:1-13-approach",
       "1:1-13"
     ],
     [
-      "1:wc-n",
+      "1:1-67-approach",
       "1:1-67"
     ],
     [
-      "1:w64",
+      "1:1-59-approach",
       "1:1-59"
     ],
     [
-      "1:w53",
+      "1:1-53-approach",
       "1:1-53"
     ],
     [
-      "1:sc-w",
+      "1:1-49-approach",
       "1:1-49"
     ],
     [
-      "1:sc47",
+      "1:1-47-approach",
       "1:1-47"
     ],
     [
-      "1:sc41",
+      "1:1-41-approach",
       "1:1-41"
     ],
     [
-      "1:sc-e",
+      "1:1-39-approach",
       "1:1-39"
     ],
     [
-      "1:w66",
+      "1:1-66-approach",
       "1:1-66"
     ],
     [
-      "1:cc-m",
+      "1:1-24-approach",
       "1:1-24"
     ],
     [
-      "1:w64",
+      "1:1-64-approach",
       "1:1-64"
     ],
     [
-      "1:cc-m",
+      "1:1-26-approach",
       "1:1-26"
     ],
     [
-      "1:w28",
+      "1:1-28-approach",
       "1:1-28"
     ],
     [
-      "1:w32",
+      "1:1-32-approach",
       "1:1-32"
     ],
     [
-      "1:w40",
+      "1:1-40-approach",
       "1:1-40"
     ],
     [
-      "1:cc21",
+      "1:1-21-approach",
       "1:1-21"
     ],
     [
-      "1:cc-m",
+      "1:1-25-approach",
       "1:1-25"
     ],
     [
-      "1:cc29",
+      "1:1-29-approach",
       "1:1-29"
     ],
     [
-      "1:cc-s",
+      "1:1-33-approach",
       "1:1-33"
     ],
     [
-      "1:lob35",
+      "1:1-35-approach",
       "1:1-35"
     ],
     [
-      "1:se-lobby",
+      "1:1-37-approach",
       "1:1-37"
     ],
     [
-      "1:se-lobby",
-      "1:Athabasca"
+      "1:lift-approach",
+      "1:lift"
+    ],
+    [
+      "1:entry-north",
+      "1:1-13-approach"
     ]
   ]
 }

@@ -1,24 +1,24 @@
 # SUB indoor map
 
-All three floors are **hand-traced vector maps** based on the user-supplied UASU
-2024 SUB floor plans. `map.json` holds room polygons, room-interior label areas,
-building outlines and the connected corridor/room/stair routing graph. There are
-no PDF backgrounds, raster floor images, or baked-in symbols. The tracing and its
-alignment to the campus footprint are schematic.
+Lower, Main and Level 2 are **hand-traced vector maps** based on the 2024 UASU
+floor plans. `map.json` holds room polygons, label areas, outlines and the
+corridor, room and stair routing graph. The traces and their alignment to the
+campus footprint are schematic. UASU publishes a room directory for the tower
+floors, which are outside the mapped area. [UASU floor plans and directory](https://www.su.ualberta.ca/this-is-your-space/this-is-your-students-union-building/whats-in-sub/)
 
 ## Use
 
-- Click **SUB floor plans**, or zoom to level 19+ over SUB.
+- Zoom to level 19 or closer over SUB, or start a route to or from a SUB room.
 - Switch **Lower / Main / Level 2** with the side buttons.
 - Search by room number or service name in either route input, or click a green
   room dot or the room itself. Clicking an open indoor area places a pin on the
   selected floor and connects it to a corridor without crossing room walls.
   Two nearby indoor pins can be routed independently.
 - Each route displays only its current-floor segment. Floor-change buttons name
-  the staircase and select the next floor. Campus legs connect through one of
-  four mapped main-level entrances, including the public passage beside the
-  loading dock. That exit connects to the mapped crossing north of SUB through
-  an explicit outdoor link in `routing-overrides.geojson`.
+  the staircase and select the next floor. Campus legs can connect through the
+  Lower-level plaza door or one of four mapped Main entrances. The passage beside
+  the loading dock connects to the crossing north of SUB through an outdoor link
+  in `routing-overrides.geojson`. [Lower-level plaza entrance](https://www.ualberta.ca/en/governance/media-library/documents/member-zone/gfc-standing-committees/fdc-motions/2013-04-25-fdc-motions.pdf)
 - **Show staircases** controls the single set of purple stair icons, not whether
    stairs may be used in a route. No staircase icons are embedded in the map artwork.
 - The southern atrium staircase on Lower and Main includes vector outlines,
@@ -34,6 +34,17 @@ alignment to the campus footprint are schematic.
   still use the explicitly mapped stairs.
 
 ## Data and implementation
+
+The mapped shops and services include updates after the 2024 plans were published.
+Bestea replaced Teapsy in 1-11, and the Student Group Flex Space occupies 0-11.
+The lower-level ATB branch closed. Its ATM is on Main. First Peoples’ House and
+its Transition Year Program moved to Education Centre South. The map retains
+the former suites' room numbers where current occupants are unverified.
+[Students’ Council leasing record](https://www.su.ualberta.ca/media/uploads/assets/CouncilOrderPapers/SC-2023-26-LA-20240416_ZD8EZ50.pdf),
+[UASU Flex Space](https://docs.su.ualberta.ca/books/student-group-services/page/student-group-flex-space),
+[ATB campus branch closure](https://www.atb.com/personal/student/),
+[ATB ATM location](https://www.atb.com/resources/find-a-location/university-of-alberta-sub-main-level/),
+[First Peoples’ House relocation](https://www.ualberta.ca/en/folio/2026/08/first-peoples-house-opens-new-legacy.html)
 
 `tools/build-sub.py` is the editable source for floor coordinate frames, corridor
 vertices, room access points and stair links. `tools/sub-spaces.json` contains the

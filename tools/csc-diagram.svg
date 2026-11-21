@@ -1,75 +1,113 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="-70 -80 1040 1160" font-family="system-ui,sans-serif">
-<rect x="-70" y="-80" width="1040" height="1160" fill="white"/>
-<text x="0" y="-35" font-size="34" font-weight="600" fill="#222222">CSC Level 1 — diagram rebuild (review, not yet fitted)</text>
-<path d="M0,0L820,0L820,743L900,743L900,1000L0,1000Z" fill="#b5bab5" stroke="#222222" stroke-width="5"/>
-<path d="M0,200 C-28,210 -28,270 0,282 Z" fill="#b5bab5" stroke="#222222" stroke-width="3"/>
-<rect x="795" y="208" width="25" height="459" fill="#b5bab5" stroke="white" stroke-width="2"/>
-<rect x="780" y="667" width="40" height="76" fill="#b5bab5" stroke="white" stroke-width="2"/>
-<rect x="10" y="0" width="220" height="125" fill="#585e5d" stroke="white" stroke-width="2"/>
-<text x="120.0" y="62.5" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">1-05</text>
-<rect x="230" y="0" width="100" height="125" fill="#585e5d" stroke="white" stroke-width="2"/>
-<text x="280.0" y="62.5" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">WC</text>
-<rect x="330" y="0" width="110" height="125" fill="#585e5d" stroke="white" stroke-width="2"/>
-<text x="385.0" y="62.5" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">WC</text>
-<rect x="450" y="0" width="170" height="111" fill="#585e5d" stroke="white" stroke-width="2"/>
-<text x="535.0" y="55.5" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">1-13</text>
-<rect x="0" y="306" width="225" height="166" fill="#585e5d" stroke="white" stroke-width="2"/>
-<text x="112.5" y="389.0" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">1-67</text>
-<rect x="0" y="472" width="225" height="195" fill="#585e5d" stroke="white" stroke-width="2"/>
-<text x="112.5" y="569.5" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">1-59</text>
-<rect x="0" y="667" width="225" height="180" fill="#585e5d" stroke="white" stroke-width="2"/>
-<text x="112.5" y="757.0" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">1-53</text>
-<rect x="20" y="847" width="200" height="84" fill="#585e5d" stroke="white" stroke-width="2"/>
-<text x="120.0" y="889.0" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">1-49</text>
-<rect x="340" y="347" width="65" height="84" fill="#585e5d" stroke="white" stroke-width="2"/>
-<text x="372.5" y="389.0" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">1-66</text>
-<rect x="405" y="347" width="65" height="84" fill="#585e5d" stroke="white" stroke-width="2"/>
-<text x="437.5" y="389.0" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">1-24</text>
-<rect x="340" y="431" width="65" height="55" fill="#585e5d" stroke="white" stroke-width="2"/>
-<text x="372.5" y="458.5" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">1-64</text>
-<rect x="405" y="431" width="65" height="55" fill="#585e5d" stroke="white" stroke-width="2"/>
-<text x="437.5" y="458.5" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">1-26</text>
-<rect x="340" y="486" width="130" height="153" fill="#585e5d" stroke="white" stroke-width="2"/>
-<text x="405.0" y="562.5" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">1-28</text>
-<rect x="340" y="639" width="130" height="62" fill="#585e5d" stroke="white" stroke-width="2"/>
-<text x="405.0" y="670.0" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">1-32</text>
-<rect x="340" y="701" width="130" height="77" fill="#585e5d" stroke="white" stroke-width="2"/>
-<text x="405.0" y="739.5" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">1-40</text>
-<rect x="580" y="215" width="215" height="139" fill="#585e5d" stroke="white" stroke-width="2"/>
-<text x="687.5" y="284.5" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">1-21</text>
-<rect x="580" y="354" width="215" height="139" fill="#585e5d" stroke="white" stroke-width="2"/>
-<text x="687.5" y="423.5" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">1-25</text>
-<rect x="580" y="493" width="215" height="174" fill="#585e5d" stroke="white" stroke-width="2"/>
-<text x="687.5" y="580.0" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">1-29</text>
-<rect x="580" y="667" width="70" height="76" fill="#585e5d" stroke="white" stroke-width="2"/>
-<text x="615.0" y="705.0" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">1-33</text>
-<rect x="650" y="667" width="70" height="76" fill="#585e5d" stroke="white" stroke-width="2"/>
-<text x="685.0" y="705.0" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">1-35</text>
-<rect x="720" y="667" width="60" height="76" fill="#585e5d" stroke="white" stroke-width="2"/>
-<text x="750.0" y="705.0" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">1-37</text>
-<rect x="220" y="847" width="240" height="84" fill="#585e5d" stroke="white" stroke-width="2"/>
-<text x="340.0" y="889.0" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">1-47</text>
-<rect x="460" y="847" width="70" height="84" fill="#585e5d" stroke="white" stroke-width="2"/>
-<text x="495.0" y="889.0" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">1-41</text>
-<rect x="530" y="847" width="60" height="84" fill="#585e5d" stroke="white" stroke-width="2"/>
-<text x="560.0" y="889.0" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">1-39</text>
-<path d="M350,333L350,285L375,264L445,264L470,285L470,333Z" fill="none" stroke="white" stroke-width="3"/>
-<circle cx="410" cy="299" r="24" fill="#222222"/>
-<text x="410" y="299" font-size="22" fill="white" text-anchor="middle" dominant-baseline="central">E</text>
-<circle cx="110" cy="257" r="24" fill="#222222"/>
-<text x="110" y="257" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">S</text>
-<circle cx="740" cy="167" r="24" fill="#222222"/>
-<text x="740" y="167" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">S</text>
-<circle cx="570" cy="910" r="24" fill="#222222"/>
-<text x="570" y="910" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">S</text>
-<circle cx="840" cy="896" r="24" fill="#222222"/>
-<text x="840" y="896" font-size="26" fill="white" text-anchor="middle" dominant-baseline="central">S</text>
-<circle cx="140" cy="208" r="14" fill="#222222"/>
-<text x="140" y="208" font-size="16" fill="white" text-anchor="middle" dominant-baseline="central">☎</text>
-<circle cx="700" cy="910" r="14" fill="#222222"/>
-<text x="700" y="910" font-size="16" fill="white" text-anchor="middle" dominant-baseline="central">☎</text>
-<text x="625" y="882" font-size="20" fill="#222222" text-anchor="middle">Access to basement</text>
-<text x="625" y="906" font-size="20" fill="#222222" text-anchor="middle">lecture theatres ↓</text>
-<text x="760" y="837" font-size="18" fill="#c0392b" text-anchor="middle">YOU ARE HERE ↑</text>
-<text x="790" y="955" font-size="20" fill="#222222" text-anchor="middle">Athabasca Hall Access →</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-30 -80 1060 1110" font-family="system-ui,sans-serif">
+<rect x="-30" y="-80" width="1060" height="1110" fill="#fff"/>
+<text x="0" y="-30" font-size="28" font-weight="600" fill="#25362c">Computing Science Centre · Level 1</text>
+<path d="M 34 0 L 610 0 L 610 92 L 706 92 L 706 244 L 790 244 L 790 810 L 1000 810 L 1000 954 L 849 954 L 849 1000 L 723 1000 L 723 965 L 526 965 L 526 1000 L 45 1000 L 45 898 L 0 898 L 0 330 L 82 330 L 82 164 L 34 164 Z" fill="#edf0ec" stroke="#52645b" stroke-width="3"/>
+<path d="M 34 0 L 263 0 L 263 164 L 34 164 Z" fill="#dce6df" stroke="#52645b" stroke-width="1.4"/>
+<path d="M 263 0 L 347 0 L 347 164 L 263 164 Z" fill="#dce6df" stroke="#52645b" stroke-width="1.4"/>
+<path d="M 347 0 L 454 0 L 454 164 L 347 164 Z" fill="#dce6df" stroke="#52645b" stroke-width="1.4"/>
+<path d="M 454 0 L 610 0 L 610 66 L 454 66 Z" fill="#dce6df" stroke="#52645b" stroke-width="1.4"/>
+<path d="M 0 330 L 202 330 L 202 519 L 0 519 Z" fill="#dce6df" stroke="#52645b" stroke-width="1.4"/>
+<path d="M 0 519 L 260 519 L 260 718 L 0 718 Z" fill="#dce6df" stroke="#52645b" stroke-width="1.4"/>
+<path d="M 0 718 L 260 718 L 260 868 L 197 868 L 197 898 L 0 898 Z" fill="#dce6df" stroke="#52645b" stroke-width="1.4"/>
+<path d="M 45 898 L 226 898 L 226 1000 L 45 1000 Z" fill="#dce6df" stroke="#52645b" stroke-width="1.4"/>
+<path d="M 226 898 L 449 898 L 449 1000 L 226 1000 Z" fill="#dce6df" stroke="#52645b" stroke-width="1.4"/>
+<path d="M 449 898 L 526 898 L 526 1000 L 449 1000 Z" fill="#dce6df" stroke="#52645b" stroke-width="1.4"/>
+<path d="M 526 898 L 604 898 L 604 965 L 526 965 Z" fill="#dce6df" stroke="#52645b" stroke-width="1.4"/>
+<path d="M 322 333 L 394 333 L 394 419 L 322 419 Z" fill="#dce6df" stroke="#52645b" stroke-width="1.4"/>
+<path d="M 394 333 L 465 333 L 465 419 L 394 419 Z" fill="#dce6df" stroke="#52645b" stroke-width="1.4"/>
+<path d="M 322 419 L 394 419 L 394 493 L 322 493 Z" fill="#dce6df" stroke="#52645b" stroke-width="1.4"/>
+<path d="M 394 419 L 465 419 L 465 493 L 394 493 Z" fill="#dce6df" stroke="#52645b" stroke-width="1.4"/>
+<path d="M 322 493 L 465 493 L 465 667 L 322 667 Z" fill="#dce6df" stroke="#52645b" stroke-width="1.4"/>
+<path d="M 322 667 L 465 667 L 465 739 L 322 739 Z" fill="#dce6df" stroke="#52645b" stroke-width="1.4"/>
+<path d="M 322 739 L 465 739 L 465 838 L 322 838 Z" fill="#dce6df" stroke="#52645b" stroke-width="1.4"/>
+<path d="M 526 244 L 790 244 L 790 369 L 526 369 Z" fill="#dce6df" stroke="#52645b" stroke-width="1.4"/>
+<path d="M 556 369 L 790 369 L 790 545 L 526 545 L 526 414 L 556 414 Z" fill="#dce6df" stroke="#52645b" stroke-width="1.4"/>
+<path d="M 526 545 L 790 545 L 790 734 L 526 734 Z" fill="#dce6df" stroke="#52645b" stroke-width="1.4"/>
+<path d="M 526 734 L 580 734 L 580 810 L 526 810 Z" fill="#dce6df" stroke="#52645b" stroke-width="1.4"/>
+<path d="M 580 734 L 635 734 L 635 810 L 580 810 Z" fill="#dce6df" stroke="#52645b" stroke-width="1.4"/>
+<path d="M 635 734 L 718 734 L 718 810 L 635 810 Z" fill="#dce6df" stroke="#52645b" stroke-width="1.4"/>
+<path d="M 322 333 L 322 268 L 350 268 L 365 286 L 417 286 L 435 268 L 465 268 L 465 333 Z" fill="#dce6df" stroke="#52645b" stroke-width="1.4"/>
+<path d="M 526 369 L 556 369 L 556 414 L 526 414 Z" fill="#dce6df" stroke="#52645b" stroke-width="1.4"/>
+<path d="M 236 386 L 263 386 L 263 450 L 236 450 Z" fill="#dce6df" stroke="#52645b" stroke-width="1.4"/>
+<path d="M 718 734 L 790 734 L 790 810 L 718 810 Z" fill="#dce6df" stroke="#52645b" stroke-width="1.4"/>
+<path d="M 263 107 L 298 107" fill="none" stroke="#52645b" stroke-width="1.4"/>
+<path d="M 298 130 L 298 164" fill="none" stroke="#52645b" stroke-width="1.4"/>
+<path d="M 454 95 L 419 95" fill="none" stroke="#52645b" stroke-width="1.4"/>
+<path d="M 419 117 L 419 164" fill="none" stroke="#52645b" stroke-width="1.4"/>
+<path d="M 454 66 L 454 164 L 526 164" fill="none" stroke="#52645b" stroke-width="1.4"/>
+<path d="M 610 92 L 610 151" fill="none" stroke="#52645b" stroke-width="1.4"/>
+<path d="M 230 164 L 230 179" fill="none" stroke="#52645b" stroke-width="1.4"/>
+<path d="M 82 264 L 192 264" fill="none" stroke="#52645b" stroke-width="1.4"/>
+<path d="M 213 264 L 262 264" fill="none" stroke="#52645b" stroke-width="1.4"/>
+<path d="M 230 248 L 230 264" fill="none" stroke="#52645b" stroke-width="1.4"/>
+<path d="M 262 286 L 262 310" fill="none" stroke="#52645b" stroke-width="1.4"/>
+<path d="M 82 330 L 262 330" fill="none" stroke="#52645b" stroke-width="1.4"/>
+<path d="M 655 206 L 526 206 L 526 244" fill="none" stroke="#52645b" stroke-width="1.4"/>
+<path d="M 526 810 L 526 844" fill="none" stroke="#52645b" stroke-width="1.4"/>
+<path d="M 526 888 L 526 898" fill="none" stroke="#52645b" stroke-width="1.4"/>
+<path d="M 718 810 L 718 848" fill="none" stroke="#52645b" stroke-width="1.4"/>
+<path d="M 604 898 L 685 898" fill="none" stroke="#52645b" stroke-width="1.4"/>
+<path d="M 604 898 L 604 965" fill="none" stroke="#52645b" stroke-width="1.4"/>
+<path d="M 723 898 L 723 965" fill="none" stroke="#52645b" stroke-width="1.4"/>
+<path d="M 723 933 L 751 933" fill="none" stroke="#52645b" stroke-width="1.4"/>
+<path d="M 246.0 164.0 L 258.0 164.0" fill="none" stroke="#edf0ec" stroke-width="3"/>
+<path d="M 275.0 164.0 L 287.0 164.0" fill="none" stroke="#edf0ec" stroke-width="3"/>
+<path d="M 430.0 164.0 L 442.0 164.0" fill="none" stroke="#edf0ec" stroke-width="3"/>
+<path d="M 610.0 45.0 L 610.0 57.0" fill="none" stroke="#edf0ec" stroke-width="3"/>
+<path d="M 202.0 360.0 L 202.0 372.0" fill="none" stroke="#edf0ec" stroke-width="3"/>
+<path d="M 260.0 702.0 L 260.0 714.0" fill="none" stroke="#edf0ec" stroke-width="3"/>
+<path d="M 260.0 838.0 L 260.0 850.0" fill="none" stroke="#edf0ec" stroke-width="3"/>
+<path d="M 213.0 898.0 L 201.0 898.0" fill="none" stroke="#edf0ec" stroke-width="3"/>
+<path d="M 285.0 898.0 L 273.0 898.0" fill="none" stroke="#edf0ec" stroke-width="3"/>
+<path d="M 495.0 898.0 L 483.0 898.0" fill="none" stroke="#edf0ec" stroke-width="3"/>
+<path d="M 597.0 898.0 L 585.0 898.0" fill="none" stroke="#edf0ec" stroke-width="3"/>
+<path d="M 322.0 411.0 L 322.0 399.0" fill="none" stroke="#edf0ec" stroke-width="3"/>
+<path d="M 465.0 401.0 L 465.0 413.0" fill="none" stroke="#edf0ec" stroke-width="3"/>
+<path d="M 322.0 465.0 L 322.0 453.0" fill="none" stroke="#edf0ec" stroke-width="3"/>
+<path d="M 465.0 455.0 L 465.0 467.0" fill="none" stroke="#edf0ec" stroke-width="3"/>
+<path d="M 322.0 590.0 L 322.0 578.0" fill="none" stroke="#edf0ec" stroke-width="3"/>
+<path d="M 465.0 675.0 L 465.0 687.0" fill="none" stroke="#edf0ec" stroke-width="3"/>
+<path d="M 449.0 838.0 L 461.0 838.0" fill="none" stroke="#edf0ec" stroke-width="3"/>
+<path d="M 526.0 304.0 L 526.0 292.0" fill="none" stroke="#edf0ec" stroke-width="3"/>
+<path d="M 526.0 431.0 L 526.0 419.0" fill="none" stroke="#edf0ec" stroke-width="3"/>
+<path d="M 526.0 584.0 L 526.0 572.0" fill="none" stroke="#edf0ec" stroke-width="3"/>
+<path d="M 528.0 810.0 L 540.0 810.0" fill="none" stroke="#edf0ec" stroke-width="3"/>
+<path d="M 587.0 810.0 L 599.0 810.0" fill="none" stroke="#edf0ec" stroke-width="3"/>
+<path d="M 702.0 810.0 L 714.0 810.0" fill="none" stroke="#edf0ec" stroke-width="3"/>
+<path d="M 400.0 286.0 L 388.0 286.0" fill="none" stroke="#edf0ec" stroke-width="3"/>
+<text x="148.5" y="82.0" font-size="19" fill="#25362c" text-anchor="middle" dominant-baseline="central">1-05</text>
+<text x="304" y="61" font-size="16" fill="#25362c" text-anchor="middle" dominant-baseline="central">WC</text>
+<text x="400" y="61" font-size="16" fill="#25362c" text-anchor="middle" dominant-baseline="central">WC</text>
+<text x="532.0" y="33.0" font-size="19" fill="#25362c" text-anchor="middle" dominant-baseline="central">1-13</text>
+<text x="101.0" y="424.5" font-size="19" fill="#25362c" text-anchor="middle" dominant-baseline="central">1-67</text>
+<text x="130.0" y="618.5" font-size="19" fill="#25362c" text-anchor="middle" dominant-baseline="central">1-59</text>
+<text x="130.0" y="793.0" font-size="19" fill="#25362c" text-anchor="middle" dominant-baseline="central">1-53</text>
+<text x="135.5" y="949.0" font-size="19" fill="#25362c" text-anchor="middle" dominant-baseline="central">1-49</text>
+<text x="337.5" y="949.0" font-size="19" fill="#25362c" text-anchor="middle" dominant-baseline="central">1-47</text>
+<text x="487.5" y="949.0" font-size="19" fill="#25362c" text-anchor="middle" dominant-baseline="central">1-41</text>
+<text x="565.0" y="931.5" font-size="19" fill="#25362c" text-anchor="middle" dominant-baseline="central">1-39</text>
+<text x="358.0" y="376.0" font-size="19" fill="#25362c" text-anchor="middle" dominant-baseline="central">1-66</text>
+<text x="429.5" y="376.0" font-size="19" fill="#25362c" text-anchor="middle" dominant-baseline="central">1-24</text>
+<text x="358.0" y="456.0" font-size="19" fill="#25362c" text-anchor="middle" dominant-baseline="central">1-64</text>
+<text x="429.5" y="456.0" font-size="19" fill="#25362c" text-anchor="middle" dominant-baseline="central">1-26</text>
+<text x="393.5" y="580.0" font-size="19" fill="#25362c" text-anchor="middle" dominant-baseline="central">1-28</text>
+<text x="393.5" y="703.0" font-size="19" fill="#25362c" text-anchor="middle" dominant-baseline="central">1-32</text>
+<text x="393.5" y="788.5" font-size="19" fill="#25362c" text-anchor="middle" dominant-baseline="central">1-40</text>
+<text x="658.0" y="306.5" font-size="19" fill="#25362c" text-anchor="middle" dominant-baseline="central">1-21</text>
+<text x="673.0" y="457.0" font-size="19" fill="#25362c" text-anchor="middle" dominant-baseline="central">1-25</text>
+<text x="658.0" y="639.5" font-size="19" fill="#25362c" text-anchor="middle" dominant-baseline="central">1-29</text>
+<text x="553.0" y="772.0" font-size="19" fill="#25362c" text-anchor="middle" dominant-baseline="central">1-33</text>
+<text x="607.5" y="772.0" font-size="19" fill="#25362c" text-anchor="middle" dominant-baseline="central">1-35</text>
+<text x="676.5" y="772.0" font-size="19" fill="#25362c" text-anchor="middle" dominant-baseline="central">1-37</text>
+<text x="394" y="301" font-size="16" fill="#25362c" text-anchor="middle" dominant-baseline="central">↕</text>
+<text x="161" y="246" font-size="16" fill="#25362c" text-anchor="middle" dominant-baseline="central">☎</text>
+<text x="738" y="911" font-size="16" fill="#25362c" text-anchor="middle" dominant-baseline="central">☎</text>
+<text x="893.5" y="935.5" font-size="13" fill="#25362c" text-anchor="middle" dominant-baseline="central">Athabasca Hall Access →</text>
+<text x="978" y="932" font-size="16" fill="#25362c" text-anchor="middle" dominant-baseline="central">→</text>
+<text x="636.5" y="870.0" font-size="13" fill="#25362c" text-anchor="middle" dominant-baseline="central">Access to basement</text>
+<text x="636.5" y="886.0" font-size="13" fill="#25362c" text-anchor="middle" dominant-baseline="central">lecture theatres ↓</text>
+<text x="156" y="298" font-size="14" fill="#25362c" text-anchor="middle" dominant-baseline="central">Stairs</text>
+<text x="667" y="211" font-size="14" fill="#25362c" text-anchor="middle" dominant-baseline="central">Stairs</text>
+<text x="652" y="934" font-size="14" fill="#25362c" text-anchor="middle" dominant-baseline="central">Stairs</text>
+<text x="887" y="884" font-size="14" fill="#25362c" text-anchor="middle" dominant-baseline="central">Stairs</text>
 </svg>

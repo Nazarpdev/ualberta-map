@@ -1,4 +1,4 @@
-export async function requestCampusRoute(start, end, { preferIndoor = false, avoidSub = false } = {}) {
+export async function requestCampusRoute(start, end, { preferIndoor = false, avoidSub = false, avoidBuildings = [] } = {}) {
     const params = new URLSearchParams({
         slat: String(start.lat), slon: String(start.lon), elat: String(end.lat), elon: String(end.lon),
         preferIndoor: String(preferIndoor), avoidSub: String(avoidSub), includeCost: 'true'
@@ -7,7 +7,9 @@ export async function requestCampusRoute(start, end, { preferIndoor = false, avo
         params.set('startName', start.name);
     if (end.name)
         params.set('endName', end.name);
-    const response = await fetch(`/api/route?${params}`, { cache: 'no-store' });
+    for (const building of avoidBuildings)
+        params.append('avoidBuildings', building);
+    const response = await fetch(`./api/route?${params}`, { cache: 'no-store' });
     if (!response.ok)
         throw new Error('Could not calculate a campus route');
     const route = (await response.json());
@@ -16,6 +18,8 @@ export async function requestCampusRoute(start, end, { preferIndoor = false, avo
     return route;
 }
 export async function requestCampusLocations() {
-    const response = await fetch('/api/locations');
+    const response = await fetch('./api/locations');
+    if (!response.ok)
+        throw new Error('Could not load campus locations');
     return (await response.json());
 }

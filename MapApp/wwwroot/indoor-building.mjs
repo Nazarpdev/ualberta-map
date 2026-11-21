@@ -135,14 +135,30 @@ export async function createIndoorBuilding(map, opts, onSelect, onFloorChange) {
     document.getElementById('showStairs').addEventListener('change', drawMarkers);
     function focus(value = floor) {
         setFloor(value);
-        const zoom = Math.max(19, Math.min(20, map.getBoundsZoom(bounds, false, L.point(120, 120))));
-        map.setView(bounds.getCenter(), zoom, { animate: true });
+        const routePanel = document.querySelector('.route-panel')?.getBoundingClientRect();
+        const mobile = window.matchMedia('(max-width: 480px)').matches;
+        const left = mobile ? 32 : (routePanel?.right ?? 0) + 28;
+        const right = !mobile && panel ? panel.getBoundingClientRect().width + 40 : 32;
+        const top = mobile ? (routePanel?.bottom ?? 0) + 24 : 60;
+        const bottom = 60;
+        const zoom = Math.max(19, Math.min(20, map.getBoundsZoom(bounds, false, L.point(left + right, top + bottom))));
+        const center = map.project(bounds.getCenter(), zoom).subtract(L.point((left - right) / 2, (top - bottom) / 2));
+        map.setView(map.unproject(center, zoom), zoom, { animate: true });
     }
     map.on('resize', () => { if (window.matchMedia('(max-width: 480px)').matches && details)
         details.open = false; });
     render();
     update();
     const names = new Map([...router.nodes.values()].filter(n => n.kind === 'room').concat([...router.spaces.values()]).map(n => [title(n), n]));
+    for (const floorPlan of data.floors) {
+        for (const space of floorPlan.spaces) {
+            if (!space.destination)
+                continue;
+            const destination = router.nodes.get(space.destination);
+            if (destination)
+                names.set(title({ ...destination, name: space.name, code: space.code }), destination);
+        }
+    }
     function inside(lat, lon) {
         // Use the actual campus footprint rather than its bounding rectangle.
         return outline.some(ring => {
@@ -156,7 +172,7 @@ export async function createIndoorBuilding(map, opts, onSelect, onFloorChange) {
         });
     }
     async function campusRoute(start, end, preferIndoor) {
-        return requestCampusRoute(start, end, { preferIndoor, avoidSub });
+        return requestCampusRoute(start, end, { preferIndoor, avoidSub, avoidBuildings: [data.building] });
     }
     const campusPoint = (portal) => ({ lat: portal.campus[0], lon: portal.campus[1] });
     const indoorSegments = (points) => floorSegments(points, router).map(segment => ({ ...segment, building: key }));
@@ -227,7 +243,7 @@ export async function createIndoorBuilding(map, opts, onSelect, onFloorChange) {
         return { segments, transitions: transitionsFor(indoor.points) };
     }
     return {
-        building: key, avoidSub, router, route, floorName, contains: inside, refreshLabels: plan.refreshLabels,
+        building: key, campusName: data.building, avoidSub, router, route, floorName, contains: inside, refreshLabels: plan.refreshLabels,
         indoorOptions, campusPoint, indoorSegments, transitionsFor,
         get floor() { return floor; },
         get visible() { return visible; },

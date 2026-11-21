@@ -72,6 +72,7 @@ export interface IndoorSpace {
     label?: string;
     shortLabel?: string;
     labelOnly?: boolean;
+    selectable?: boolean;
     code?: string | null;
     note?: string;
 }
@@ -139,7 +140,7 @@ export class IndoorRouter {
         this.spaces = new Map();
         for (const floor of data.floors) {
             floor.spaces.forEach((space, index) => {
-                if (space.node || space.destination) return;
+                if (space.node || space.destination || space.selectable === false) return;
                 const box = space.labelBox;
                 const points = space.polygon;
                 const center = space.iconPoint ?? (box ? [(box[0] + box[2]) / 2, (box[1] + box[3]) / 2]

@@ -1,5 +1,7 @@
 import { createSubMap } from './sub-map.mjs';
 import { createCscMap } from './csc-map.mjs';
+import { createCommonsMap } from './commons-map.mjs';
+import { createCampus3D } from './campus-3d.mjs';
 import { requestCampusLocations, requestCampusRoute } from './route-client.mjs';
 import type { CampusRoute } from './route-client.mjs';
 import type { IndoorBuilding, IndoorOption, RouteResult, SelectedPoint } from './indoor-building.mjs';
@@ -10,9 +12,10 @@ const centerLimit = L.latLngBounds(
     [53.5310, -113.5150]  // Northeast corner (Saskatchewan Dr / 112 St)
 ).pad(0.2); // campus + a bit extra; applies to the center so it never changes with zoom
 
+const compactMap = window.matchMedia('(max-width: 480px)').matches;
 const map = L.map('map', {
     minZoom: 15
-}).setView([53.5264, -113.5255], 16); // Start closer
+}).setView([compactMap ? 53.5271 : 53.5264, -113.5255], compactMap ? 16 : 17);
 map.on('moveend', () => {
     const center = map.getCenter();
     const clamped = L.latLng(
@@ -31,9 +34,16 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 let locations: Record<string, [number, number]> = {};
-let sub: IndoorBuilding | undefined, csc: IndoorBuilding | undefined;
 const indoorBuildings: IndoorBuilding[] = [];
 const campusEntrances: L.Marker[] = [];
+let campusFeatures: GeoJSON.Feature[] = [];
+const plans = [
+    { name: "Students' Union Building", label: 'SUB', create: createSubMap },
+    { name: 'Computing Science Centre', label: 'CSC', create: createCscMap },
+    { name: 'University Commons', label: 'University Commons', create: createCommonsMap }
+];
+const planLabels = new Map(plans.map(plan => [plan.name, plan.label]));
+const routeStatus = document.getElementById('routeStatus')!;
 let startPoint: SelectedPoint | null = null, endPoint: SelectedPoint | null = null, routeResult: RouteResult | null = null;
 let requestVersion = 0;
 const routeLayer = L.layerGroup().addTo(map);
@@ -46,17 +56,6 @@ const selectionIcon = L.divIcon({
         + '<circle cx="18" cy="16" r="6" fill="#fff" stroke="#246c9a" stroke-width="1.5"/></svg>'
 });
 map.createPane('routes'); map.getPane('routes')!.style.zIndex = '450';
-for (const [key, create] of [['sub', createSubMap], ['csc', createCscMap]] as const) {
-    try {
-        const building = await create(map, selectPoint, renderRoute);
-        indoorBuildings.push(building);
-        if (key === 'sub') sub = building;
-        else csc = building;
-    } catch (error) {
-        console.error(error);
-    }
-}
-if (!indoorBuildings.length) (document.getElementById('showStairs') as HTMLInputElement).disabled = true;
 
 const buildingFor = (point: SelectedPoint | null | undefined): IndoorBuilding | undefined =>
     point?.building ? indoorBuildings.find(building => building.building === point.building) : undefined;
@@ -124,14 +123,15 @@ function setupAutocomplete(input: HTMLInputElement) {
     input.addEventListener('blur', close);
 }
 
+setupAutocomplete(document.getElementById('startLoc') as HTMLInputElement);
+setupAutocomplete(document.getElementById('endLoc') as HTMLInputElement);
 requestCampusLocations()
     .then(data => {
-        locations = Object.assign({}, data, ...indoorBuildings.map(building => building.locations));
-        setupAutocomplete(document.getElementById('startLoc') as HTMLInputElement);
-        setupAutocomplete(document.getElementById('endLoc') as HTMLInputElement);
-    });
+        locations = { ...data, ...locations };
+    })
+    .catch(console.error);
 
-const entranceLayer = L.layerGroup().addTo(map);
+const entranceLayer = L.layerGroup();
 const entranceIcon = L.divIcon({
     className: 'entrance-icon',
     html: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21V3h14v18M3 21h18M8 21V6l8-1v16"/><path d="M12 13h1"/></svg>',
@@ -139,108 +139,129 @@ const entranceIcon = L.divIcon({
     iconAnchor: [13, 13]
 });
 const isEntrance = (feature: GeoJSON.Feature): boolean => feature.geometry?.type === 'Point'
-    && Boolean(feature.properties?.entrance) && feature.properties!.entrance !== 'no';
+    && typeof feature.properties?.entrance === 'string'
+    && !['no', 'emergency', 'exit'].includes(feature.properties!.entrance)
+    && !['no', 'private'].includes(feature.properties!.foot ?? feature.properties!.access);
+const isBuilding = (feature: GeoJSON.Feature): boolean =>
+    (feature.geometry?.type === 'Polygon' || feature.geometry?.type === 'MultiPolygon')
+    && Boolean(feature.properties?.building) && feature.properties!.building !== 'no';
 
-(document.getElementById('showEntrances') as HTMLInputElement).addEventListener('change', (event) => {
-    const target = event.target as HTMLInputElement;
-    if (target.checked) entranceLayer.addTo(map);
+const entranceToggle = document.getElementById('showEntrances') as HTMLInputElement;
+entranceToggle.addEventListener('change', () => {
+    if (entranceToggle.checked) entranceLayer.addTo(map);
     else map.removeLayer(entranceLayer);
 });
+if (entranceToggle.checked) entranceLayer.addTo(map);
 
-fetch('/map.geojson')
-    .then(res => {
-        if (!res.ok) throw new Error(`Map data failed to load (${res.status})`);
-        return res.json();
-    })
-    .then(async (data: GeoJSON.FeatureCollection) => {
-        // Show the same corrected doors and connections used by campus routing.
-        const response = await fetch('/routing-overrides.geojson');
-        if (!response.ok) throw new Error(`Map corrections failed to load (${response.status})`);
-        const corrections = (await response.json()) as { features: GeoJSON.Feature[] };
-        const replaced = new Set(corrections.features.map(feature => feature.properties?.['@id']).filter(Boolean));
-        return { ...data, features: [
-            ...data.features.filter(feature => !replaced.has(feature.properties?.['@id'])),
-            ...corrections.features
-        ] } as GeoJSON.FeatureCollection;
-    })
-    .then((data: GeoJSON.FeatureCollection) => {
-        indoorBuildings.forEach(building => building.setFootprints(data.features));
-        L.geoJSON(data, {
-            filter: (feature: GeoJSON.Feature) => !isEntrance(feature),
-            style: { color: '#8fa99b', weight: 1, opacity: 0.6, fillOpacity: 0.08 }
-        }).addTo(map);
-        L.geoJSON(data, {
-            filter: isEntrance,
-            pointToLayer: (feature: GeoJSON.Feature, latlng: L.LatLng) => {
-                const type = feature.properties!.entrance as string;
-                const label = feature.properties!.name || (type === 'yes' ? 'Entrance' : `${type.charAt(0).toUpperCase()}${type.slice(1)} entrance`);
-                const tooltip = document.createElement('span');
-                tooltip.textContent = label;
-                const marker = L.marker(latlng, {
-                    icon: entranceIcon,
-                    title: label,
-                    keyboard: false,
-                    zIndexOffset: -1000,
-                    bubblingMouseEvents: true
-                }).bindTooltip(tooltip, { direction: 'top', offset: [0, -10] });
-                campusEntrances.push(marker);
-                return marker;
-            }
-        }).addTo(entranceLayer);
-    })
-    .catch((error: unknown) => {
-        console.error(error);
-        const toggle = document.getElementById('showEntrances') as HTMLInputElement;
-        toggle.checked = false;
-        toggle.disabled = true;
-        toggle.parentElement!.title = 'Entrance data could not be loaded. Refresh to try again.';
-    });
-
-// Corner rounding limits: indoor floors have open space, outdoor paths are narrow.
-const SMOOTHING = {
-    indoor: { radius: 25, maxOffset: 4 },
-    outdoor: { radius: 8, maxOffset: 1 }
-};
-
-function smoothCoords(coords: [number, number][], indoor: boolean, arcSteps = 12): [number, number][] {
-    if (coords.length < 3) return coords;
-    const { radius, maxOffset } = indoor ? SMOOTHING.indoor : SMOOTHING.outdoor;
-    const smooth: [number, number][] = [coords[0]];
-    for (let i = 1; i < coords.length - 1; i++) {
-        const [lat0, lon0] = coords[i - 1];
-        const [lat1, lon1] = coords[i];
-        const [lat2, lon2] = coords[i + 1];
-        // Work in metres around the vertex so the curve size stays fixed
-        // instead of scaling with the adjoining segment lengths.
-        const kx = 111320 * Math.cos(lat1 * Math.PI / 180), ky = 111320;
-        const v1x = (lon1 - lon0) * kx, v1y = (lat1 - lat0) * ky;
-        const v2x = (lon2 - lon1) * kx, v2y = (lat2 - lat1) * ky;
-        const len1 = Math.hypot(v1x, v1y), len2 = Math.hypot(v2x, v2y);
-        if (len1 < 1e-6 || len2 < 1e-6) {
-            smooth.push(coords[i]);
-            continue;
-        }
-        const turn = Math.abs(Math.atan2(v1x * v2y - v1y * v2x, v1x * v2x + v1y * v2y));
-        if (turn < 0.15) {
-            smooth.push(coords[i]);
-            continue;
-        }
-        // The curve's midpoint lies r·sin(turn/2)/2 from the vertex. Shrink the radius
-        // so it never strays more than maxOffset: sharp V turns on a path stay on it.
-        const r = Math.min(radius, len1 / 2, len2 / 2, 2 * maxOffset / Math.sin(turn / 2));
-        const ax = -v1x / len1 * r, ay = -v1y / len1 * r;
-        const bx = v2x / len2 * r, by = v2y / len2 * r;
-        // Quadratic bezier with the original vertex as control (at the origin here).
-        for (let j = 0; j <= arcSteps; j++) {
-            const t = j / arcSteps;
-            const mx = (1 - t) * (1 - t) * ax + t * t * bx;
-            const my = (1 - t) * (1 - t) * ay + t * t * by;
-            smooth.push([lat1 + my / ky, lon1 + mx / kx]);
-        }
+const campusPaths = L.geoJSON(undefined, {
+    filter: feature => feature.geometry?.type !== 'Point' && !isBuilding(feature),
+    style: { color: '#829287', weight: 1, opacity: 0.45, fillOpacity: 0.07, interactive: false }
+}).addTo(map);
+const campusBuildings = L.geoJSON(undefined, {
+    filter: isBuilding,
+    style: feature => ({
+        className: 'campus-building', color: '#456353', weight: 1.3,
+        fillColor: planLabels.has(feature?.properties?.name) ? '#6d9c7d' : '#a5b9aa', fillOpacity: 0.82
+    }),
+    onEachFeature(feature, layer) {
+        const name = feature.properties?.name;
+        if (typeof name !== 'string' || !name) return;
+        const label = feature.properties?.short_name ? planLabels.get(name) : undefined;
+        const text = document.createElement('span');
+        text.textContent = label ?? name;
+        layer.bindTooltip(text, label
+            ? { permanent: true, direction: 'center', className: 'campus-landmark', opacity: 1 }
+            : { sticky: true, direction: 'top' });
     }
-    smooth.push(coords[coords.length - 1]);
-    return smooth;
+}).addTo(map);
+const entrances = L.geoJSON(undefined, {
+    filter: isEntrance,
+    pointToLayer(feature, latlng) {
+        const type = feature.properties!.entrance as string;
+        const label = feature.properties!.name || (type === 'yes' ? 'Entrance' : `${type.charAt(0).toUpperCase()}${type.slice(1)} entrance`);
+        const tooltip = document.createElement('span');
+        tooltip.textContent = label;
+        const marker = L.marker(latlng, {
+            icon: entranceIcon, title: label, keyboard: false, zIndexOffset: -1000, bubblingMouseEvents: true
+        }).bindTooltip(tooltip, { direction: 'top', offset: [0, -10] });
+        campusEntrances.push(marker);
+        return marker;
+    }
+}).addTo(entranceLayer);
+
+function drawCampus(data: GeoJSON.FeatureCollection, drawFootprints = true) {
+    campusFeatures = data.features;
+    for (const building of indoorBuildings) building.setFootprints(campusFeatures);
+    campusPaths.clearLayers().addData(data);
+    if (drawFootprints) campusBuildings.clearLayers().addData(data);
+    campusEntrances.length = 0;
+    entrances.clearLayers().addData(data);
+    renderRoute();
 }
+
+async function loadCampusData() {
+    async function read(url: string): Promise<GeoJSON.FeatureCollection> {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`Could not load ${url} (${response.status})`);
+        return response.json();
+    }
+    const corrections = read('./routing-overrides.geojson').catch(error => {
+        console.error(error);
+        return null;
+    });
+    const campus = await read('./map.geojson');
+    drawCampus(campus);
+    const overrides = await corrections;
+    if (!overrides?.features.length) return;
+    const replaced = new Set(overrides.features.map(feature => feature.properties?.['@id']).filter(Boolean));
+    const changedFootprints = overrides.features.some(isBuilding)
+        || campus.features.some(feature => isBuilding(feature) && replaced.has(feature.properties?.['@id']));
+    drawCampus({ ...campus, features: [
+        ...campus.features.filter(feature => !replaced.has(feature.properties?.['@id'])), ...overrides.features
+    ] }, changedFootprints);
+}
+
+loadCampusData().catch(error => {
+    console.error(error);
+    entranceToggle.disabled = true;
+    document.getElementById('mapStatus')!.textContent = 'Campus building outlines could not load. Refresh to try again.';
+});
+
+const floorPlans = document.getElementById('floorPlans')!;
+const floorPlanLinks = document.getElementById('floorPlanLinks')!;
+const stairsToggle = document.getElementById('showStairs') as HTMLInputElement;
+stairsToggle.disabled = true;
+for (const { label, name, create } of plans) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.textContent = label;
+    button.title = `View ${name} floor plan`;
+    button.hidden = true;
+    floorPlanLinks.appendChild(button);
+    create(map, selectPoint, renderRoute).then(building => {
+        indoorBuildings.push(building);
+        building.setFootprints(campusFeatures);
+        Object.assign(locations, building.locations);
+        button.addEventListener('click', () => building.focus());
+        button.hidden = false;
+        floorPlans.hidden = false;
+        stairsToggle.disabled = false;
+    }).catch(console.error);
+}
+
+const mapElement = document.getElementById('map')!;
+const updateDetailClass = () => mapElement.classList.toggle('campus-detail', map.getZoom() >= 19);
+map.on('zoomend', updateDetailClass);
+updateDetailClass();
+
+const view3DButton = document.getElementById('viewCampus3d') as HTMLButtonElement;
+let campus3D: ReturnType<typeof createCampus3D> | undefined;
+view3DButton.addEventListener('click', () => {
+    const dialog = document.getElementById('campus3d') as HTMLDialogElement;
+    campus3D ??= createCampus3D(dialog, './campus-elevation.geojson');
+    campus3D.open();
+});
+view3DButton.hidden = false;
 
 function renderRoute(): void {
     routeLayer.clearLayers(); markerLayer.clearLayers();
@@ -260,7 +281,8 @@ function renderRoute(): void {
         // Hide only other floors while that building plan is visible.
         const building = indoorBuildings.find(item => item.building === segment.building);
         if (segment.floor != null && building?.visible && segment.floor !== building.floor) continue;
-        L.polyline(smoothCoords(segment.coords, segment.floor != null), { pane: 'routes', color: '#236348', weight: 5, lineJoin: 'round', lineCap: 'round' }).addTo(routeLayer);
+        // Keep the routed geometry at doors and corners, even after Leaflet simplifies the line.
+        L.polyline(segment.coords, { pane: 'routes', color: '#236348', weight: 5, lineJoin: 'round', lineCap: 'round', smoothFactor: 0 }).addTo(routeLayer);
     }
     indoorBuildings.forEach(building => building.refreshLabels());
 }
@@ -275,7 +297,9 @@ async function crossBuildingRoute(startBuilding: IndoorBuilding, endBuilding: In
             const from = startBuilding.campusPoint(start.portal);
             const to = endBuilding.campusPoint(end.portal);
             const campus = await requestCampusRoute(from, to, {
-                preferIndoor, avoidSub: startBuilding.avoidSub || endBuilding.avoidSub
+                preferIndoor,
+                avoidSub: startBuilding.avoidSub || endBuilding.avoidSub,
+                avoidBuildings: [startBuilding.campusName, endBuilding.campusName]
             });
             if (!campus.coordinates.length) return null;
             return { start, end, campus, cost: start.cost + campus.cost + end.cost };
@@ -300,6 +324,7 @@ async function crossBuildingRoute(startBuilding: IndoorBuilding, endBuilding: In
 async function calculateRoute(): Promise<void> {
     const version = ++requestVersion;
     routeResult = null; renderRoute();
+    routeStatus.textContent = '';
     document.getElementById('routeSteps')!.replaceChildren();
     try {
         let result: RouteResult;
@@ -310,7 +335,9 @@ async function calculateRoute(): Promise<void> {
         else if (startBuilding || endBuilding)
             result = await (startBuilding ?? endBuilding!)!.route(startPoint as SelectedPoint, endPoint as SelectedPoint, { preferIndoor });
         else {
-            const route = await requestCampusRoute(startPoint as SelectedPoint, endPoint as SelectedPoint, { preferIndoor });
+            const route = await requestCampusRoute(startPoint as SelectedPoint, endPoint as SelectedPoint, {
+                preferIndoor, avoidSub: indoorBuildings.some(building => building.avoidSub)
+            });
             result = { segments: [{ floor: null, coords: route.coordinates, building: null }], transitions: [] };
         }
         if (version !== requestVersion) return;
@@ -333,6 +360,7 @@ async function calculateRoute(): Promise<void> {
     } catch (error) {
         if (version !== requestVersion) return;
         routeResult = null; renderRoute();
+        routeStatus.textContent = error instanceof Error ? error.message : 'No mapped route found.';
     }
 }
 
@@ -346,6 +374,7 @@ function samePoint(a: SelectedPoint, b: SelectedPoint): boolean {
 }
 
 function selectPoint(point: SelectedPoint): void {
+    routeStatus.textContent = '';
     if (startPoint && !endPoint && samePoint(point, startPoint)) {
         ++requestVersion;
         startPoint = null; routeResult = null;
@@ -390,5 +419,7 @@ map.on('zoomend moveend', renderRoute);
     try {
         const start = resolve('startLoc', startPoint), end = resolve('endLoc', endPoint);
         startPoint = start; endPoint = end; calculateRoute();
-    } catch (error) { /* invalid location: ignore */ }
+    } catch (error) {
+        routeStatus.textContent = error instanceof Error ? error.message : 'Choose a starting location and destination.';
+    }
 };

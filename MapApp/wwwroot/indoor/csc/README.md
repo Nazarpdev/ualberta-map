@@ -1,43 +1,40 @@
 # CSC indoor map
 
-Level 1 of the Computing Science Centre is a **hand-traced vector map** based
-on the user-supplied CSC Level 1 wayfinding plan. `map.json` holds room
-polygons, room-interior label areas, the building outline and the connected
-corridor/room/stair routing graph. There are no raster floor images or
-baked-in symbols. The tracing and its alignment to the campus footprint are
-schematic: the source image is stretched relative to the OSM footprint, so
-rooms were fitted inside the mapped walls rather than traced literally.
+Level 1 of the Computing Science Centre is traced from a photograph of the
+posted wayfinding sign. The plan includes the labelled rooms, room openings,
+three campus entrances, four stairs, the lift, washrooms, campus phones, and
+the Athabasca Hall connection. Interior destinations route to their mapped
+doors. Room 1-13 uses the exterior approach beside the north entry visible
+on the sign.
 
-Only Level 1 is mapped, so there is no floor switcher; the plan appears when
-zoomed to level 19+ over CSC. Clicking a room, room label or amenity badge
-selects it; clicking an open indoor area places a pin on Level 1 and connects
-it to a corridor without crossing room walls.
+The photo establishes the relative layout. Its overlay on the campus map
+uses a schematic fit to the geographic bounds of the building. Outdoor
+route legs use the separately mapped campus door coordinates. The sign
+provides no dimensions or surveyed alignment points.
 
-Routes combine with campus legs through the three mapped entrances (west,
-south and north), each tied to the OSM door node and its walkway. The east
-"Access to basement lecture theatres" stair and the "Athabasca Hall Access"
-exit are routable destinations that stop at CSC's end; the interiors beyond
-them (basement theatres, Athabasca Hall) are not mapped here.
+The plan appears at zoom level 19 and above. Selecting a room, label, or
+amenity sets a route endpoint. The south stair is the Level 1 destination
+for basement lecture theatres, and the Athabasca Hall destination stops at
+the passage from CSC. The indoor map covers Level 1.
 
 ## Data and implementation
 
-`tools/build-csc.py` is the editable source for the coordinate frame,
-corridor vertices, room access points and entrances. `tools/csc-spaces.json`
-contains the hand-traced room/space outlines and their label areas. Plan
-conventions match `tools/build-sub.py` (x grows south, y grows west), but the
-geographic fit is a plain linear crop/bounds mapping with no surveyed
-registration control points.
+- `tools/csc-spaces.json` holds room and amenity outlines and label areas.
+- `tools/build-csc.py` holds the traced perimeter, partitions, room access
+  points, and campus doors. The shared router connects clear paths through
+  the corridor geometry.
+- `tools/csc-diagram.svg` renders the same map used by the app for comparison
+  with the sign. The source photograph is separate from the map layers.
 
-`indoor-building.mjs` is the shared plan-display and routing implementation
-behind SUB (`sub-map.mjs`) and CSC (`csc-map.mjs`); `sub-plan.mjs` draws both
-buildings' SVG layers in separate panes. Cross-building routes (CSC to SUB,
-or either building to an outdoor point) are assembled in `map.js`, which joins
-each indoor leg to the campus API through its cheapest entrance. These served
-modules are compiled from the TypeScript sources in `MapApp/client/`
-(`npm run build`).
+Regenerate both checked-in outputs with standard Python:
 
-To regenerate map data (standard Python only; no Python dependency at runtime):
-
-```powershell
-python tools/build-csc.py
+```sh
+python3 tools/build-csc.py
+python3 tools/csc-diagram.py
 ```
+
+The University of Alberta lists the west entrance as a DATS pickup location,
+identifies seven of the numbered rooms as labs, and identifies the Computing
+Science Help Desk as CSC 1-32. [DATS locations](https://www.ualberta.ca/en/campus-operations-services/dats-locations-on-campus.html),
+[lab facilities](https://www.ualberta.ca/en/computing-science/resources/labs-and-room-booking/lab-facilities.html),
+[department contact page](https://www.ualberta.ca/en/computing-science/contact-us/index.html).

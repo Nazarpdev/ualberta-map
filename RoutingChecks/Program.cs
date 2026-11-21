@@ -28,6 +28,10 @@ Feature("Point", new[] { .003, .0002 }, new() { ["entrance"] = "yes" });
 Way([[0, .0002], [-.001, .0002]]);
 Way([[.001, .0008], [.002, .0008]], true);
 Way([[.003, .0002], [.004, .0002]]);
+Feature("LineString", new[] { new[] { 0.0, .004 }, new[] { .003, .004 } },
+    new() { ["highway"] = "footway", ["access"] = "private" });
+Feature("LineString", new[] { new[] { 0.0, .004 }, new[] { .0015, .005 }, new[] { .003, .004 } },
+    new() { ["highway"] = "footway", ["access"] = "no", ["foot"] = "yes" });
 
 var file = Path.Combine(Path.GetTempPath(), $"routing-check-{Guid.NewGuid()}.geojson");
 try
@@ -55,6 +59,9 @@ try
     var segment = service.GetRoute(.0003, -.0003, .0003, -.0007);
     Check(segment.Count == 4 && At(segment[1], .0002, -.0003) && At(segment[2], .0002, -.0007),
         "Outdoor markers join the path at projections, without vertex detours");
+    var publicRoute = service.GetRoute(.004, 0, .004, .003);
+    Check(publicRoute.Any(p => At(p, .005, .0015)),
+        "Pedestrian routing avoids private paths and respects an explicit foot access exception");
     Check(service.GetRoute(.0005, .0005, .0005, .0105, "A", "Disconnected").Count == 0,
         "Unconnected buildings do not invent an outside entrance");
     var repeated = service.GetRoute(.0005, .0005, .0005, .0025, "A", "B");
@@ -65,7 +72,7 @@ finally { File.Delete(file); }
 
 if (args.Length > 0)
 {
-    var campus = new RoutingService(args[0]);
+    var campus = new RoutingService(args[0], args.Length > 1 ? args[1] : null);
     var locations = campus.GetLocations();
     var cab = locations["Central Academic Building"];
     var campusFeatures = new NetTopologySuite.IO.GeoJsonReader().Read<NetTopologySuite.Features.FeatureCollection>(File.ReadAllText(args[0]));
@@ -89,12 +96,16 @@ if (args.Length > 0)
         && At(cabToSab[^1], 53.52602, -113.52455), "CAB–SAB screenshot markers retain their positions");
     Check(!cabToSab.Any(p => At(p, 53.526702, -113.525057) || At(p, 53.52583, -113.524935)),
         "CAB–SAB indoor route never visits either outside door");
-    Check(cabToSab.Count == 4 && At(cabToSab[1], 53.526307, -113.524778)
-        && At(cabToSab[2], 53.52611, -113.524778), "CAB–SAB markers connect directly to the indoor pedway");
+    Check(cabToSab.Count >= 4 && At(cabToSab[1], 53.526307, -113.524778)
+        && At(cabToSab[^2], 53.52611, -113.524778)
+        && cabToSab.Skip(1).SkipLast(1).All(p => Math.Abs(p[1] + 113.524778) < 1e-10),
+        "CAB–SAB markers connect directly to the indoor pedway");
     var sab = locations["South Academic Building"];
     var namedSab = campus.GetRoute(cab[0], cab[1], sab[0], sab[1],
         "Central Academic Building", "South Academic Building");
-    Check(namedSab.Count == 2 && namedSab.All(p => Math.Abs(p[1] + 113.524778) < 1e-10),
+    Check(namedSab.Count >= 2 && At(namedSab[0], 53.526307, -113.524778)
+        && At(namedSab[^1], 53.52611, -113.524778)
+        && namedSab.All(p => Math.Abs(p[1] + 113.524778) < 1e-10),
         "Typed CAB–SAB route only spans the pedway between building edges");
     foreach (var name in new[] { "Cameron Library", "Centennial Centre for Interdisciplinary Science" })
     {
@@ -105,5 +116,19 @@ if (args.Length > 0)
         var typed = campus.GetRoute(cab[0], cab[1], destination[0], destination[1], "Central Academic Building", name);
         Check(typed.Count > 0 && !At(typed[0], cab[0], cab[1]) && !At(typed[^1], destination[0], destination[1]),
             $"Campus typed buildings: CAB to {name} end at access points");
+    }
+    var commons = campusFeatures.Single(f => f.Attributes.Exists("building")
+        && f.Attributes.Exists("name") && f.Attributes["name"]?.ToString() == "University Commons").Geometry;
+    foreach (var door in new[] { new[] { 53.52538, -113.522511 }, new[] { 53.525156, -113.52327 }, new[] { 53.525158, -113.52358 } })
+    {
+        var commonsLeg = campus.GetRouteDetails(cab[0], cab[1], door[0], door[1], "Central Academic Building",
+            preferIndoor: true, avoidBuildings: ["University Commons"]).Coordinates;
+        Check(commonsLeg.Count > 1 && At(commonsLeg[^1], door[0], door[1]),
+            "Campus leg reaches the selected University Commons Level 1 door");
+        Check(commonsLeg.Zip(commonsLeg.Skip(1)).All(pair =>
+            !new NetTopologySuite.Geometries.LineString([
+                new NetTopologySuite.Geometries.Coordinate(pair.First[1], pair.First[0]),
+                new NetTopologySuite.Geometries.Coordinate(pair.Second[1], pair.Second[0])
+            ]).Relate(commons, "T********")), "Campus leg stays outside University Commons until the selected door");
     }
 }

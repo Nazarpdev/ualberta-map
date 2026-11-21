@@ -48,6 +48,8 @@ export function createSubPlan(map, router, onSelect, panes = { plans: 'subPlans'
             layer.on('click', () => onSelect(id));
     };
     const destination = (space) => {
+        if (space.selectable === false)
+            return undefined;
         const floor = current;
         return space.node ?? space.destination ?? `${floor.id}:space:${floor.spaces.indexOf(space)}`;
     };
@@ -57,13 +59,14 @@ export function createSubPlan(map, router, onSelect, panes = { plans: 'subPlans'
         shapes.addTo(map);
         labels.addTo(map);
         amenities.addTo(map);
-        const outline = L.polygon(footprint ?? geoLine(floor.id, floor.footprint, true), {
+        const outline = L.polygon(geoLine(floor.id, floor.footprint, true), {
             renderer, pane: panes.plans, className: 'sub-footprint',
             fillColor: spaceColors.Corridors, fillOpacity: 1, color: '#87988d', weight: 2,
             interactive: false
         }).addTo(shapes);
         if (footprint) {
-            const svg = outline.getElement().ownerSVGElement;
+            const outlinePath = outline.getElement();
+            const svg = outlinePath.ownerSVGElement;
             let clip = svg.querySelector(`#${clipId}`);
             if (!clip) {
                 clip = document.createElementNS('http://www.w3.org/2000/svg', 'clipPath');
@@ -76,21 +79,26 @@ export function createSubPlan(map, router, onSelect, panes = { plans: 'subPlans'
             }
             clipPath = clip.firstElementChild;
             updateClip();
+            outlinePath.setAttribute('clip-path', `url(#${clipId})`);
         }
         for (const space of floor.spaces) {
             const box = space.labelBox;
             const polygon = space.polygon ?? (box ? [[box[0], box[1]], [box[2], box[1]], [box[2], box[3]], [box[0], box[3]]] : undefined);
             if (!polygon)
                 continue;
+            const id = destination(space);
             const layer = L.polygon(geoLine(floor.id, polygon, true), {
-                renderer, pane: panes.plans, className: 'sub-space',
-                color: '#9daea3', weight: 1.2, fillColor: spaceColors[space.category],
-                fillOpacity: space.polygon ? 1 : 0, stroke: Boolean(space.polygon), bubblingMouseEvents: false
-            }).bindTooltip(text(`${space.code ? `${space.code} · ` : ''}${space.name}${space.note ? ` · ${space.note}` : ''}`)).addTo(shapes);
+                renderer, pane: panes.plans, className: id ? 'sub-space' : '',
+                color: '#9daea3', weight: 1.2, fillColor: spaceColors[space.category] ?? spaceColors.Offices,
+                fillOpacity: space.polygon ? 1 : 0, stroke: Boolean(space.polygon), interactive: Boolean(id), bubblingMouseEvents: false
+            }).addTo(shapes);
             if (clipPath)
                 layer.getElement().setAttribute('clip-path', `url(#${clipId})`);
-            layer.getElement().dataset.room = destination(space);
-            select(layer, destination(space));
+            if (id) {
+                layer.getElement().dataset.room = id;
+                layer.bindTooltip(text(`${space.code ? `${space.code} · ` : ''}${space.name}${space.note ? ` · ${space.note}` : ''}`));
+                select(layer, id);
+            }
             // Cut a small opening in the wall at the traced room access point.
             const door = router.nodes.get(space.node);
             if (!door || !space.polygon)
@@ -226,10 +234,11 @@ export function createSubPlan(map, router, onSelect, panes = { plans: 'subPlans'
             name.className = 'sub-label-name';
             name.textContent = space.label ?? space.name;
             element.appendChild(name);
-            if (!space.icon && (space.code || space.note)) {
+            const secondaryText = space.code ?? space.note;
+            if (!space.icon && secondaryText && secondaryText !== name.textContent) {
                 const code = document.createElement('span');
                 code.className = 'sub-label-code';
-                code.textContent = space.code ?? space.note ?? '';
+                code.textContent = secondaryText;
                 element.appendChild(code);
             }
             const probe = document.createElement('div');
@@ -264,12 +273,13 @@ export function createSubPlan(map, router, onSelect, panes = { plans: 'subPlans'
             if (previousLabels.has(space))
                 element.style.animation = 'none';
             displayedLabels.add(space);
+            const id = destination(space);
             const marker = L.marker(labelCenter, {
                 pane: panes.labels, icon: L.divIcon({ className: 'sub-room-label', html: element, iconSize: [w, h], iconAnchor: [w / 2, h / 2] }),
-                title: space.name, keyboard: true,
-                interactive: true, bubblingMouseEvents: false
+                title: space.name, keyboard: Boolean(id),
+                interactive: Boolean(id), bubblingMouseEvents: false
             }).addTo(labels);
-            select(marker, destination(space));
+            select(marker, id);
         }
     }
     function refreshLabels() {
